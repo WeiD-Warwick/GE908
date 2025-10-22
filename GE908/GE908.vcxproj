@@ -123,6 +123,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Foundation\GELog.cpp" />
+    <ClCompile Include="Src\Foundation\GEView.cpp" />
     <ClCompile Include="Src\Core\Maps\Fixed\FixMap.cpp" />
     <ClCompile Include="Src\Core\Camera\Camera.cpp" />
     <ClCompile Include="Src\Foundation\GEFont.cpp" />
@@ -132,6 +134,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Foundation\GEView.h" />
     <ClInclude Include="Src\Foundation\GEFont.h" />
     <ClInclude Include="Src\Core\Maps\MapManager.h" />
     <ClInclude Include="Src\Core\Maps\Fixed\FixMap.h" />

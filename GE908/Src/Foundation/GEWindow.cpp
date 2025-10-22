@@ -51,24 +51,25 @@ void GEWindow::drawText(const std::string& text, int startX, int startY, const G
         if (!img) continue;
 
         unsigned char* data = img->data;
-        int w = img->width;
-        int h = img->height;
+        int originW = img->width;
+        int originH = img->height;
 
-        int scaledW = w * scale;
-        int scaledH = h * scale;
+        int scaledW = originW * scale;
+        int scaledH = originH * scale;
 
+		// loop through each pixel in the scaled image
         for (int sy = 0; sy < scaledH; ++sy) {
             for (int sx = 0; sx < scaledW; ++sx) {
                 int srcX = sx / scale; 
                 int srcY = sy / scale;
-                int idx = (srcY * w + srcX) * 4;
 
-                unsigned char origR = data[idx];
-                unsigned char origG = data[idx + 1];
-                unsigned char origB = data[idx + 2];
-                unsigned char origA = data[idx + 3];
+				// after scale,the next char need to draw at cursorX + scaledW
+                int idx = (srcY * originW + srcX) * 4;
 
-                if (origA != 0) {
+                unsigned char originA = data[idx + 3];
+
+				// tiny non-transparent pixel
+                if (originA != 0) {
                     unsigned char r = color.r;
                     unsigned char g = color.g;
                     unsigned char b = color.b;
@@ -77,12 +78,13 @@ void GEWindow::drawText(const std::string& text, int startX, int startY, const G
             }
         }
 
+		// update cursor position for next character
         cursorX += scaledW;
     }
 }
 
 void GEWindow::render() {
     drawBGColor();
-    drawText("Welcome To GE908!", 50, 50, GEColor::Red, 1);
+    drawText("Welcome To GE908!", 50, 50, GEColor::Red, 2);
     present();
 }

@@ -43,6 +43,7 @@ void GameManager::update(float deltaTime) {
 }
 
 void GameManager::render() {
+
 	_window.render();
 }
 
