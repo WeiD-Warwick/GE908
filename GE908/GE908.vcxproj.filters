@@ -21,13 +21,19 @@
     <ClCompile Include="Src\GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\GEKit\GEWindow.cpp">
+    <ClCompile Include="Src\Core\Camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Foundation\GELog.cpp">
+    <ClCompile Include="Src\Core\Maps\Fixed\FixMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Assets\GEResource.cpp">
+    <ClCompile Include="Src\Foundation\GEWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Foundation\GEFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Foundation\GEModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,29 +44,29 @@
     <ClInclude Include="Src\GameManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\GEKit\GEColor.h">
+    <ClInclude Include="Src\Foundation\GEModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\GEKit\GEWindow.h">
+    <ClInclude Include="Src\Foundation\GEWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Foundation\GELog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Foundation\GESTL.h">
+    <ClInclude Include="Src\Core\Camera\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Assets\GEResource.h">
+    <ClInclude Include="Src\Core\Maps\Fixed\FixMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\Maps\MapManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Foundation\GEFont.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Src\Assets\Fonts\SystemFont.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Fonts\nullptr.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Src\Assets\Tiles\0.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -134,6 +140,291 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Src\Assets\Tiles\landscape.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\32.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\33.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\34.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\35.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\36.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\37.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\38.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\39.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\40.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\41.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\42.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\43.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\44.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\46.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\47.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\48.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\49.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\50.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\51.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\52.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\53.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\54.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\55.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\56.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\57.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\58.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\59.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\60.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\61.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\62.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\63.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\64.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\65.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\66.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\67.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\68.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\69.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\70.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\71.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\72.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\73.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\74.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\75.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\76.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\77.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\78.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\79.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\80.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\81.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\82.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\83.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\84.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\85.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\86.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\87.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\88.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\89.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\90.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\91.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\92.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\93.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\94.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\95.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\96.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\97.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\98.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\99.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\100.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\101.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\102.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\103.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\104.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\105.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\106.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\107.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\108.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\109.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\110.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\111.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\112.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\113.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\114.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\115.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\116.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\117.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\118.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\119.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\120.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\121.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\122.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\123.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\124.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\125.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\126.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

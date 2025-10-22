@@ -8,29 +8,34 @@
 
 using namespace GamesEngineeringBase;
 
-void GameManager::_loadWindow(int width, int height, const std::string title, bool fullScreen) {
-	_window.create(width, height, title, fullScreen);
-	GELog::shared().info("Init window.");
-	_window.playLaunchAppAnimation(5.f);
-}
-
 GameManager::GameManager() : _window(), _isRunning(false) {}
 
 GameManager::~GameManager() {}
 
+// load Game Resource, like maps, player, enemies
+void GameManager::loadComponent() {
+
+	// load window
+	_window.loadWindow();
+
+	// load font
+	_font.loadFont();
+
+	// load sounds
+
+	
+
+	// load characters
+}
+
 void GameManager::run() {
 	_isRunning = true;
-	loadView();
+	loadComponent();
 
 	while (_isRunning) {
 		update(0.016f);
 		render();
 	}
-}
-
-// load Game Resource, like maps, player, enemies
-void GameManager::loadView() {
-	_loadWindow(1280, 720, "WM908", false);
 }
 
 void GameManager::update(float deltaTime) {

@@ -3,7 +3,8 @@
 //
 
 #pragma once
-#include "GEKit/GEWindow.h"
+#include "Foundation/GEWindow.h"
+#include "Foundation/GEFont.h"
 
 using namespace GamesEngineeringBase;
 
@@ -12,8 +13,8 @@ class GameManager {
 private:
 	// window
 	GEWindow _window;
+	GEFont _font;
 	bool _isRunning;
-	void _loadWindow(int width, int height, const std::string title, bool fullScreen);
 
 public:
 	GameManager();
@@ -22,8 +23,8 @@ public:
 	// Start Game Loops
 	void run();
 
-	// load Game Resource, like maps, player, enemies
-	void loadView();
+	// load Game Resource, like maps, player, enemies, fonts
+	void loadComponent();
 
 	// update
 	void update(float deltaTime);
