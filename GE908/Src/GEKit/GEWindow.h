@@ -11,6 +11,7 @@ class GEWindow : public GamesEngineeringBase::Window {
 private:
 	// set the backgroundColor
 	void drawBGColor();
+	void loadFont();
 public:
 
 	GEColor backgroundColor = GEColor(0, 0, 0);

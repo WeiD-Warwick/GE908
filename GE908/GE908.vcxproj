@@ -123,18 +123,52 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Assets\GEResource.cpp" />
     <ClCompile Include="Src\Foundation\GELog.cpp" />
     <ClCompile Include="Src\GEKit\GEWindow.cpp" />
     <ClCompile Include="Src\GameManager.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Assets\GEResource.h" />
     <ClInclude Include="Src\Foundation\GELog.h" />
     <ClInclude Include="Src\Foundation\GESTL.h" />
     <ClInclude Include="Src\GEKit\GEWindow.h" />
     <ClInclude Include="Src\GameManager.h" />
     <ClInclude Include="Src\GEKit\GEColor.h" />
     <ClInclude Include="ThirdParty\GamesEngineeringBase.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Src\Assets\Fonts\nullptr.png" />
+    <Image Include="Src\Assets\Fonts\SystemFont.bmp" />
+    <Image Include="Src\Assets\Tiles\0.png" />
+    <Image Include="Src\Assets\Tiles\1.png" />
+    <Image Include="Src\Assets\Tiles\10.png" />
+    <Image Include="Src\Assets\Tiles\11.png" />
+    <Image Include="Src\Assets\Tiles\12.png" />
+    <Image Include="Src\Assets\Tiles\13.png" />
+    <Image Include="Src\Assets\Tiles\14.png" />
+    <Image Include="Src\Assets\Tiles\15.png" />
+    <Image Include="Src\Assets\Tiles\16.png" />
+    <Image Include="Src\Assets\Tiles\17.png" />
+    <Image Include="Src\Assets\Tiles\18.png" />
+    <Image Include="Src\Assets\Tiles\19.png" />
+    <Image Include="Src\Assets\Tiles\2.png" />
+    <Image Include="Src\Assets\Tiles\20.png" />
+    <Image Include="Src\Assets\Tiles\21.png" />
+    <Image Include="Src\Assets\Tiles\22.png" />
+    <Image Include="Src\Assets\Tiles\23.png" />
+    <Image Include="Src\Assets\Tiles\3.png" />
+    <Image Include="Src\Assets\Tiles\4.png" />
+    <Image Include="Src\Assets\Tiles\5.png" />
+    <Image Include="Src\Assets\Tiles\6.png" />
+    <Image Include="Src\Assets\Tiles\7.png" />
+    <Image Include="Src\Assets\Tiles\8.png" />
+    <Image Include="Src\Assets\Tiles\9.png" />
+    <Image Include="Src\Assets\Tiles\landscape.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Src\Assets\Tiles\tiles.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

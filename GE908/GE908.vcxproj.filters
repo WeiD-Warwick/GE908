@@ -27,6 +27,9 @@
     <ClCompile Include="Src\Foundation\GELog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Assets\GEResource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ThirdParty\GamesEngineeringBase.h">
@@ -47,5 +50,94 @@
     <ClInclude Include="Src\Foundation\GESTL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Assets\GEResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Src\Assets\Fonts\SystemFont.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Fonts\nullptr.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\5.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\6.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\7.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\8.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\9.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\10.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\11.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\12.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\13.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\14.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\15.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\16.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\17.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\18.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\19.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\20.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\21.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\22.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\23.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Tiles\landscape.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Src\Assets\Tiles\tiles.txt" />
   </ItemGroup>
 </Project>
