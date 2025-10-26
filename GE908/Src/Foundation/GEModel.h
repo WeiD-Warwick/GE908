@@ -3,12 +3,6 @@
 //
 
 #pragma once
-//
-// Created by W.D. on 20/10/25
-//
-
-#pragma once
-
 struct GEColor {
 public:
 	unsigned char r;

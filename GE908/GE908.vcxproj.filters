@@ -24,9 +24,6 @@
     <ClCompile Include="Src\Core\Camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Maps\Fixed\FixMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Foundation\GEWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,6 +31,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Foundation\GELog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Foundation\GEView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\GESaveData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,13 +62,13 @@
     <ClInclude Include="Src\Core\Camera\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Maps\Fixed\FixMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Core\Maps\MapManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Foundation\GEFont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Foundation\GEView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\GESaveData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

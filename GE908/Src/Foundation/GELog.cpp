@@ -1,3 +1,7 @@
+//
+// Created by W.D. on 18/10/25
+//
+
 #include "GELog.h"
 
 void GELog::info(const std::string& content) {

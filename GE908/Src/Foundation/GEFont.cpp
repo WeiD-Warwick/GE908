@@ -1,3 +1,7 @@
+//
+// Created by W.D. on 22/10/25
+//
+
 #include "GEFont.h"
 
 Image* GEFont::fontChar[95] = { nullptr };

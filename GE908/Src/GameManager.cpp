@@ -21,6 +21,9 @@ void GameManager::loadComponent() {
 	// load font
 	_font.loadFont();
 
+	// load maps
+
+
 	// load sounds
 
 	
