@@ -42,6 +42,9 @@
     <ClCompile Include="Src\Core\GESaveData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ThirdParty\GamesEngineeringBase.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Core\GESaveData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\Maps\GEMapsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -143,9 +149,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Src\Assets\Tiles\23.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\landscape.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Src\Assets\Fonts\32.png">
@@ -433,8 +436,11 @@
     <Image Include="Src\Assets\Fonts\126.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Src\SaveGames\landscape.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Src\Assets\Tiles\tiles.txt" />
+    <Text Include="Src\SaveGames\tiles.txt" />
   </ItemGroup>
 </Project>

@@ -5,15 +5,16 @@
 #pragma once
 #include "Foundation/GEWindow.h"
 #include "Foundation/GEFont.h"
+#include "Core/Maps/GEMapsManager.h"
 
 using namespace GamesEngineeringBase;
 
 class GameManager {
 
 private:
-	// window
 	GEWindow _window;
 	GEFont _font;
+	GEMapsManager _mapManager;
 	bool _isRunning;
 
 public:

@@ -22,12 +22,11 @@ void GameManager::loadComponent() {
 	_font.loadFont();
 
 	// load maps
-
+	_mapManager.loadTileResources("Src/Assets/Tiles/");
+	_mapManager.loadSaveData("Src/SaveGames/tiles.txt");
 
 	// load sounds
-
 	
-
 	// load characters
 }
 
@@ -46,7 +45,6 @@ void GameManager::update(float deltaTime) {
 }
 
 void GameManager::render() {
-
 	_window.render();
 }
 

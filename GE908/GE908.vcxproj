@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp" />
     <ClCompile Include="Src\Core\GESaveData.cpp" />
     <ClCompile Include="Src\Foundation\GELog.cpp" />
     <ClCompile Include="Src\Foundation\GEView.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Maps\GEMapsManager.h" />
     <ClInclude Include="Src\Core\GESaveData.h" />
     <ClInclude Include="Src\Foundation\GEView.h" />
     <ClInclude Include="Src\Foundation\GEFont.h" />
@@ -264,10 +266,10 @@
     <Image Include="Src\Assets\Tiles\7.png" />
     <Image Include="Src\Assets\Tiles\8.png" />
     <Image Include="Src\Assets\Tiles\9.png" />
-    <Image Include="Src\Assets\Tiles\landscape.png" />
+    <Image Include="Src\SaveGames\landscape.png" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Src\Assets\Tiles\tiles.txt" />
+    <Text Include="Src\SaveGames\tiles.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
