@@ -8,9 +8,11 @@
 
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager() : _window(), _isRunning(false) {}
+GameManager::GameManager() : _window(), _font(), _mapManager(), _isRunning(false) {}
 
-GameManager::~GameManager() {}
+GameManager::~GameManager() {
+	_font.release();
+}
 
 // load Game Resource, like maps, player, enemies
 void GameManager::loadComponent() {
@@ -45,9 +47,11 @@ void GameManager::update(float deltaTime) {
 }
 
 void GameManager::render() {
-	_window.render();
+	_window.drawMap(_mapManager, 0, 0);
+	_window.present();
 }
 
 void GameManager::stop() {
+	_isRunning = false;
 
 }

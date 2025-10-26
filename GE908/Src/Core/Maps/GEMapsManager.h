@@ -4,7 +4,9 @@
 
 #pragma once
 #include "../GESaveData.h"
-#include "../../Foundation/GEWindow.h"
+#include "../../../ThirdParty/GamesEngineeringBase.h"
+
+using namespace GamesEngineeringBase;
 
 class GEMapsManager {
 private:

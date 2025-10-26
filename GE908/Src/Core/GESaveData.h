@@ -31,7 +31,7 @@ public:
 	int getTileHeight() const { return _tileHeight; }
 	int getLayerCount() const { return _layerCount; }
 
-	int getTileID(int layer, int x, int y) const;
+	int getTileID(int layer, int row, int col) const;
 
 };
 

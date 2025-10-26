@@ -155,8 +155,8 @@ bool GESaveData::loadGame(const std::string& filename) {
     return true;
 }
 
-int GESaveData::getTileID(int layer, int x, int y) const {
+int GESaveData::getTileID(int layer, int row, int col) const {
     if (!_layers || layer < 0 || layer >= _layerCount) return 0;
-    if (x < 0 || y < 0 || x >= _mapWidth || y >= _mapHeight) return 0;
-    return _layers[layer][y][x];
+    if (row < 0 || col < 0 || col >= _mapWidth || row >= _mapHeight) return 0;
+    return _layers[layer][row][col];
 }

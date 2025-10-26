@@ -5,20 +5,18 @@
 #pragma once
 #include <string>
 #include "../../ThirdParty/GamesEngineeringBase.h"
-#include "GEModel.h"
+#include "../Core/Maps/GEMapsManager.h"
 #include "GEFont.h"
 #include "GELog.h"
 
 class GEWindow : public GamesEngineeringBase::Window {
-
-private:
-    void drawBGColor();
-
+ 
 public:
-	GEColor backgroundColor = GEColor(0, 0, 0);
 
     GEWindow();
     ~GEWindow();
+
+    void drawBGColor(unsigned char r, unsigned char g, unsigned char b);
 
     void loadWindow();
 
@@ -26,9 +24,10 @@ public:
     void _playLaunchAppAnimation(float duration);
 
 	// Draw Text
-    void drawText(const std::string& text, int startX, int startY, const GEColor& color, int scale);
+    void drawText(const std::string& text, int startX, int startY, const unsigned char* textColor, int scale);
 
-	// render UI in game loops
-    void render();
+    void drawImage(const Image* image, int x, int y);
+
+    void drawMap(GEMapsManager& mapManager, int offsetX, int offsetY);
 };
 

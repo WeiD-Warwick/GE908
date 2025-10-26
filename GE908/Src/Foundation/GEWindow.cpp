@@ -2,13 +2,6 @@
 
 using namespace GamesEngineeringBase;
 
-void GEWindow::drawBGColor() {
-    clear();
-    for (unsigned int i = 0; i < (getWidth() * getHeight()); i++) {
-        draw(i, backgroundColor.r, backgroundColor.g, backgroundColor.b);
-    }
-}
-
 GEWindow::GEWindow() {}
 
 GEWindow::~GEWindow() {}
@@ -16,33 +9,9 @@ GEWindow::~GEWindow() {}
 void GEWindow::loadWindow() {
     GELog::shared().info("Init window.");
     create(1280, 720, "WM908", false);
-    _playLaunchAppAnimation(5.f);
 }
 
-void GEWindow::_playLaunchAppAnimation(float duration) {
-    GELog::shared().info("Begin Play Launch App Animation");
-
-    const GEColor startColor(0, 0, 0);
-    const GEColor endColor(255, 255, 255);
-    const int steps = 100;
-    const float stepTime = duration / steps;
-
-    for (int i = 0; i <= steps; ++i) {
-        float t = static_cast<float>(i) / steps;
-
-        int r = startColor.r + t * (endColor.r - startColor.r);
-        int g = startColor.g + t * (endColor.g - startColor.g);
-        int b = startColor.b + t * (endColor.b - startColor.b);
-
-        backgroundColor = GEColor(r, g, b);
-        drawBGColor();
-        present();
-    }
-
-    GELog::shared().info("End Play Launch App Animation");
-}
-
-void GEWindow::drawText(const std::string& text, int startX, int startY, const GEColor& color, int scale) {
+void GEWindow::drawText(const std::string& text, int startX, int startY, const unsigned char* textColor, int scale) {
     int cursorX = startX;
     int cursorY = startY;
 
@@ -58,8 +27,8 @@ void GEWindow::drawText(const std::string& text, int startX, int startY, const G
         int scaledH = originH * scale;
 
 		// loop through each pixel in the scaled image
-        for (int sy = 0; sy < scaledH; ++sy) {
-            for (int sx = 0; sx < scaledW; ++sx) {
+        for (int sy = 0; sy < scaledH; sy++) {
+            for (int sx = 0; sx < scaledW; sx++) {
                 int srcX = sx / scale; 
                 int srcY = sy / scale;
 
@@ -70,9 +39,9 @@ void GEWindow::drawText(const std::string& text, int startX, int startY, const G
 
 				// tiny non-transparent pixel
                 if (originA != 0) {
-                    unsigned char r = color.r;
-                    unsigned char g = color.g;
-                    unsigned char b = color.b;
+                    unsigned char r = textColor[0];
+                    unsigned char g = textColor[1];
+                    unsigned char b = textColor[2];
                     draw(cursorX + sx, cursorY + sy, r, g, b);
                 }
             }
@@ -83,8 +52,65 @@ void GEWindow::drawText(const std::string& text, int startX, int startY, const G
     }
 }
 
-void GEWindow::render() {
-    drawBGColor();
-    drawText("Welcome To GE908!", 50, 50, GEColor::Red, 2);
-    present();
+void GEWindow::drawImage(const Image* image, int x, int y) {
+    if (!image) {
+        GELog::shared().error("drawImage: Null image pointer");
+        return;
+    }
+
+    for (unsigned int dy = 0; dy < image->height; dy++) {
+        for (unsigned int dx = 0; dx < image->width; dx++) {
+            draw(x + dx, y + dy, image->at(dx, dy));
+        }
+    }
+}
+
+void GEWindow::drawMap(GEMapsManager& mapManager, int offsetX, int offsetY) {
+    const GESaveData* saveData = mapManager.getSaveData();
+    if (!saveData) return;
+
+    int layers = saveData->getLayerCount();
+    int mapWidth = saveData->getMapWidth();
+    int mapHeight = saveData->getMapHeight();
+    int tileWidth = saveData->getTileWidth();
+    int tileHeight = saveData->getTileHeight();
+
+    int winWidth = getWidth();
+    int winHeight = getHeight();
+
+    for (int layer = 0; layer < layers; layer++) {
+        for (int row = 0; row < mapHeight; row++) {
+            for (int col = 0; col < mapWidth; col++) {
+                int tileID = saveData->getTileID(layer, row, col);
+                Image* img = mapManager.getTileImage(tileID);
+                if (!img) continue;
+
+                int originX = col * tileWidth + offsetX;
+                int originY = row * tileHeight + offsetY;
+
+				// if the tile is completely outside the window, skip drawing
+                if (originX + tileWidth < 0 || originX >= winWidth ||
+                    originY + tileHeight < 0 || originY >= winHeight)
+                    continue;
+
+                for (unsigned int dy = 0; dy < img->height; dy++) {
+                    for (unsigned int dx = 0; dx < img->width; dx++) {
+                        int screenX = originX + dx;
+                        int screenY = originY + dy;
+
+						// border check
+                        if (screenX < 0 || screenY < 0 ||
+                            screenX >= winWidth || screenY >= winHeight)
+                            continue;
+
+                        if (img->alphaAt(dx, dy) > 210) {
+                            unsigned char* px = img->at(dx, dy);
+                            if (!px) continue;
+                            draw(screenX, screenY, px);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,4 +1,5 @@
 #include "GEMapsManager.h"
+#include "../../Foundation/GELog.h"
 #define TILESCOUNT 24
 
 GEMapsManager::GEMapsManager() {

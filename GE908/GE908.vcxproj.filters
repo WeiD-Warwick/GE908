@@ -21,16 +21,13 @@
     <ClCompile Include="Src\GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Camera\Camera.cpp">
+    <ClCompile Include="Src\Core\Camera\GECamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEFont.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Foundation\GEModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GELog.cpp">
@@ -53,16 +50,13 @@
     <ClInclude Include="Src\GameManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Foundation\GEModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Foundation\GEWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Foundation\GELog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Camera\Camera.h">
+    <ClInclude Include="Src\Core\Camera\GECamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Foundation\GEFont.h">
