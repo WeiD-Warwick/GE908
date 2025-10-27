@@ -8,6 +8,7 @@
 #include "Core/Maps/GEMapsManager.h"
 #include "Core/Character/Player/GEPlayer.h"
 #include "Core/Camera/GECamera.h"
+#include "Foundation/GEFPSCounter.cpp"
 
 using namespace GamesEngineeringBase;
 
@@ -19,6 +20,7 @@ private:
 	GEMapsManager _mapManager;
 	GEPlayer _player;
 	GECamera _camera;
+	GEFpsCounter _fpsCounter;
 
 	bool _isRunning;
 

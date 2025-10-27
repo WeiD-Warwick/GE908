@@ -74,10 +74,13 @@ void GameManager::update(float deltaTime) {
 
 	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight);
 	_camera.followPlayer(_player.getX(), _player.getY(), _player.getWidth(), _player.getHeight());
+	_fpsCounter.frameRendered();
 }
 
 void GameManager::render() {
 	_window.drawMap(_mapManager, _camera);
+	const unsigned char fpsColor[3] = { 255, 0, 0 };
+	_window.drawText("FPS:" + std::to_string(static_cast<int>(_fpsCounter.getFps())), 1000, 700, fpsColor, 1);
 	_window.drawPlayer(_player, _camera);
 	_window.present();
 }

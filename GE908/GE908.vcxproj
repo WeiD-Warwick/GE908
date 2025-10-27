@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="Src\Core\Character\Player\GEPlayer.cpp" />
     <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp" />
+    <ClCompile Include="Src\Foundation\GEFPSCounter.cpp" />
     <ClCompile Include="Src\Foundation\GESaveData.cpp" />
     <ClCompile Include="Src\Foundation\GELog.cpp" />
     <ClCompile Include="Src\Core\Camera\GECamera.cpp" />
