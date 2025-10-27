@@ -134,3 +134,7 @@ void GEWindow::drawPlayer(const GEPlayer& player, const GECamera& camera) {
         }
     }
 }
+
+void GEWindow::drawUI(const GEButton* buttons) {
+
+}

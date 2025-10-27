@@ -10,6 +10,7 @@
 #include "../Core/Character/Player/GEPlayer.h"
 #include "GEFont.h"
 #include "GELog.h"
+#include "GEButton.h"
 
 class GEWindow : public GamesEngineeringBase::Window {
  
@@ -25,5 +26,7 @@ public:
     void drawMap(GEMapsManager& mapManager, const GECamera& camera);
 
     void drawPlayer(const GEPlayer& player, const GECamera& camera);
+
+    void drawUI(const GEButton* buttons);
 };
 
