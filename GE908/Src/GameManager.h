@@ -6,6 +6,8 @@
 #include "Foundation/GEWindow.h"
 #include "Foundation/GEFont.h"
 #include "Core/Maps/GEMapsManager.h"
+#include "Core/Character/Player/GEPlayer.h"
+#include "Core/Camera/GECamera.h"
 
 using namespace GamesEngineeringBase;
 
@@ -15,6 +17,9 @@ private:
 	GEWindow _window;
 	GEFont _font;
 	GEMapsManager _mapManager;
+	GEPlayer _player;
+	GECamera _camera;
+
 	bool _isRunning;
 
 public:

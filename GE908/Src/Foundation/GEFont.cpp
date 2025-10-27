@@ -7,7 +7,7 @@
 Image* GEFont::fontChar[95] = { nullptr };
 bool GEFont::isLoaded = false;
 
-bool GEFont::loadFont() {
+bool GEFont::load() {
     for (int i = 0; i < 95; ++i) {
         std::string filename = "Src/Assets/Fonts/" + std::to_string(i + 32) + ".png";
 

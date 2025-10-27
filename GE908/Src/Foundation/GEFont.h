@@ -17,7 +17,7 @@ private:
 public:
 
 	// load font characters from folder
-    static bool loadFont(); 
+    static bool load(); 
 
 	// get character image by char
     static Image* getChar(char c);

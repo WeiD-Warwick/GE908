@@ -1,14 +1,16 @@
-//
+﻿//
 // Created by W.D. on 18/10/25
 //
 
 #include <string>
 #include "GameManager.h"
 #include "Foundation/GELog.h"
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager() : _window(), _font(), _mapManager(), _isRunning(false) {}
+GameManager::GameManager() : _window(), _font(), _mapManager(), _player(), _camera(WINDOW_WIDTH, WINDOW_HEIGHT), _isRunning(false) {}
 
 GameManager::~GameManager() {
 	_font.release();
@@ -18,18 +20,28 @@ GameManager::~GameManager() {
 void GameManager::loadComponent() {
 
 	// load window
-	_window.loadWindow();
+	_window.load(WINDOW_WIDTH, WINDOW_HEIGHT, "WM908", false);
 
 	// load font
-	_font.loadFont();
+	_font.load();
 
 	// load maps
-	_mapManager.loadTileResources("Src/Assets/Tiles/");
-	_mapManager.loadSaveData("Src/SaveGames/tiles.txt");
+	_mapManager.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
 
-	// load sounds
-	
 	// load characters
+	_player.load("Src/Assets/Textures/player.png");
+	const GESaveData* mapData = _mapManager.getSaveData();
+	if (mapData) {
+		int mapWorldWidth = mapData->getMapWidth() * mapData->getTileWidth();
+		int mapWorldHeight = mapData->getMapHeight() * mapData->getTileHeight();
+
+		int playerStartX = static_cast<int>((mapWorldWidth / 2.0f) - (_player.getWidth() / 2.0f));
+		int playerStartY = static_cast<int>((mapWorldHeight / 2.0f) - (_player.getHeight() / 2.0f));
+		_player.setPosition(playerStartX, playerStartY);
+	}
+	else {
+		GELog::shared().warning("Map data not loaded, player starts at (0,0)");
+	}
 }
 
 void GameManager::run() {
@@ -44,10 +56,28 @@ void GameManager::run() {
 
 void GameManager::update(float deltaTime) {
 	_window.checkInput();
+
+	bool moveUp = _window.keyPressed('W');
+	bool moveDown = _window.keyPressed('S');
+	bool moveLeft = _window.keyPressed('A');
+	bool moveRight = _window.keyPressed('D');
+	bool pause = _window.keyPressed(VK_ESCAPE);
+
+	if (pause) stop();
+
+	unsigned char textColor[3] = { 255, 255, 255 };
+	if (moveUp) _window.drawText("moveUp", 50, 50, textColor, 2);
+
+	// 更新玩家位置
+	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight);
+
+	// 相机跟随玩家
+	_camera.followPlayer(_player);
 }
 
 void GameManager::render() {
 	_window.drawMap(_mapManager, 0, 0);
+	_player.render(_window, _camera.getOffsetX(), _camera.getOffsetY());
 	_window.present();
 }
 

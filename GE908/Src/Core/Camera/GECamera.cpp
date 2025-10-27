@@ -4,3 +4,16 @@
 
 #include "GECamera.h"
 
+GECamera::GECamera(int screenW, int screenH)
+	: _offsetX(0), _offsetY(0), _screenW(screenW), _screenH(screenH) {
+}
+
+GECamera::~GECamera() {}
+
+
+// calculate left top world coordinates
+// make the character in the center of the screen
+void GECamera::followPlayer(GEPlayer& player) {
+	_offsetX = player.getX() - (_screenW / 2) + (player.getWidth() / 2);
+	_offsetY = player.getY() - (_screenH / 2) + (player.getHeight() / 2);
+}

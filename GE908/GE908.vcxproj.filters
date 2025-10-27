@@ -33,13 +33,13 @@
     <ClCompile Include="Src\Foundation\GELog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Foundation\GEView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Core\GESaveData.cpp">
+    <ClCompile Include="Src\Foundation\GESaveData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Character\Player\GEPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,89 +62,17 @@
     <ClInclude Include="Src\Foundation\GEFont.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Foundation\GEView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Core\GESaveData.h">
+    <ClInclude Include="Src\Foundation\GESaveData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Core\Maps\GEMapsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Core\Character\Player\GEPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Src\Assets\Tiles\0.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\1.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\2.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\3.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\4.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\5.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\6.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\7.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\8.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\9.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\10.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\11.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\12.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\13.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\14.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\15.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\16.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\17.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\18.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\19.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\20.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\21.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\22.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\Assets\Tiles\23.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Src\Assets\Fonts\32.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -431,6 +359,81 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Src\SaveGames\landscape.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\5.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\6.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\7.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\8.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\9.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\10.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\11.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\12.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\13.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\14.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\15.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\16.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\17.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\18.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\19.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\20.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\21.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\22.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\23.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Textures\player.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

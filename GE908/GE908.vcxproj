@@ -123,10 +123,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\Character\Player\GEPlayer.cpp" />
     <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp" />
-    <ClCompile Include="Src\Core\GESaveData.cpp" />
+    <ClCompile Include="Src\Foundation\GESaveData.cpp" />
     <ClCompile Include="Src\Foundation\GELog.cpp" />
-    <ClCompile Include="Src\Foundation\GEView.cpp" />
     <ClCompile Include="Src\Core\Camera\GECamera.cpp" />
     <ClCompile Include="Src\Foundation\GEFont.cpp" />
     <ClCompile Include="Src\Foundation\GEWindow.cpp" />
@@ -134,9 +134,9 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Character\Player\GEPlayer.h" />
     <ClInclude Include="Src\Core\Maps\GEMapsManager.h" />
-    <ClInclude Include="Src\Core\GESaveData.h" />
-    <ClInclude Include="Src\Foundation\GEView.h" />
+    <ClInclude Include="Src\Foundation\GESaveData.h" />
     <ClInclude Include="Src\Foundation\GEFont.h" />
     <ClInclude Include="Src\Core\Camera\GECamera.h" />
     <ClInclude Include="Src\Foundation\GELog.h" />
@@ -240,30 +240,31 @@
     <Image Include="Src\Assets\Fonts\97.png" />
     <Image Include="Src\Assets\Fonts\98.png" />
     <Image Include="Src\Assets\Fonts\99.png" />
-    <Image Include="Src\Assets\Tiles\0.png" />
-    <Image Include="Src\Assets\Tiles\1.png" />
-    <Image Include="Src\Assets\Tiles\10.png" />
-    <Image Include="Src\Assets\Tiles\11.png" />
-    <Image Include="Src\Assets\Tiles\12.png" />
-    <Image Include="Src\Assets\Tiles\13.png" />
-    <Image Include="Src\Assets\Tiles\14.png" />
-    <Image Include="Src\Assets\Tiles\15.png" />
-    <Image Include="Src\Assets\Tiles\16.png" />
-    <Image Include="Src\Assets\Tiles\17.png" />
-    <Image Include="Src\Assets\Tiles\18.png" />
-    <Image Include="Src\Assets\Tiles\19.png" />
-    <Image Include="Src\Assets\Tiles\2.png" />
-    <Image Include="Src\Assets\Tiles\20.png" />
-    <Image Include="Src\Assets\Tiles\21.png" />
-    <Image Include="Src\Assets\Tiles\22.png" />
-    <Image Include="Src\Assets\Tiles\23.png" />
-    <Image Include="Src\Assets\Tiles\3.png" />
-    <Image Include="Src\Assets\Tiles\4.png" />
-    <Image Include="Src\Assets\Tiles\5.png" />
-    <Image Include="Src\Assets\Tiles\6.png" />
-    <Image Include="Src\Assets\Tiles\7.png" />
-    <Image Include="Src\Assets\Tiles\8.png" />
-    <Image Include="Src\Assets\Tiles\9.png" />
+    <Image Include="Src\Assets\MapTiles\0.png" />
+    <Image Include="Src\Assets\MapTiles\1.png" />
+    <Image Include="Src\Assets\MapTiles\10.png" />
+    <Image Include="Src\Assets\MapTiles\11.png" />
+    <Image Include="Src\Assets\MapTiles\12.png" />
+    <Image Include="Src\Assets\MapTiles\13.png" />
+    <Image Include="Src\Assets\MapTiles\14.png" />
+    <Image Include="Src\Assets\MapTiles\15.png" />
+    <Image Include="Src\Assets\MapTiles\16.png" />
+    <Image Include="Src\Assets\MapTiles\17.png" />
+    <Image Include="Src\Assets\MapTiles\18.png" />
+    <Image Include="Src\Assets\MapTiles\19.png" />
+    <Image Include="Src\Assets\MapTiles\2.png" />
+    <Image Include="Src\Assets\MapTiles\20.png" />
+    <Image Include="Src\Assets\MapTiles\21.png" />
+    <Image Include="Src\Assets\MapTiles\22.png" />
+    <Image Include="Src\Assets\MapTiles\23.png" />
+    <Image Include="Src\Assets\MapTiles\3.png" />
+    <Image Include="Src\Assets\MapTiles\4.png" />
+    <Image Include="Src\Assets\MapTiles\5.png" />
+    <Image Include="Src\Assets\MapTiles\6.png" />
+    <Image Include="Src\Assets\MapTiles\7.png" />
+    <Image Include="Src\Assets\MapTiles\8.png" />
+    <Image Include="Src\Assets\MapTiles\9.png" />
+    <Image Include="Src\Assets\Textures\player.png" />
     <Image Include="Src\SaveGames\landscape.png" />
   </ItemGroup>
   <ItemGroup>

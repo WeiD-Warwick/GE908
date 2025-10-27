@@ -14,7 +14,13 @@ GEMapsManager::~GEMapsManager() {
 	}
 }
 
-bool GEMapsManager::loadTileResources(const std::string& folderPath) {
+void GEMapsManager::load(const std::string& tilesFolderPath, const std::string& saveDatafilePath)
+{
+	loadTileResources(tilesFolderPath);
+	loadSaveData(saveDatafilePath);
+}
+
+void GEMapsManager::loadTileResources(const std::string& folderPath) {
 	_tileImages = new Image * [TILESCOUNT];
 
 	for (int i = 0; i <= 23; i++) {
@@ -22,12 +28,10 @@ bool GEMapsManager::loadTileResources(const std::string& folderPath) {
 		std::string filePath = folderPath + std::to_string(i) + ".png";
 		if (!_tileImages[i]->load(filePath)) {
 			GELog::shared().error("Load tile: " + std::to_string(i) + " failed.");
-			return false;
 		}
 	}
 
 	GELog::shared().info("Load tiles success.");
-	return true;
 }
 
 void GEMapsManager::loadSaveData(const std::string& filePath) {

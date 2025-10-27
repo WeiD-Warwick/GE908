@@ -16,12 +16,7 @@ public:
     GEWindow();
     ~GEWindow();
 
-    void drawBGColor(unsigned char r, unsigned char g, unsigned char b);
-
-    void loadWindow();
-
-	// When App Start, play launch app animation
-    void _playLaunchAppAnimation(float duration);
+    void load(int width, int height, const std::string& title, bool isFullstreen);
 
 	// Draw Text
     void drawText(const std::string& text, int startX, int startY, const unsigned char* textColor, int scale);

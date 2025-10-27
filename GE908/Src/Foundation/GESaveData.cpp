@@ -1,12 +1,14 @@
 ﻿//
 // Created by W.D. on 26/10/25
 //
+
 #include "GESaveData.h"
-#include "../Foundation/GELog.h"
+#include "GELog.h"
 #include <fstream>
 #include <sstream>
 
 bool GESaveData::_allocateLayers(int layerCount) {
+
     if (_mapWidth <= 0 || _mapHeight <= 0 || layerCount <= 0) return false;
 
     _layers = new int** [layerCount];

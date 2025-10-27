@@ -6,9 +6,9 @@ GEWindow::GEWindow() {}
 
 GEWindow::~GEWindow() {}
 
-void GEWindow::loadWindow() {
+void GEWindow::load(int width, int height, const std::string& title, bool isFullstreen) {
     GELog::shared().info("Init window.");
-    create(1280, 720, "WM908", false);
+    create(width, height, title, isFullstreen);
 }
 
 void GEWindow::drawText(const std::string& text, int startX, int startY, const unsigned char* textColor, int scale) {
@@ -60,7 +60,9 @@ void GEWindow::drawImage(const Image* image, int x, int y) {
 
     for (unsigned int dy = 0; dy < image->height; dy++) {
         for (unsigned int dx = 0; dx < image->width; dx++) {
-            draw(x + dx, y + dy, image->at(dx, dy));
+            if (image->alphaAt(dx, dy) > 210) {
+                draw(x + dx, y + dy, image->at(dx, dy));
+            }
         }
     }
 }
