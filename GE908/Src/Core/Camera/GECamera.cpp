@@ -3,6 +3,7 @@
 //
 
 #include "GECamera.h"
+#include "../Character/Player/GEPlayer.h"
 
 GECamera::GECamera(int screenW, int screenH)
 	: _offsetX(0), _offsetY(0), _screenW(screenW), _screenH(screenH) {

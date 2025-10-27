@@ -1,4 +1,5 @@
 ﻿#include "GEWindow.h"
+#include "../Core/Camera/GECamera.h"
 
 using namespace GamesEngineeringBase;
 
@@ -52,22 +53,7 @@ void GEWindow::drawText(const std::string& text, int startX, int startY, const u
     }
 }
 
-void GEWindow::drawImage(const Image* image, int x, int y) {
-    if (!image) {
-        GELog::shared().error("drawImage: Null image pointer");
-        return;
-    }
-
-    for (unsigned int dy = 0; dy < image->height; dy++) {
-        for (unsigned int dx = 0; dx < image->width; dx++) {
-            if (image->alphaAt(dx, dy) > 210) {
-                draw(x + dx, y + dy, image->at(dx, dy));
-            }
-        }
-    }
-}
-
-void GEWindow::drawMap(GEMapsManager& mapManager, int offsetX, int offsetY) {
+void GEWindow::drawMap(GEMapsManager& mapManager, const GECamera& camera) {
     const GESaveData* saveData = mapManager.getSaveData();
     if (!saveData) return;
 
@@ -87,8 +73,8 @@ void GEWindow::drawMap(GEMapsManager& mapManager, int offsetX, int offsetY) {
                 Image* img = mapManager.getTileImage(tileID);
                 if (!img) continue;
 
-                int originX = col * tileWidth + offsetX;
-                int originY = row * tileHeight + offsetY;
+                int originX = col * tileWidth + camera.getOffsetX();
+                int originY = row * tileHeight + camera.getOffsetY();
 
 				// if the tile is completely outside the window, skip drawing
                 if (originX + tileWidth < 0 || originX >= winWidth ||
@@ -112,6 +98,38 @@ void GEWindow::drawMap(GEMapsManager& mapManager, int offsetX, int offsetY) {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+void GEWindow::drawPlayer(const GEPlayer& player, const GECamera& camera) {
+    const Image* characterImage = player.getCharacterImage();
+    if (!characterImage) {
+        GELog::shared().error("Player image is null, cannot render");
+        return;
+    }
+
+    const unsigned char* pixelData = characterImage->data;
+    int imageWidth = characterImage->width;
+    int imageHeight = characterImage->height;
+    int playerX = player.getX();
+    int playerY = player.getY();
+
+    for (int y = 0; y < imageHeight; ++y) {
+        for (int x = 0; x < imageWidth; ++x) {
+            int pixelIndex = (y * imageWidth + x) * 4;
+            unsigned char a = pixelData[pixelIndex + 3];
+
+            if (a > 0) {
+                int worldX = playerX + x;
+                int worldY = playerY + y;
+                int screenX = camera.worldToScreenX(worldX);
+                int screenY = camera.worldToScreenY(worldY);
+                draw(screenX, screenY,
+                    pixelData[pixelIndex],
+                    pixelData[pixelIndex + 1],
+                    pixelData[pixelIndex + 2]);
             }
         }
     }

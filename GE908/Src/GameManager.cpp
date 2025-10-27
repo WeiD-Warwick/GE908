@@ -65,9 +65,6 @@ void GameManager::update(float deltaTime) {
 
 	if (pause) stop();
 
-	unsigned char textColor[3] = { 255, 255, 255 };
-	if (moveUp) _window.drawText("moveUp", 50, 50, textColor, 2);
-
 	// 更新玩家位置
 	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight);
 
@@ -76,8 +73,8 @@ void GameManager::update(float deltaTime) {
 }
 
 void GameManager::render() {
-	_window.drawMap(_mapManager, 0, 0);
-	_player.render(_window, _camera.getOffsetX(), _camera.getOffsetY());
+	_window.drawMap(_mapManager, _camera);
+	_window.drawPlayer(_player, _camera);
 	_window.present();
 }
 

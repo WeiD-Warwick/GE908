@@ -3,7 +3,8 @@
 //
 
 #pragma once
-#include "../Character/Player/GEPlayer.h"
+
+class GEPlayer;
 
 class GECamera {
 private:

@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
-#include "../../../Foundation/GEWindow.h"
+#include "../../../../ThirdParty/GamesEngineeringBase.h"
 
-class GEPlayer{
+using namespace GamesEngineeringBase;
+
+class GEPlayer {
 
 protected:
 	int _x = 0;					// position x
@@ -11,7 +13,7 @@ protected:
 	int _width = 0;				// character width
 	int _height = 0;			// character height
 
-	int _speed = 1000;				// movement speed
+	int _speed = 200;				// movement speed
 
 	int _hp = 0;					// hp
 	int _mp = 0;					// mp
@@ -20,15 +22,13 @@ protected:
 
 	Image* _characterImage = nullptr;		// character image
 
-
 public:
 	GEPlayer();
+	~GEPlayer();
 
 	void load(const std::string& characterImagePath);
 
 	void update(float deltaTime, bool moveUp, bool moveDown, bool moveLeft, bool moveRight);
-
-	void render(GEWindow& window, int cameraOffsetX, int cameraOffsetY) const;
 
 	int getX() const { return _x; }
 	int getY() const { return _y; }

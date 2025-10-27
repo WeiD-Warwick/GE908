@@ -6,6 +6,8 @@
 #include <string>
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Core/Maps/GEMapsManager.h"
+#include "../Core/Camera/GECamera.h"
+#include "../Core/Character/Player/GEPlayer.h"
 #include "GEFont.h"
 #include "GELog.h"
 
@@ -18,11 +20,10 @@ public:
 
     void load(int width, int height, const std::string& title, bool isFullstreen);
 
-	// Draw Text
     void drawText(const std::string& text, int startX, int startY, const unsigned char* textColor, int scale);
 
-    void drawImage(const Image* image, int x, int y);
+    void drawMap(GEMapsManager& mapManager, const GECamera& camera);
 
-    void drawMap(GEMapsManager& mapManager, int offsetX, int offsetY);
+    void drawPlayer(const GEPlayer& player, const GECamera& camera);
 };
 
