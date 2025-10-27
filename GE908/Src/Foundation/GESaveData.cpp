@@ -9,22 +9,22 @@
 
 bool GESaveData::_allocateLayers(int layerCount) {
 
-    if (_mapWidth <= 0 || _mapHeight <= 0 || layerCount <= 0) return false;
+    if (_mapColCount <= 0 || _mapRowCount <= 0 || layerCount <= 0) return false;
 
     _layers = new int** [layerCount];
     for (int layer = 0; layer < layerCount; ++layer) {
-        _layers[layer] = new int* [_mapHeight];
-        for (int y = 0; y < _mapHeight; ++y) {
-            _layers[layer][y] = new int[_mapWidth];
-            for (int x = 0; x < _mapWidth; ++x)
+        _layers[layer] = new int* [_mapRowCount];
+        for (int y = 0; y < _mapRowCount; ++y) {
+            _layers[layer][y] = new int[_mapColCount];
+            for (int x = 0; x < _mapColCount; ++x)
                 _layers[layer][y][x] = 0;
         }
     }
 
     _layerCount = layerCount;
     GELog::shared().info("Allocated new mapLayers: " + std::to_string(_layerCount)
-                        + ", width: " + std::to_string(_mapWidth) 
-                        + ", height: " + std::to_string(_mapHeight));
+                        + ", width: " + std::to_string(_mapColCount) 
+                        + ", height: " + std::to_string(_mapRowCount));
 
     return true;
 }
@@ -33,7 +33,7 @@ void GESaveData::_releaseLayers() {
     if (!_layers) return;
 
     for (int layer = 0; layer < _layerCount; ++layer) {
-        for (int y = 0; y < _mapHeight; ++y)
+        for (int y = 0; y < _mapRowCount; ++y)
             delete[] _layers[layer][y];
         delete[] _layers[layer];
     }
@@ -54,8 +54,8 @@ bool GESaveData::_parseKeywordLine(const std::string& line) {
 
 	if (!(iss >> key >> value)) return false;
 
-	if (key == "tileswide") _mapWidth = value;
-	else if (key == "tileshigh") _mapHeight = value;
+	if (key == "tileswide") _mapColCount = value;
+	else if (key == "tileshigh") _mapRowCount = value;
 	else if (key == "tilewidth") _tileWidth = value;
 	else if (key == "tileheight") _tileHeight = value;
 	return true;
@@ -115,10 +115,10 @@ bool GESaveData::loadGame(const std::string& filename) {
                 int*** newLayers = new int** [currentLayer + 1];
                 for (int l = 0; l < oldCount; ++l) newLayers[l] = _layers[l];
                 for (int l = oldCount; l <= currentLayer; ++l) {
-                    newLayers[l] = new int* [_mapHeight];
-                    for (int y = 0; y < _mapHeight; ++y) {
-                        newLayers[l][y] = new int[_mapWidth];
-                        for (int x = 0; x < _mapWidth; ++x)
+                    newLayers[l] = new int* [_mapRowCount];
+                    for (int y = 0; y < _mapRowCount; ++y) {
+                        newLayers[l][y] = new int[_mapColCount];
+                        for (int x = 0; x < _mapColCount; ++x)
                             newLayers[l][y][x] = 0;
                     }
                 }
@@ -135,23 +135,15 @@ bool GESaveData::loadGame(const std::string& filename) {
             std::string cell;
             int x = 0;
 
-            while (std::getline(ss, cell, ',') && x < _mapWidth) {
+            while (std::getline(ss, cell, ',') && x < _mapColCount) {
                 _layers[currentLayer][currentRow][x] = std::stoi(cell);
                 ++x;
             }
 
             currentRow++;
-            if (currentRow >= _mapHeight) startReadingLayer = false;
+            if (currentRow >= _mapRowCount) startReadingLayer = false;
         }
     }
-
-    //for (int l = 0; l < _layerCount; l++) {
-    //    for (int y = 0; y < _mapHeight; y++) {
-    //        for (int x = 0; x < _mapWidth; x++) {
-    //            std::cout << _layers[l][y][x] << std::endl;
-    //        }
-    //    }
-    //}
 
     file.close();
     return true;
@@ -159,6 +151,6 @@ bool GESaveData::loadGame(const std::string& filename) {
 
 int GESaveData::getTileID(int layer, int row, int col) const {
     if (!_layers || layer < 0 || layer >= _layerCount) return 0;
-    if (row < 0 || col < 0 || col >= _mapWidth || row >= _mapHeight) return 0;
+    if (row < 0 || col < 0 || col >= _mapColCount || row >= _mapRowCount) return 0;
     return _layers[layer][row][col];
 }

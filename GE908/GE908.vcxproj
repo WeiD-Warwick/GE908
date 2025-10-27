@@ -123,7 +123,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Foundation\GEButton.cpp" />
     <ClCompile Include="Src\Core\Character\Player\GEPlayer.cpp" />
     <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp" />
     <ClCompile Include="Src\Foundation\GESaveData.cpp" />
@@ -135,7 +134,6 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Foundation\GEButton.h" />
     <ClInclude Include="Src\Core\Character\BaseCharacter.h" />
     <ClInclude Include="Src\Core\Character\Player\GEPlayer.h" />
     <ClInclude Include="Src\Core\Maps\GEMapsManager.h" />

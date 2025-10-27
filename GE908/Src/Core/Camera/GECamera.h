@@ -11,8 +11,8 @@ private:
 	int _screenW = 0;            // world coordinate x of the top-left corner of the camera view
 	int _screenH = 0;            // world coordinate y of the top-left corner of the camera view
 
-	int _mapWidth = 0;
-	int _mapHeight = 0;
+	int _mapColCount = 0;
+	int _mapRowCount = 0;
 
 public:
 

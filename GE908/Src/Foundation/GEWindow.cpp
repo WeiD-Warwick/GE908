@@ -58,8 +58,8 @@ void GEWindow::drawMap(GEMapsManager& mapManager, const GECamera& camera) {
     if (!saveData) return;
 
     int layers = saveData->getLayerCount();
-    int mapWidth = saveData->getMapWidth();
-    int mapHeight = saveData->getMapHeight();
+    int mapWidth = saveData->getMapColCount();
+    int mapHeight = saveData->getMapRowCount();
     int tileWidth = saveData->getTileWidth();
     int tileHeight = saveData->getTileHeight();
 
@@ -133,8 +133,4 @@ void GEWindow::drawPlayer(const GEPlayer& player, const GECamera& camera) {
             }
         }
     }
-}
-
-void GEWindow::drawUI(const GEButton* buttons) {
-
 }

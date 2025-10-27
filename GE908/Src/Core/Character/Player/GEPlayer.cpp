@@ -19,8 +19,8 @@ void GEPlayer::update(float deltaTime, bool moveUp, bool moveDown, bool moveLeft
     if (moveRight) _x += moveAmount;
 
 	if (_x < 0) _x = 0;
-	if (_x > (_mapWidth - _width)) _x = (_mapWidth - _width);
+	if (_x > (_mapColCount - _width)) _x = (_mapColCount - _width);
 
 	if (_y < 0) _y = 0;
-	if (_y > (_mapHeight - _height)) _y = (_mapHeight - _height);
+	if (_y > (_mapRowCount - _height)) _y = (_mapRowCount - _height);
 }

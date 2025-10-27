@@ -34,8 +34,8 @@ void GameManager::loadComponent() {
 	// update position
 	const GESaveData* mapData = _mapManager.getSaveData();
 	if (mapData) {
-		int mapWorldWidth = mapData->getMapWidth() * mapData->getTileWidth();
-		int mapWorldHeight = mapData->getMapHeight() * mapData->getTileHeight();
+		int mapWorldWidth = mapData->getMapColCount() * mapData->getTileWidth();
+		int mapWorldHeight = mapData->getMapRowCount() * mapData->getTileHeight();
 
 		// set player in the center of map
 		int playerStartX = static_cast<int>((mapWorldWidth / 2.0f) - (_player.getWidth() / 2.0f));

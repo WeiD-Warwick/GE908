@@ -20,11 +20,11 @@ void GECamera::followPlayer(int playerX, int playerY, int playerWidth, int playe
 	int targetOffsetY = playerY - (_screenH / 2) + (playerHeight / 2);
 
 	// border check, pick valided one
-	_offsetX = std::max(0, std::min(targetOffsetX, _mapWidth - _screenW));
-	_offsetY = std::max(0, std::min(targetOffsetY, _mapHeight - _screenH));
+	_offsetX = std::max(0, std::min(targetOffsetX, _mapColCount - _screenW));
+	_offsetY = std::max(0, std::min(targetOffsetY, _mapRowCount - _screenH));
 }
 
 void GECamera::setMapBounds(int mapWidth, int mapHeight) {
-	_mapWidth = mapWidth;
-	_mapHeight = mapHeight;
+	_mapColCount = mapWidth;
+	_mapRowCount = mapHeight;
 }
