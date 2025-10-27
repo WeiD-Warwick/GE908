@@ -4,8 +4,6 @@
 
 #pragma once
 
-class GEPlayer;
-
 class GECamera {
 private:
 	int _offsetX;                // camera offset X   
@@ -13,12 +11,16 @@ private:
 	int _screenW = 0;            // world coordinate x of the top-left corner of the camera view
 	int _screenH = 0;            // world coordinate y of the top-left corner of the camera view
 
+	int _mapWidth = 0;
+	int _mapHeight = 0;
+
 public:
 
     GECamera(int screenW, int screenH);
 	~GECamera();
 
-    void followPlayer(GEPlayer& player);
+    void followPlayer(int playerX, int playerY, int playerWidth, int playerHeight);
+	void setMapBounds(int mapWidth, int mapHeight);
 
     int worldToScreenX(int worldX) const { return worldX - _offsetX; }
     int worldToScreenY(int worldY) const { return worldY - _offsetY; }

@@ -3,7 +3,7 @@
 //
 
 #include "GECamera.h"
-#include "../Character/Player/GEPlayer.h"
+#include <algorithm>
 
 GECamera::GECamera(int screenW, int screenH)
 	: _offsetX(0), _offsetY(0), _screenW(screenW), _screenH(screenH) {
@@ -14,7 +14,17 @@ GECamera::~GECamera() {}
 
 // calculate left top world coordinates
 // make the character in the center of the screen
-void GECamera::followPlayer(GEPlayer& player) {
-	_offsetX = player.getX() - (_screenW / 2) + (player.getWidth() / 2);
-	_offsetY = player.getY() - (_screenH / 2) + (player.getHeight() / 2);
+void GECamera::followPlayer(int playerX, int playerY, int playerWidth, int playerHeight) {
+
+	int targetOffsetX = playerX - (_screenW / 2) + (playerWidth / 2);
+	int targetOffsetY = playerY - (_screenH / 2) + (playerHeight / 2);
+
+	// border check, pick valided one
+	_offsetX = std::max(0, std::min(targetOffsetX, _mapWidth - _screenW));
+	_offsetY = std::max(0, std::min(targetOffsetY, _mapHeight - _screenH));
+}
+
+void GECamera::setMapBounds(int mapWidth, int mapHeight) {
+	_mapWidth = mapWidth;
+	_mapHeight = mapHeight;
 }

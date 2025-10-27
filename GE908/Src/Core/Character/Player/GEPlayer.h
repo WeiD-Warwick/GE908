@@ -20,6 +20,9 @@ protected:
 
 	bool isAlive = true;				// alive status
 
+	int _mapWidth = 0;
+	int _mapHeight = 0;
+
 	Image* _characterImage = nullptr;		// character image
 
 public:
@@ -40,6 +43,7 @@ public:
 	int getMP() const { return _mp; }
 
 	void setPosition(int x, int y) { _x = x; _y = y; }
+	void setMapBounds(int mapWidth, int mapHeight);
 
 	Image* getCharacterImage() const { return _characterImage; }
 };

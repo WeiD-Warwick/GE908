@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "GEPlayer.h"
 #include "../../../Foundation/GELog.h"
 #include "../../../../ThirdParty/GamesEngineeringBase.h"
@@ -24,18 +25,21 @@ void GEPlayer::load(const std::string& characterImagePath) {
 
 void GEPlayer::update(float deltaTime, bool moveUp, bool moveDown, bool moveLeft, bool moveRight) {
     float moveDelta = _speed * deltaTime;
-    unsigned int moveAmount = static_cast<unsigned int>(max(moveDelta, 1.0f)); 
+    unsigned int moveAmount = static_cast<unsigned int>(max(moveDelta, 1.0f));
 
-	if (moveUp) {
-		_y -= moveAmount;
-	}
-	if (moveDown) {
-		_y += moveAmount;
-	}
-	if (moveLeft) {
-		_x -= moveAmount;
-	}
-	if (moveRight) {
-		_x += moveAmount;
-	}
+    if (moveUp) _y -= moveAmount;
+    if (moveDown) _y += moveAmount;
+    if (moveLeft) _x -= moveAmount;
+    if (moveRight) _x += moveAmount;
+
+	if (_x < 0) _x = 0;
+	if (_x > (_mapWidth - _width)) _x = (_mapWidth - _width);
+
+	if (_y < 0) _y = 0;
+	if (_y > (_mapHeight - _height)) _y = (_mapHeight - _height);
+}
+
+void GEPlayer::setMapBounds(int mapWidth, int mapHeight) {
+	_mapWidth = mapWidth;
+	_mapHeight = mapHeight;
 }

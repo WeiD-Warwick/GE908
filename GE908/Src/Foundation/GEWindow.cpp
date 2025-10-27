@@ -73,8 +73,8 @@ void GEWindow::drawMap(GEMapsManager& mapManager, const GECamera& camera) {
                 Image* img = mapManager.getTileImage(tileID);
                 if (!img) continue;
 
-                int originX = col * tileWidth + camera.getOffsetX();
-                int originY = row * tileHeight + camera.getOffsetY();
+                int originX = col * tileWidth - camera.getOffsetX();
+                int originY = row * tileHeight - camera.getOffsetY();
 
 				// if the tile is completely outside the window, skip drawing
                 if (originX + tileWidth < 0 || originX >= winWidth ||

@@ -30,14 +30,21 @@ void GameManager::loadComponent() {
 
 	// load characters
 	_player.load("Src/Assets/Textures/player.png");
+
+	// update position
 	const GESaveData* mapData = _mapManager.getSaveData();
 	if (mapData) {
 		int mapWorldWidth = mapData->getMapWidth() * mapData->getTileWidth();
 		int mapWorldHeight = mapData->getMapHeight() * mapData->getTileHeight();
 
+		// set player in the center of map
 		int playerStartX = static_cast<int>((mapWorldWidth / 2.0f) - (_player.getWidth() / 2.0f));
 		int playerStartY = static_cast<int>((mapWorldHeight / 2.0f) - (_player.getHeight() / 2.0f));
 		_player.setPosition(playerStartX, playerStartY);
+		_player.setMapBounds(mapWorldWidth, mapWorldHeight);
+
+		// set camera border
+		_camera.setMapBounds(mapWorldWidth, mapWorldHeight);
 	}
 	else {
 		GELog::shared().warning("Map data not loaded, player starts at (0,0)");
@@ -65,11 +72,8 @@ void GameManager::update(float deltaTime) {
 
 	if (pause) stop();
 
-	// 更新玩家位置
 	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight);
-
-	// 相机跟随玩家
-	_camera.followPlayer(_player);
+	_camera.followPlayer(_player.getX(), _player.getY(), _player.getWidth(), _player.getHeight());
 }
 
 void GameManager::render() {
