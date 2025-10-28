@@ -11,7 +11,7 @@ protected:
 	int _y = 0;								// position y
 	int _width = 0;							// character width
 	int _height = 0;						// character height
-	int _speed = 200;						// movement speed
+	int _speed = 100;						// movement speed
 	int _hp = 0;							// hp
 	bool isAlive = true;					// alive status
 	int _mapColCount = 0;
