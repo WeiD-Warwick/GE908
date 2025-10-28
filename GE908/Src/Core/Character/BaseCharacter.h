@@ -14,8 +14,8 @@ protected:
 	int _speed = 100;						// movement speed
 	int _hp = 0;							// hp
 	bool isAlive = true;					// alive status
-	int _mapColCount = 0;
-	int _mapRowCount = 0;
+	int _mapWidth = 0;
+	int _mapHeight = 0;
 
 	Image* _characterImage = nullptr;		// character image
 
@@ -48,7 +48,7 @@ public:
 
 	void setPosition(int x, int y) { _x = x; _y = y; }
 	void setSpeed(int speed) { _speed = speed; }
-	void setMapBounds(int mapWidth, int mapHeight) { _mapColCount = mapWidth; _mapRowCount = mapHeight; }
+	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth; _mapHeight = mapHeight; }
 
 	Image* getCharacterImage() const { return _characterImage; }
 };

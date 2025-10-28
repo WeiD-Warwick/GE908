@@ -31,6 +31,6 @@ public:
     Image* getTileImage(int tileID) const;
 
     // get current save data
-    const GESaveData* getSaveData() const { return _saveData; }
+    GESaveData* getSaveData() { return _saveData; }
 };
 

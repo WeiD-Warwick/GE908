@@ -28,20 +28,18 @@ void GameManager::loadComponent() {
 	// load maps
 	_mapManager.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
 
-	// load characters
-	_player.load("Src/Assets/Textures/player.png");
-
 	// update position
-	const GESaveData* mapData = _mapManager.getSaveData();
-	if (mapData) {
-		int mapWorldWidth = mapData->getMapColCount() * mapData->getTileWidth();
-		int mapWorldHeight = mapData->getMapRowCount() * mapData->getTileHeight();
+	GESaveData* saveData = _mapManager.getSaveData();
+	if (saveData) {
+		int mapWorldWidth = saveData->getMapTotalWidth();
+		int mapWorldHeight = saveData->getMapTotalHeight();
 
 		// set player in the center of map
 		int playerStartX = static_cast<int>((mapWorldWidth / 2.0f) - (_player.getWidth() / 2.0f));
 		int playerStartY = static_cast<int>((mapWorldHeight / 2.0f) - (_player.getHeight() / 2.0f));
-		_player.setPosition(playerStartX, playerStartY);
-		_player.setMapBounds(mapWorldWidth, mapWorldHeight);
+		
+		_player.load("Src/Assets/Textures/player.png");
+		_player.loadData(saveData);
 
 		// set camera border
 		_camera.setMapBounds(mapWorldWidth, mapWorldHeight);
@@ -78,6 +76,7 @@ void GameManager::update(float deltaTime) {
 }
 
 void GameManager::render() {
+	_window.clear();
 	_window.drawMap(_mapManager, _camera);
 	const unsigned char fpsColor[3] = { 255, 0, 0 };
 	_window.drawText("FPS:" + std::to_string(static_cast<int>(_fpsCounter.getFps())), 1000, 700, fpsColor, 1);

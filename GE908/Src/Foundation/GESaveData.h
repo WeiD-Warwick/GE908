@@ -14,6 +14,9 @@ private:
 	int _cameraOffsetX = 0;
 	int _cameraOffsetY = 0;
 
+	int _windowWidth = 0;
+	int _windowHeight = 0;
+
 	int*** _layers = nullptr;
 	int _layerCount = 0;
 
@@ -30,8 +33,10 @@ public:
 
 	int getMapColCount() const { return _mapColCount; }
 	int getMapRowCount() const { return _mapRowCount; }
+
 	int getTileWidth() const { return _tileWidth; }
 	int getTileHeight() const { return _tileHeight; }
+
 	int getMapTotalWidth() const { return _mapColCount * _tileWidth; }
 	int getMapTotalHeight() const { return _mapRowCount * _tileHeight; }
 
@@ -39,6 +44,11 @@ public:
 	void setCameraOffsetY(int y) { _cameraOffsetY = y; }
 	int getCameraOffsetX() { return _cameraOffsetX; }
 	int getCameraOffsetY() { return _cameraOffsetY; }
+
+	void setWindowWidth(int width) { _windowWidth = width; }
+	void setWindowHeight(int height) { _windowHeight = height; }
+	int getWindowWidth() { return _windowWidth; }
+	int getWindowHeight() { return _windowHeight;  }
 
 	int getLayerCount() const { return _layerCount; }
 
