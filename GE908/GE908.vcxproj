@@ -123,8 +123,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Core\Character\Player\GEPlayer.cpp" />
+    <ClCompile Include="Src\Core\Character\GEEnemyManager.cpp" />
+    <ClCompile Include="Src\Core\Character\GEEnemy.cpp" />
+    <ClCompile Include="Src\Core\Character\GEPlayer.cpp" />
     <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp" />
+    <ClCompile Include="Src\Foundation\GECollisible.h" />
     <ClCompile Include="Src\Foundation\GEFPSCounter.cpp" />
     <ClCompile Include="Src\Foundation\GESaveData.cpp" />
     <ClCompile Include="Src\Foundation\GELog.cpp" />
@@ -135,8 +138,10 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Character\GEEnemyManager.h" />
+    <ClInclude Include="Src\Core\Character\GEEnemy.h" />
     <ClInclude Include="Src\Core\Character\BaseCharacter.h" />
-    <ClInclude Include="Src\Core\Character\Player\GEPlayer.h" />
+    <ClInclude Include="Src\Core\Character\GEPlayer.h" />
     <ClInclude Include="Src\Core\Maps\GEMapsManager.h" />
     <ClInclude Include="Src\Foundation\GESaveData.h" />
     <ClInclude Include="Src\Foundation\GEFont.h" />

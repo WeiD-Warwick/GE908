@@ -7,8 +7,8 @@ using namespace GamesEngineeringBase;
 class BaseCharacter {
 
 protected:
-	int _x = 0;								// position x
-	int _y = 0;								// position y
+	int _originX = 0;						// position x
+	int _originY = 0;						// position y
 	int _width = 0;							// character width
 	int _height = 0;						// character height
 	int _speed = 100;						// movement speed
@@ -38,15 +38,15 @@ public:
 		}
 	}
 
-	int getX() const { return _x; }
-	int getY() const { return _y; }
+	int getX() const { return _originX; }
+	int getY() const { return _originY; }
 	int getWidth() const { return _width; }
 	int getHeight() const { return _height; }
 	int getSpeed() const { return _speed; }
 	int getHP() const { return _hp; }
 	bool getIsAlive() const { return isAlive; }
 
-	void setPosition(int x, int y) { _x = x; _y = y; }
+	void setPosition(int x, int y) { _originX = x; _originY = y; }
 	void setSpeed(int speed) { _speed = speed; }
 	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth; _mapHeight = mapHeight; }
 

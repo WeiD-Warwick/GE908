@@ -39,10 +39,19 @@
     <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Character\Player\GEPlayer.cpp">
+    <ClCompile Include="Src\Core\Character\GEPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Foundation\GEButton.cpp">
+    <ClCompile Include="Src\Foundation\GEFPSCounter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Character\GEEnemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Character\GEEnemyManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Foundation\GECollisible.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,13 +80,16 @@
     <ClInclude Include="Src\Core\Maps\GEMapsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Character\Player\GEPlayer.h">
+    <ClInclude Include="Src\Core\Character\GEPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Core\Character\BaseCharacter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Foundation\GEButton.h">
+    <ClInclude Include="Src\Core\Character\GEEnemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\Character\GEEnemyManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,7 +7,7 @@
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Core/Maps/GEMapsManager.h"
 #include "../Core/Camera/GECamera.h"
-#include "../Core/Character/Player/GEPlayer.h"
+#include "../Core/Character/GEPlayer.h"
 #include "GEFont.h"
 #include "GELog.h"
 

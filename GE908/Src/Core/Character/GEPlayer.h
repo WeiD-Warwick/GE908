@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "../BaseCharacter.h"
-#include "../../../Foundation/GESaveData.h"
+#include "BaseCharacter.h"
+#include "../../Foundation/GESaveData.h"
 
 class GEPlayer : public BaseCharacter {
 

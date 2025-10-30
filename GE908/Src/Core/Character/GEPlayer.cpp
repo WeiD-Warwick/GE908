@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "GEPlayer.h"
-#include "../../../Foundation/GELog.h"
-#include "../../../../ThirdParty/GamesEngineeringBase.h"
+#include "../../Foundation/GELog.h"
+#include "../../../ThirdParty/GamesEngineeringBase.h"
 
 using namespace GamesEngineeringBase;
 
@@ -27,14 +27,14 @@ void GEPlayer::update(float deltaTime, bool moveUp, bool moveDown, bool moveLeft
     float moveDelta = _speed * deltaTime;
     unsigned int moveAmount = static_cast<unsigned int>(max(moveDelta, 1.0f));
 
-    if (moveUp) _y -= moveAmount;
-    if (moveDown) _y += moveAmount;
-    if (moveLeft) _x -= moveAmount;
-    if (moveRight) _x += moveAmount;
+    if (moveUp) _originY -= moveAmount;
+    if (moveDown) _originY += moveAmount;
+    if (moveLeft) _originX -= moveAmount;
+    if (moveRight) _originX += moveAmount;
 
-	if (_x < 0) _x = 0;
-	if (_x > (_mapWidth - _width)) _x = (_mapWidth - _width);
+	if (_originX < 0) _originX = 0;
+	if (_originX > (_mapWidth - _width)) _originX = (_mapWidth - _width);
 
-	if (_y < 0) _y = 0;
-	if (_y > (_mapHeight - _height)) _y = (_mapHeight - _height);
+	if (_originY < 0) _originY = 0;
+	if (_originY > (_mapHeight - _height)) _originY = (_mapHeight - _height);
 }

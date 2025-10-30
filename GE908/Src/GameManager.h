@@ -6,7 +6,7 @@
 #include "Foundation/GEWindow.h"
 #include "Foundation/GEFont.h"
 #include "Core/Maps/GEMapsManager.h"
-#include "Core/Character/Player/GEPlayer.h"
+#include "Core/Character/GEPlayer.h"
 #include "Core/Camera/GECamera.h"
 #include "Foundation/GEFPSCounter.cpp"
 
