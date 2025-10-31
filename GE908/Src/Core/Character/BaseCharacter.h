@@ -1,40 +1,39 @@
 #pragma once
 #include "../../../ThirdParty/GamesEngineeringBase.h"
+#include "../../Foundation/GECollisible.h"
 #include "../../Foundation/GELog.h"
+#include "../../Foundation/GEWindow.h"
 
 using namespace GamesEngineeringBase;
 
-class BaseCharacter {
+class BaseCharacter : public GECollisible {
 
 protected:
-	int _originX = 0;						// position x
-	int _originY = 0;						// position y
-	int _width = 0;							// character width
-	int _height = 0;						// character height
-	int _speed = 100;						// movement speed
-	int _hp = 0;							// hp
-	bool isAlive = true;					// alive status
+	int _width = 0;
+	int _height = 0;
+	int _speed = 100;
+	int _hp = 0;
+	bool isAlive = true;
 	int _mapWidth = 0;
 	int _mapHeight = 0;
 
-	Image* _characterImage = nullptr;		// character image
-
 public:
-	BaseCharacter() {};
-	~BaseCharacter() {};
+	BaseCharacter(int x = 0, int y = 0, const std::string& filename = "", GECollisionType type = None)
+		: GECollisible(x, y, filename, type) {
+		_width = image.width;
+		_height = image.height;
+	}
+
+	virtual ~BaseCharacter() {}
 
 	void load(const std::string& characterImagePath) {
-		_characterImage = new Image();
-
-		if (!_characterImage->load(characterImagePath)) {
-			delete _characterImage;
-			_characterImage = nullptr;
-			GELog::shared().error("Load player character image: " + characterImagePath + "Failed");
+		if (!image.load(characterImagePath)) {
+			GELog::shared().error("Load character image failed: " + characterImagePath);
 		}
 		else {
-			_width = _characterImage->width;
-			_height = _characterImage->height;
-			GELog::shared().info("Load player character image: " + characterImagePath + "Success");
+			_width = image.width;
+			_height = image.height;
+			GELog::shared().info("Loaded character image: " + characterImagePath);
 		}
 	}
 
@@ -49,7 +48,4 @@ public:
 	void setPosition(int x, int y) { _originX = x; _originY = y; }
 	void setSpeed(int speed) { _speed = speed; }
 	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth; _mapHeight = mapHeight; }
-
-	Image* getCharacterImage() const { return _characterImage; }
 };
-

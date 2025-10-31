@@ -5,10 +5,11 @@
 #pragma once
 #include "Foundation/GEWindow.h"
 #include "Foundation/GEFont.h"
+#include "Foundation/GEFPSCounter.cpp"
 #include "Core/Maps/GEMapsManager.h"
 #include "Core/Character/GEPlayer.h"
 #include "Core/Camera/GECamera.h"
-#include "Foundation/GEFPSCounter.cpp"
+#include "Core/Character/GEEnemyManager.h"
 
 using namespace GamesEngineeringBase;
 
@@ -21,6 +22,7 @@ private:
 	GEPlayer _player;
 	GECamera _camera;
 	GEFpsCounter _fpsCounter;
+	GEEnemyManager _enemyManager;
 
 	bool _isRunning;
 
@@ -42,5 +44,8 @@ public:
 
 	// End Game Loops
 	void stop();
+
+	GameManager(const GameManager&) = delete;
+	GameManager& operator=(const GameManager&) = delete;
 };
 

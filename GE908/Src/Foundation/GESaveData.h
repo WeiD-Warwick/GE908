@@ -14,8 +14,8 @@ private:
 	int _cameraOffsetX = 0;
 	int _cameraOffsetY = 0;
 
-	int _windowWidth = 0;
-	int _windowHeight = 0;
+	int _windowWidth = 1280;
+	int _windowHeight = 720;
 
 	int*** _layers = nullptr;
 	int _layerCount = 0;

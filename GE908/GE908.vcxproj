@@ -127,6 +127,7 @@
     <ClCompile Include="Src\Core\Character\GEEnemy.cpp" />
     <ClCompile Include="Src\Core\Character\GEPlayer.cpp" />
     <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp" />
+    <ClCompile Include="Src\Foundation\GECollisible.cpp" />
     <ClCompile Include="Src\Foundation\GECollisible.h" />
     <ClCompile Include="Src\Foundation\GEFPSCounter.cpp" />
     <ClCompile Include="Src\Foundation\GESaveData.cpp" />
@@ -271,6 +272,10 @@
     <Image Include="Src\Assets\MapTiles\7.png" />
     <Image Include="Src\Assets\MapTiles\8.png" />
     <Image Include="Src\Assets\MapTiles\9.png" />
+    <Image Include="Src\Assets\Textures\enemy_fast.png" />
+    <Image Include="Src\Assets\Textures\enemy_heavy.png" />
+    <Image Include="Src\Assets\Textures\enemy_normal.png" />
+    <Image Include="Src\Assets\Textures\enemy_static.png" />
     <Image Include="Src\Assets\Textures\player.png" />
     <Image Include="Src\SaveGames\landscape.png" />
   </ItemGroup>

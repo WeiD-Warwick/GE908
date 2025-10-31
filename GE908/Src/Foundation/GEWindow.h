@@ -7,7 +7,6 @@
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Core/Maps/GEMapsManager.h"
 #include "../Core/Camera/GECamera.h"
-#include "../Core/Character/GEPlayer.h"
 #include "GEFont.h"
 #include "GELog.h"
 
@@ -23,7 +22,5 @@ public:
     void drawText(const std::string& text, int startX, int startY, const unsigned char* textColor, int scale);
 
     void drawMap(GEMapsManager& mapManager, const GECamera& camera);
-
-    void drawPlayer(const GEPlayer& player, const GECamera& camera);
 };
 

@@ -3,30 +3,23 @@
 //
 
 #pragma once
+#include "../../Foundation/GESaveData.h"
 
 class GECamera {
 private:
-	int _offsetX;                // camera offset X   
-	int _offsetY;                // camer offset Y
-	int _screenW = 0;            // world coordinate x of the top-left corner of the camera view
-	int _screenH = 0;            // world coordinate y of the top-left corner of the camera view
-
-	int _mapColCount = 0;
-	int _mapRowCount = 0;
+	GESaveData* _saveData = nullptr;
 
 public:
 
-    GECamera(int screenW, int screenH);
+	GECamera();
 	~GECamera();
 
+	void loadData(GESaveData* saveData) { _saveData = saveData; }
+
     void followPlayer(int playerX, int playerY, int playerWidth, int playerHeight);
-	void setMapBounds(int mapWidth, int mapHeight);
+	int getOffsetX() const { return _saveData->getCameraOffsetX(); }
+	int getOffsetY() const { return _saveData->getCameraOffsetY(); }
 
-    int worldToScreenX(int worldX) const { return worldX - _offsetX; }
-    int worldToScreenY(int worldY) const { return worldY - _offsetY; }
-	int screenToWorldX(int screenX) const { return screenX + _offsetX; }
-	int screenToWorldY(int screenY) const { return screenY + _offsetY; }
-
-	int getOffsetX() const { return _offsetX; }
-	int getOffsetY() const { return _offsetY; }
+	int getWindowWidth() { return _saveData->getWindowWidth(); }
+	int getWindowHeight() { return _saveData->getWindowHeight(); }
 };

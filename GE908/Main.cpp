@@ -5,7 +5,7 @@
 #include "Src/GameManager.h"
 
 int main() {
-	GameManager game = GameManager();
+	GameManager game;
 
 	game.run();
 

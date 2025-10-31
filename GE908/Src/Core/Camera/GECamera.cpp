@@ -5,9 +5,7 @@
 #include "GECamera.h"
 #include <algorithm>
 
-GECamera::GECamera(int screenW, int screenH)
-	: _offsetX(0), _offsetY(0), _screenW(screenW), _screenH(screenH) {
-}
+GECamera::GECamera() {}
 
 GECamera::~GECamera() {}
 
@@ -16,15 +14,14 @@ GECamera::~GECamera() {}
 // make the character in the center of the screen
 void GECamera::followPlayer(int playerX, int playerY, int playerWidth, int playerHeight) {
 
-	int targetOffsetX = playerX - (_screenW / 2) + (playerWidth / 2);
-	int targetOffsetY = playerY - (_screenH / 2) + (playerHeight / 2);
+	int _windowW = getWindowWidth();
+	int _windowH = getWindowHeight();
+	int _mapWidth = _saveData->getMapTotalWidth();
+	int _mapHeight = _saveData->getMapTotalHeight();
 
-	// border check, pick valided one
-	_offsetX = std::max(0, std::min(targetOffsetX, _mapColCount - _screenW));
-	_offsetY = std::max(0, std::min(targetOffsetY, _mapRowCount - _screenH));
-}
+	int targetOffsetX = playerX - (_windowW / 2) + (playerWidth / 2);
+	int targetOffsetY = playerY - (_windowH / 2) + (playerHeight / 2);
 
-void GECamera::setMapBounds(int mapWidth, int mapHeight) {
-	_mapColCount = mapWidth;
-	_mapRowCount = mapHeight;
+	_saveData->setCameraOffsetX(std::max(0, std::min(targetOffsetX, _mapWidth - _windowW)));
+	_saveData->setCameraOffsetY(std::max(0, std::min(targetOffsetY, _mapHeight - _windowH)));
 }

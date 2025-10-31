@@ -102,35 +102,3 @@ void GEWindow::drawMap(GEMapsManager& mapManager, const GECamera& camera) {
         }
     }
 }
-
-void GEWindow::drawPlayer(const GEPlayer& player, const GECamera& camera) {
-    const Image* characterImage = player.getCharacterImage();
-    if (!characterImage) {
-        GELog::shared().error("Player image is null, cannot render");
-        return;
-    }
-
-    const unsigned char* pixelData = characterImage->data;
-    int imageWidth = characterImage->width;
-    int imageHeight = characterImage->height;
-    int playerX = player.getX();
-    int playerY = player.getY();
-
-    for (int y = 0; y < imageHeight; ++y) {
-        for (int x = 0; x < imageWidth; ++x) {
-            int pixelIndex = (y * imageWidth + x) * 4;
-            unsigned char a = pixelData[pixelIndex + 3];
-
-            if (a > 0) {
-                int worldX = playerX + x;
-                int worldY = playerY + y;
-                int screenX = camera.worldToScreenX(worldX);
-                int screenY = camera.worldToScreenY(worldY);
-                draw(screenX, screenY,
-                    pixelData[pixelIndex],
-                    pixelData[pixelIndex + 1],
-                    pixelData[pixelIndex + 2]);
-            }
-        }
-    }
-}

@@ -10,7 +10,7 @@
 
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager() : _window(), _font(), _mapManager(), _player(), _camera(WINDOW_WIDTH, WINDOW_HEIGHT), _isRunning(false) {}
+GameManager::GameManager() : _window(), _font(), _mapManager(), _player(), _camera(), _isRunning(false) {}
 
 GameManager::~GameManager() {
 	_font.release();
@@ -40,24 +40,14 @@ void GameManager::loadComponent() {
 		
 		_player.load("Src/Assets/Textures/player.png");
 		_player.loadData(saveData);
-
-		// set camera border
-		_camera.setMapBounds(mapWorldWidth, mapWorldHeight);
+		_camera.loadData(saveData);
+		_enemyManager.load(saveData);
 	}
 	else {
 		GELog::shared().warning("Map data not loaded, player starts at (0,0)");
 	}
 }
 
-void GameManager::run() {
-	_isRunning = true;
-	loadComponent();
-
-	while (_isRunning) {
-		update(0.016f);
-		render();
-	}
-}
 
 void GameManager::update(float deltaTime) {
 	_window.checkInput();
@@ -71,18 +61,43 @@ void GameManager::update(float deltaTime) {
 	if (pause) stop();
 
 	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight);
+
 	_camera.followPlayer(_player.getX(), _player.getY(), _player.getWidth(), _player.getHeight());
+
+	_enemyManager.update(deltaTime, &_player);
+
+	for (int i = 0; i < _enemyManager.getEnemyCount(); ++i) {
+		GEEnemy* e = _enemyManager.getEnemyAt(i);
+		if (e && e->collide(_player)) {
+			GELog::shared().warning("Player hit by enemy!");
+		}
+	}
+
 	_fpsCounter.frameRendered();
 }
 
 void GameManager::render() {
 	_window.clear();
 	_window.drawMap(_mapManager, _camera);
+	_player.draw(_window);
+	_enemyManager.draw(_window);
+
 	const unsigned char fpsColor[3] = { 255, 0, 0 };
 	_window.drawText("FPS:" + std::to_string(static_cast<int>(_fpsCounter.getFps())), 1000, 700, fpsColor, 1);
-	_window.drawPlayer(_player, _camera);
+
 	_window.present();
 }
+
+void GameManager::run() {
+	_isRunning = true;
+	loadComponent();
+
+	while (_isRunning) {
+		update(0.016f);
+		render();
+	}
+}
+
 
 void GameManager::stop() {
 	_isRunning = false;
