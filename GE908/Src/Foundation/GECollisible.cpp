@@ -2,8 +2,8 @@
 #include "GEWindow.h"
 
 void GECollisible::draw(GEWindow& window, const GECamera& camera) {
-    int camX = camera.getOffsetX();
-    int camY = camera.getOffsetY();
+    int camX = camera.getX();
+    int camY = camera.getY();
     int winW = window.getWidth();
     int winH = window.getHeight();
 
@@ -29,14 +29,13 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
             int dy = static_cast<int>(sqrtf(static_cast<float>(r2 - dx * dx)));
             if (cx + dx >= 0 && cx + dx < winW) {
                 if (cy + dy >= 0 && cy + dy < winH)
-                    window.draw(cx + dx, cy + dy, 255, 255, 0);
+                    window.draw(cx + dx, cy + dy, 255, 0, 0);
                 if (cy - dy >= 0 && cy - dy < winH)
-                    window.draw(cx + dx, cy - dy, 255, 255, 0);
+                    window.draw(cx + dx, cy - dy, 255, 0, 0);
             }
         }
     }
 }
-
 
 bool GECollisible::collide(const GECollisible& other) const {
     int dx = (_originX + image.width / 2) - (other._originX + other.image.width / 2);

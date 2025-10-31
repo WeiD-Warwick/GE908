@@ -1,7 +1,3 @@
-//
-// Created by W.D. on 22/10/25
-//
-
 #pragma once
 #include "GELog.h"
 #include "../../ThirdParty/GamesEngineeringBase.h"

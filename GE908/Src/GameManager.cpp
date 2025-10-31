@@ -1,8 +1,4 @@
-﻿//
-// Created by W.D. on 18/10/25
-//
-
-#include <string>
+﻿#include <string>
 #include "GameManager.h"
 #include "Foundation/GELog.h"
 #define WINDOW_WIDTH 1280
@@ -19,29 +15,21 @@ GameManager::~GameManager() {
 // load Game Resource, like maps, player, enemies
 void GameManager::loadComponent() {
 
-	// load window
 	_window.load(WINDOW_WIDTH, WINDOW_HEIGHT, "WM908", false);
 
-	// load font
 	_font.load();
 
-	// load maps
 	_mapManager.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
 
-	// update position
-	GESaveData* saveData = _mapManager.getSaveData();
-	if (saveData) {
-		int mapWorldWidth = saveData->getMapTotalWidth();
-		int mapWorldHeight = saveData->getMapTotalHeight();
-
-		// set player in the center of map
-		int playerStartX = static_cast<int>((mapWorldWidth / 2.0f) - (_player.getWidth() / 2.0f));
-		int playerStartY = static_cast<int>((mapWorldHeight / 2.0f) - (_player.getHeight() / 2.0f));
-		
+	_saveData = _mapManager.getSaveData();
+	if (_saveData) {
 		_player.load("Src/Assets/Textures/player.png");
-		_player.loadData(saveData);
-		_camera.loadData(saveData);
-		_enemyManager.load(saveData);
+		_player.loadData(_saveData);
+
+		int mapWorldWidth = _saveData->getMapTotalWidth();
+		int mapWorldHeight = _saveData->getMapTotalHeight();
+		_camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
+		_enemyManager.load(_saveData);
 	}
 	else {
 		GELog::shared().warning("Map data not loaded, player starts at (0,0)");
@@ -64,11 +52,13 @@ void GameManager::update(float deltaTime) {
 
 	_camera.followPlayer(_player.getX(), _player.getY(), _player.getWidth(), _player.getHeight());
 
+	_saveData->setCameraOffset(_camera.getX(), _camera.getY());
+
 	_enemyManager.update(deltaTime, &_player);
 
 	for (int i = 0; i < _enemyManager.getEnemyCount(); ++i) {
-		GEEnemy* e = _enemyManager.getEnemyAt(i);
-		if (e && e->collide(_player)) {
+		GEEnemy* enemy = _enemyManager.getEnemyAt(i);
+		if (enemy && enemy->collide(_player)) {
 			GELog::shared().warning("Player hit by enemy!");
 		}
 	}

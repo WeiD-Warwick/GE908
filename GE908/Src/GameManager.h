@@ -1,7 +1,3 @@
-//
-// Created by W.D. on 18/10/25
-//
-
 #pragma once
 #include "Foundation/GEWindow.h"
 #include "Foundation/GEFont.h"
@@ -23,6 +19,7 @@ private:
 	GECamera _camera;
 	GEFpsCounter _fpsCounter;
 	GEEnemyManager _enemyManager;
+	GESaveData* _saveData = nullptr;
 
 	bool _isRunning;
 

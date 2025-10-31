@@ -1,8 +1,4 @@
-﻿//
-// Created by W.D. on 26/10/25
-//
-
-#pragma once
+﻿#pragma once
 #include "../../../ThirdParty/GamesEngineeringBase.h"
 #include "../../Foundation/GESaveData.h"
 

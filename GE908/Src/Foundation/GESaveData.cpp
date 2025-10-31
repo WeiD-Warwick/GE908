@@ -1,8 +1,4 @@
-﻿//
-// Created by W.D. on 26/10/25
-//
-
-#include "GESaveData.h"
+﻿#include "GESaveData.h"
 #include "GELog.h"
 #include <fstream>
 #include <sstream>

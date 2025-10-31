@@ -1,9 +1,6 @@
-//
-// Created by W.D. on 26/10/25
-//
-
-#include <iostream>
 #pragma once
+#include <string>
+
 class GESaveData {
 private:
 	int _mapColCount = 0;
@@ -40,13 +37,11 @@ public:
 	int getMapTotalWidth() const { return _mapColCount * _tileWidth; }
 	int getMapTotalHeight() const { return _mapRowCount * _tileHeight; }
 
-	void setCameraOffsetX(int x) { _cameraOffsetX = x; }
-	void setCameraOffsetY(int y) { _cameraOffsetY = y; }
+	void setCameraOffset(int x, int y) { _cameraOffsetX = x; _cameraOffsetY = y; }
 	int getCameraOffsetX() { return _cameraOffsetX; }
 	int getCameraOffsetY() { return _cameraOffsetY; }
 
-	void setWindowWidth(int width) { _windowWidth = width; }
-	void setWindowHeight(int height) { _windowHeight = height; }
+	void setWindowSize(int width, int height) { _windowWidth = width; _windowHeight = height; }
 	int getWindowWidth() { return _windowWidth; }
 	int getWindowHeight() { return _windowHeight;  }
 

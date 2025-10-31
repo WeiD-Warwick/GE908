@@ -54,7 +54,7 @@ void GEWindow::drawText(const std::string& text, int startX, int startY, const u
 }
 
 void GEWindow::drawMap(GEMapsManager& mapManager, const GECamera& camera) {
-    const GESaveData* saveData = mapManager.getSaveData();
+    GESaveData* saveData = mapManager.getSaveData();
     if (!saveData) return;
 
     int layers = saveData->getLayerCount();
@@ -62,6 +62,8 @@ void GEWindow::drawMap(GEMapsManager& mapManager, const GECamera& camera) {
     int mapHeight = saveData->getMapRowCount();
     int tileWidth = saveData->getTileWidth();
     int tileHeight = saveData->getTileHeight();
+    int cameraOffsetX = saveData->getCameraOffsetX();
+    int cameraOffsetY = saveData->getCameraOffsetY();
 
     int winWidth = getWidth();
     int winHeight = getHeight();
@@ -73,29 +75,25 @@ void GEWindow::drawMap(GEMapsManager& mapManager, const GECamera& camera) {
                 Image* img = mapManager.getTileImage(tileID);
                 if (!img) continue;
 
-                int originX = col * tileWidth - camera.getOffsetX();
-                int originY = row * tileHeight - camera.getOffsetY();
+                int screenOriginX = camera.worldToScreenX(col * tileWidth);
+                int screenOriginY = camera.worldToScreenY(row * tileHeight);
 
-				// if the tile is completely outside the window, skip drawing
-                if (originX + tileWidth < 0 || originX >= winWidth ||
-                    originY + tileHeight < 0 || originY >= winHeight)
+				// if the tile is completely outside the screen, skip drawing
+                if (screenOriginX + tileWidth < 0 || screenOriginX >= winWidth ||
+                    screenOriginY + tileHeight < 0 || screenOriginY >= winHeight)
                     continue;
 
                 for (unsigned int dy = 0; dy < img->height; dy++) {
                     for (unsigned int dx = 0; dx < img->width; dx++) {
-                        int screenX = originX + dx;
-                        int screenY = originY + dy;
+                        int screenX = screenOriginX + dx;
+                        int screenY = screenOriginY + dy;
 
 						// border check
-                        if (screenX < 0 || screenY < 0 ||
-                            screenX >= winWidth || screenY >= winHeight)
+                        if (screenX < 0 || screenY < 0 || screenX >= winWidth || screenY >= winHeight) 
                             continue;
 
-                        if (img->alphaAt(dx, dy) > 210) {
-                            unsigned char* px = img->at(dx, dy);
-                            if (!px) continue;
-                            draw(screenX, screenY, px);
-                        }
+                        if (img->alphaAt(dx, dy) > 0)
+                            draw(screenX, screenY, img->atUnchecked(dx, dy));
                     }
                 }
             }
