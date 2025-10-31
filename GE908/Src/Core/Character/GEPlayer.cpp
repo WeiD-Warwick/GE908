@@ -42,8 +42,8 @@ void GEPlayer::update(float deltaTime, bool moveUp, bool moveDown, bool moveLeft
     if (moveLeft) _originX -= moveAmount;
     if (moveRight) _originX += moveAmount;
 
-    int cameraWidth = _saveData->getWindowWidth();   
-    int cameraHeight = _saveData->getWindowHeight();
+    int cameraWidth = _saveData->getScreenWidth();   
+    int cameraHeight = _saveData->getScreenHeight();
     int mapTotalWidth = _mapWidth;
     int mapTotalHeight = _mapHeight;
 

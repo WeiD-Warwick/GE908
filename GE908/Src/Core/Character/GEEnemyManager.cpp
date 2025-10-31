@@ -20,41 +20,6 @@ void GEEnemyManager::load(GESaveData* saveData) {
     _saveData = saveData;
 }
 
-void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
-    if (_enemyCount >= MAX_ENEMIES) return;
-
-    int camX = _saveData->getCameraOffsetX();
-    int camY = _saveData->getCameraOffsetY();
-    int camW = _saveData->getWindowWidth();
-    int camH = _saveData->getWindowHeight();
-    int mapW = _saveData->getMapTotalWidth();
-    int mapH = _saveData->getMapTotalHeight();
-
-    const int margin = 64;
-    int side = rand() % 4;
-    int x = 0, y = 0;
-
-    switch (side) {
-    case 0: x = camX + rand() % camW; y = camY - margin; break;
-    case 1: x = camX + rand() % camW; y = camY + camH + margin; break;
-    case 2: x = camX - margin;        y = camY + rand() % camH; break;
-    case 3: x = camX + camW + margin; y = camY + rand() % camH; break;
-    }
-
-    // clamp ?????
-    if (x < 0) x = 0;
-    if (y < 0) y = 0;
-    if (x > mapW - 1) x = mapW - 1;
-    if (y > mapH - 1) y = mapH - 1;
-
-    GEEnemyType type = static_cast<GEEnemyType>(rand() % 4);
-    GEEnemy* e = new GEEnemy(type);
-    e->setMapBounds(mapW, mapH);
-    e->setPosition(x, y);
-
-    _enemies[_enemyCount++] = e;
-}
-
 void GEEnemyManager::draw(GEWindow& window, const GECamera& camera) {
     for (unsigned int i = 0; i < _enemyCount; i++) {
         if (_enemies[i])
@@ -62,6 +27,51 @@ void GEEnemyManager::draw(GEWindow& window, const GECamera& camera) {
     }
 }
 
+void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
+    if (_enemyCount >= MAX_ENEMIES) return;
+
+    int camOffsetX = _saveData->getCameraOffsetX();
+    int camOffsetY = _saveData->getCameraOffsetY();
+    int screenW = _saveData->getScreenWidth();
+    int screenH = _saveData->getScreenHeight();
+    int mapW = _saveData->getMapTotalWidth();
+    int mapH = _saveData->getMapTotalHeight();
+
+    // make the enemy appearance more natural
+    const int safeDistance = _saveData->getTileWidth() * 2;
+    int side = rand() % 4;
+    int x = 0, y = 0;
+
+    switch (side) {
+    case 0:
+        // top
+        x = camOffsetX + rand() % screenW;
+        y = camOffsetY - safeDistance; break;
+    case 1: 
+        // bottom
+        x = camOffsetX + rand() % screenW;
+        y = camOffsetY + screenH + safeDistance; break;
+    case 2: 
+        // 
+        x = camOffsetX - safeDistance;
+        y = camOffsetY + rand() % screenH; break;
+    case 3: 
+        x = camOffsetX + screenW + safeDistance;
+        y = camOffsetY + rand() % screenH; break;
+    }
+
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x > mapW - 1) x = mapW - 1;
+    if (y > mapH - 1) y = mapH - 1;
+
+    GEEnemyType type = static_cast<GEEnemyType>(rand() % 4);
+    GEEnemy* enemy = new GEEnemy(type);
+    enemy->setMapBounds(mapW, mapH);
+    enemy->setPosition(x, y);
+
+    _enemies[_enemyCount++] = enemy;
+}
 
 void GEEnemyManager::update(float deltaTime, GEPlayer* player) {
     _spawnTimer += deltaTime;

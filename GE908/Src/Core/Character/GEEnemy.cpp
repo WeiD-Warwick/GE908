@@ -17,11 +17,11 @@ GEEnemy::GEEnemy(GEEnemyType type)
 {
 	switch (_type) {
 	case Normal:
-		_hp = 100; _speed = 20; break;
+		_hp = 100; _speed = 80; break;
 	case Fast:
 		_hp = 60; _speed = 80; break;
 	case Heavy:
-		_hp = 200; _speed = 30; break;
+		_hp = 200; _speed = 80; break;
 	case StaticShooter:
 		_hp = 80; _speed = 0; _isStatic = true; _attackRate = 3.0f; break;
 	}
@@ -41,8 +41,7 @@ void GEEnemy::update(float deltaTime, int playerX, int playerY) {
 		float moveDelta = _speed * deltaTime;
 		_originX += static_cast<int>(dirX * moveDelta);
 		_originY += static_cast<int>(dirY * moveDelta);
-	}
-	else {
+	} else {
 		_attackCooldown += deltaTime;
 		if (_attackCooldown > _attackRate) {
 			_attackCooldown = 0;

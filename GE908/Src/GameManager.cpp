@@ -1,8 +1,8 @@
 ﻿#include <string>
 #include "GameManager.h"
 #include "Foundation/GELog.h"
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 854
+#define WINDOW_HEIGHT 480
 
 using namespace GamesEngineeringBase;
 
@@ -73,7 +73,7 @@ void GameManager::render() {
 	_enemyManager.draw(_window, _camera);
 
 	const unsigned char fpsColor[3] = { 255, 0, 0 };
-	_window.drawText("FPS:" + std::to_string(static_cast<int>(_fpsCounter.getFps())), 1000, 700, fpsColor, 1);
+	_window.drawText("FPS:" + std::to_string(static_cast<int>(_fpsCounter.getFps())), 200, 400, fpsColor, 1);
 
 	_window.present();
 }

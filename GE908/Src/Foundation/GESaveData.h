@@ -11,8 +11,8 @@ private:
 	int _cameraOffsetX = 0;
 	int _cameraOffsetY = 0;
 
-	int _windowWidth = 1280;
-	int _windowHeight = 720;
+	int _windowWidth = 854;
+	int _windowHeight = 480;
 
 	int*** _layers = nullptr;
 	int _layerCount = 0;
@@ -42,8 +42,8 @@ public:
 	int getCameraOffsetY() { return _cameraOffsetY; }
 
 	void setWindowSize(int width, int height) { _windowWidth = width; _windowHeight = height; }
-	int getWindowWidth() { return _windowWidth; }
-	int getWindowHeight() { return _windowHeight;  }
+	int getScreenWidth() { return _windowWidth; }
+	int getScreenHeight() { return _windowHeight;  }
 
 	int getLayerCount() const { return _layerCount; }
 
