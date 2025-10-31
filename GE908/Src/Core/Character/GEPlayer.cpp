@@ -13,6 +13,13 @@ GEPlayer::GEPlayer()
 
 GEPlayer::~GEPlayer() {}
 
+static int clamp(int value, int minVal, int maxVal) {
+    if (value < minVal) return minVal;
+    if (value > maxVal) return maxVal;
+    return value;
+}
+
+
 void GEPlayer::loadData(GESaveData* saveData) {
 	_saveData = saveData;
 
@@ -27,17 +34,44 @@ void GEPlayer::loadData(GESaveData* saveData) {
 }
 
 void GEPlayer::update(float deltaTime, bool moveUp, bool moveDown, bool moveLeft, bool moveRight) {
-	float moveDelta = _speed * deltaTime;
-	unsigned int moveAmount = static_cast<unsigned int>(moveDelta > 1.0f ? moveDelta : 1.0f);
+    float moveDelta = _speed * deltaTime;
+    unsigned int moveAmount = static_cast<unsigned int>(moveDelta > 1.0f ? moveDelta : 1.0f);
 
-	if (moveUp) _originY -= moveAmount;
-	if (moveDown) _originY += moveAmount;
-	if (moveLeft) _originX -= moveAmount;
-	if (moveRight) _originX += moveAmount;
+    if (moveUp) _originY -= moveAmount;
+    if (moveDown) _originY += moveAmount;
+    if (moveLeft) _originX -= moveAmount;
+    if (moveRight) _originX += moveAmount;
 
-	if (_originX < 0) _originX = 0;
-	if (_originX > (_mapWidth - _width)) _originX = (_mapWidth - _width);
+    int cameraWidth = _saveData->getWindowWidth();   
+    int cameraHeight = _saveData->getWindowHeight();
+    int mapTotalWidth = _mapWidth;
+    int mapTotalHeight = _mapHeight;
 
-	if (_originY < 0) _originY = 0;
-	if (_originY > (_mapHeight - _height)) _originY = (_mapHeight - _height);
+    int minCenterX, maxCenterX;
+    if (mapTotalWidth > cameraWidth) {
+        minCenterX = cameraWidth / 2;
+        maxCenterX = mapTotalWidth - cameraWidth / 2;
+    }
+    else {
+        minCenterX = maxCenterX = mapTotalWidth / 2;
+    }
+
+    int minCenterY, maxCenterY;
+    if (mapTotalHeight > cameraHeight) {
+        minCenterY = cameraHeight / 2;
+        maxCenterY = mapTotalHeight - cameraHeight / 2;
+    }
+    else {
+        minCenterY = maxCenterY = mapTotalHeight / 2;
+    }
+
+    int playerHalfWidth = _width / 2;
+    int playerHalfHeight = _height / 2;
+    int minOriginX = minCenterX - playerHalfWidth;
+    int maxOriginX = maxCenterX - playerHalfWidth;
+    int minOriginY = minCenterY - playerHalfHeight;
+    int maxOriginY = maxCenterY - playerHalfHeight;
+
+    _originX = clamp(_originX, minOriginX, maxOriginX);
+    _originY = clamp(_originY, minOriginY, maxOriginY);
 }

@@ -9,7 +9,7 @@ private:
     GEEnemy* _enemies[MAX_ENEMIES];
     unsigned int _enemyCount = 0;
     float _spawnTimer = 0.0f;
-    float _spawnInterval = 3.0f;
+    float _spawnInterval = 10.0f;
     GESaveData* _saveData = nullptr;
 
     void spawnEnemyOutsideCamera(GEPlayer* player);
