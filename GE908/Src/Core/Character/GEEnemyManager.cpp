@@ -27,27 +27,41 @@ void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
     int camY = _saveData->getCameraOffsetY();
     int camW = _saveData->getWindowWidth();
     int camH = _saveData->getWindowHeight();
+    int mapW = _saveData->getMapTotalWidth();
+    int mapH = _saveData->getMapTotalHeight();
 
-    if (camW <= 0 || camH <= 0) {
-        GELog::shared().warning("Invalid camera size, spawn cancelled.");
-        return;
-    }
-
-    int spawnX, spawnY;
+    const int margin = 64;
     int side = rand() % 4;
+    int x = 0, y = 0;
 
     switch (side) {
-    case 0: spawnX = camX + rand() % camW; spawnY = camY - 100; break;
-    case 1: spawnX = camX + rand() % camW; spawnY = camY + camH + 100; break;
-    case 2: spawnX = camX - 100; spawnY = camY + rand() % camH; break;
-    case 3: spawnX = camX + camW + 100; spawnY = camY + rand() % camH; break;
+    case 0: x = camX + rand() % camW; y = camY - margin; break;
+    case 1: x = camX + rand() % camW; y = camY + camH + margin; break;
+    case 2: x = camX - margin;        y = camY + rand() % camH; break;
+    case 3: x = camX + camW + margin; y = camY + rand() % camH; break;
     }
 
+    // clamp ?????
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x > mapW - 1) x = mapW - 1;
+    if (y > mapH - 1) y = mapH - 1;
+
     GEEnemyType type = static_cast<GEEnemyType>(rand() % 4);
-    _enemies[_enemyCount] = new GEEnemy(type);
-    _enemies[_enemyCount]->setPosition(spawnX, spawnY);
-    _enemyCount++;
+    GEEnemy* e = new GEEnemy(type);
+    e->setMapBounds(mapW, mapH);
+    e->setPosition(x, y);
+
+    _enemies[_enemyCount++] = e;
 }
+
+void GEEnemyManager::draw(GEWindow& window, const GECamera& camera) {
+    for (unsigned int i = 0; i < _enemyCount; i++) {
+        if (_enemies[i])
+            _enemies[i]->draw(window, camera);
+    }
+}
+
 
 void GEEnemyManager::update(float deltaTime, GEPlayer* player) {
     _spawnTimer += deltaTime;
@@ -61,12 +75,5 @@ void GEEnemyManager::update(float deltaTime, GEPlayer* player) {
     for (unsigned int i = 0; i < _enemyCount; i++) {
         if (_enemies[i])
             _enemies[i]->update(deltaTime, player->getX(), player->getY());
-    }
-}
-
-void GEEnemyManager::draw(GEWindow& window) {
-    for (unsigned int i = 0; i < _enemyCount; i++) {
-        if (_enemies[i])
-            _enemies[i]->draw(window);
     }
 }

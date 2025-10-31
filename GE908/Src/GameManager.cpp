@@ -79,8 +79,8 @@ void GameManager::update(float deltaTime) {
 void GameManager::render() {
 	_window.clear();
 	_window.drawMap(_mapManager, _camera);
-	_player.draw(_window);
-	_enemyManager.draw(_window);
+	_player.draw(_window, _camera);
+	_enemyManager.draw(_window, _camera);
 
 	const unsigned char fpsColor[3] = { 255, 0, 0 };
 	_window.drawText("FPS:" + std::to_string(static_cast<int>(_fpsCounter.getFps())), 1000, 700, fpsColor, 1);

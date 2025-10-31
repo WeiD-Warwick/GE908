@@ -1,35 +1,42 @@
 ﻿#include "GECollisible.h"
 #include "GEWindow.h"
 
-void GECollisible::draw(GEWindow& window) {
+void GECollisible::draw(GEWindow& window, const GECamera& camera) {
+    int camX = camera.getOffsetX();
+    int camY = camera.getOffsetY();
+    int winW = window.getWidth();
+    int winH = window.getHeight();
+
     for (unsigned int dy = 0; dy < image.height; dy++) {
-        if (_originY + dy > 0 && _originY + dy < window.getHeight()) {
-            for (unsigned int dx = 0; dx < image.width; dx++) {
-                if (_originX + dx > 0 && _originX + dx < window.getWidth() &&
-                    image.alphaAtUnchecked(dx, dy) > 0) {
-                    window.draw(_originX + dx, _originY + dy, image.atUnchecked(dx, dy));
-                }
+        int sy = _originY + (int)dy - camY;
+        if (sy < 0 || sy >= winH) continue;
+
+        for (unsigned int dx = 0; dx < image.width; dx++) {
+            int sx = _originX + (int)dx - camX;
+            if (sx < 0 || sx >= winW) continue;
+
+            if (image.alphaAtUnchecked(dx, dy) > 0)
+                window.draw(sx, sy, image.atUnchecked(dx, dy));
+        }
+    }
+
+    if (SHOW_COLLISION_CIRCLE) {
+        int radius = getCollisionRadius();
+        int cx = _originX + image.width / 2 - camX;
+        int cy = _originY + image.height / 2 - camY;
+        int r2 = radius * radius;
+        for (int dx = -radius; dx <= radius; dx++) {
+            int dy = static_cast<int>(sqrtf(static_cast<float>(r2 - dx * dx)));
+            if (cx + dx >= 0 && cx + dx < winW) {
+                if (cy + dy >= 0 && cy + dy < winH)
+                    window.draw(cx + dx, cy + dy, 255, 255, 0);
+                if (cy - dy >= 0 && cy - dy < winH)
+                    window.draw(cx + dx, cy - dy, 255, 255, 0);
             }
         }
     }
-    if (SHOW_COLLISION_CIRCLE) drawCollisionCircle(window);
 }
 
-void GECollisible::drawCollisionCircle(GEWindow& window) const {
-    int radius = getCollisionRadius();
-    int cx = _originX + image.width / 2;
-    int cy = _originY + image.height / 2;
-    int r2 = radius * radius;
-    for (int dx = -radius; dx <= radius; dx++) {
-        int dy = static_cast<int>(sqrtf(static_cast<float>(r2 - dx * dx)));
-        if (cx + dx >= 0 && cx + dx < window.getWidth()) {
-            if (cy + dy >= 0 && cy + dy < window.getHeight())
-                window.draw(cx + dx, cy + dy, 255, 255, 0);
-            if (cy - dy >= 0 && cy - dy < window.getHeight())
-                window.draw(cx + dx, cy - dy, 255, 255, 0);
-        }
-    }
-}
 
 bool GECollisible::collide(const GECollisible& other) const {
     int dx = (_originX + image.width / 2) - (other._originX + other.image.width / 2);

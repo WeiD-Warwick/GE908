@@ -21,6 +21,6 @@ public:
     GEEnemy* getEnemyAt(int index) { return _enemies[index]; }
     void load(GESaveData* saveData);
     void update(float deltaTime, GEPlayer* player);
-    void draw(GEWindow& window);
+    void draw(GEWindow& window, const GECamera& camera);
 
 };

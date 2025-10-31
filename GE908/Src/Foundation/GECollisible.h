@@ -1,5 +1,6 @@
 #pragma once
 #include "../../ThirdParty/GamesEngineeringBase.h"
+#include "../Core/Camera/GECamera.h"
 
 #define SHOW_COLLISION_CIRCLE true
 
@@ -38,9 +39,7 @@ public:
 	int getImageHeight() const { return image.height; }
 	int getCollisionRadius() const { return image.width / 3; }
 
-	void draw(GEWindow& window);
-
-	void drawCollisionCircle(GEWindow& window) const;
+	void draw(GEWindow& window, const GECamera& camera);
 
 	// collide detect
 	bool collide(const GECollisible& other) const;
