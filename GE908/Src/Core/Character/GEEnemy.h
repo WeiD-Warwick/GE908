@@ -15,6 +15,9 @@ private:
 	float _attackRate = 2.0f;
 	bool _isStatic = false;
 
+	float _accumX = 0.0f;
+	float _accumY = 0.0f;
+
 public:
 	GEEnemy(GEEnemyType type);
 	~GEEnemy();

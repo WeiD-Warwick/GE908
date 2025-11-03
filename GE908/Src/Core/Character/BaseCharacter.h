@@ -13,7 +13,6 @@ protected:
 	int _height = 0;
 	int _speed = 100;
 	int _hp = 0;
-	bool isAlive = true;
 	int _mapWidth = 0;
 	int _mapHeight = 0;
 
@@ -43,7 +42,7 @@ public:
 	int getHeight() const { return _height; }
 	int getSpeed() const { return _speed; }
 	int getHP() const { return _hp; }
-	bool getIsAlive() const { return isAlive; }
+	bool isAlive() const { return _hp > 0; }
 
 	void setPosition(int x, int y) { _originX = x; _originY = y; }
 	void setSpeed(int speed) { _speed = speed; }

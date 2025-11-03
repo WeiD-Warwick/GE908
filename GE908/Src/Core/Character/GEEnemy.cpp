@@ -31,20 +31,32 @@ GEEnemy::GEEnemy(GEEnemyType type)
 
 GEEnemy::~GEEnemy() {}
 
-void GEEnemy::update(float deltaTime, int playerX, int playerY) {
-	if (!isAlive) return;
+void GEEnemy::update(float dt, int characterX, int characterY) {
+	if (!isAlive()) return;
 
 	if (!_isStatic) {
-		int dirX = (playerX > _originX) - (playerX < _originX);
-		int dirY = (playerY > _originY) - (playerY < _originY);
+		int currentX = getX();
+		int currentY = getY();
 
-		float moveDelta = _speed * deltaTime;
-		_originX += static_cast<int>(dirX * moveDelta);
-		_originY += static_cast<int>(dirY * moveDelta);
-	} else {
-		_attackCooldown += deltaTime;
+		int dirX = (characterX > currentX) - (characterX < currentX);
+		int dirY = (characterY > currentY) - (characterY < currentY);
+
+		float step = _speed * dt;
+		_accumX += dirX * step;
+		_accumY += dirY * step;
+
+		// Debouncer
+		int moveX = (int)std::floor(std::abs(_accumX)) * ((_accumX >= 0) ? 1 : -1);
+		int moveY = (int)std::floor(std::abs(_accumY)) * ((_accumY >= 0) ? 1 : -1);
+		_accumX -= moveX;
+		_accumY -= moveY;
+
+		setPosition(currentX + moveX, currentY + moveY);
+	}
+	else {
+		_attackCooldown += dt;
 		if (_attackCooldown > _attackRate) {
-			_attackCooldown = 0;
+			_attackCooldown = 0.f;
 			GELog::shared().info("Static enemy fired projectile");
 		}
 	}
