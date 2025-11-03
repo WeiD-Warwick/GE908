@@ -72,13 +72,13 @@ void GEMapsManager::draw(GEWindow& window, GECamera& camera) {
     int winHeight = _saveData->getScreenHeight();
 
     for (int layer = 0; layer < layers; layer++) {
-        for (int row = 0; row < mapHeight; row++) {
-            for (int col = 0; col < mapWidth; col++) {
-                int tileID = _saveData->getTileID(layer, row, col);
+        for (int rowNumber = 0; rowNumber < mapHeight; rowNumber++) {
+            for (int colNumber = 0; colNumber < mapWidth; colNumber++) {
+                int tileID = _saveData->getTileID(layer, rowNumber, colNumber);
                 GETile* tile = getTile(tileID);
                 if (!tile) continue;
 
-				tile->setPosition(col * tileWidth, row * tileHeight);
+				tile->setPosition(colNumber * tileWidth, rowNumber * tileHeight);
 				tile->draw(window, camera);
             }
         }
