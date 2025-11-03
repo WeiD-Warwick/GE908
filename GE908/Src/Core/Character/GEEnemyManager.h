@@ -5,6 +5,7 @@
 #define MAX_ENEMIES 200
 
 class GEEnemyManager {
+
 private:
     GEEnemy* _enemies[MAX_ENEMIES];
     unsigned int _enemyCount = 0;
@@ -13,14 +14,18 @@ private:
     GESaveData* _saveData = nullptr;
 
     void spawnEnemyOutsideCamera(GEPlayer* player);
+
 public:
+
     GEEnemyManager();
     ~GEEnemyManager();
 
-    int getEnemyCount() { return _enemyCount; };
-    GEEnemy* getEnemyAt(int index) { return _enemies[index]; }
+    int getEnemyCount() const { return _enemyCount; };
+    GEEnemy* getEnemyAt(int index) const { return _enemies[index]; }
+
     void load(GESaveData* saveData);
     void update(float deltaTime, GEPlayer* player);
     void draw(GEWindow& window, const GECamera& camera);
 
+    bool isWaterTile(int tileID) { return tileID >= 14 && tileID <= 22; }
 };

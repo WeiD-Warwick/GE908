@@ -73,7 +73,8 @@ void GameManager::render() {
 	_enemyManager.draw(_window, _camera);
 
 	const unsigned char fpsColor[3] = { 255, 0, 0 };
-	_window.drawText("FPS:" + std::to_string(static_cast<int>(_fpsCounter.getFps())), 200, 400, fpsColor, 1);
+
+	_font.draw("FPS:" + std::to_string(static_cast<int>(_fpsCounter.getFps())), 200, 400, fpsColor, 1, _window);
 
 	_window.present();
 }

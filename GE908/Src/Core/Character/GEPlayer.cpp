@@ -1,9 +1,7 @@
-#include <algorithm>
 #include "GEPlayer.h"
 #include "BaseCharacter.h"
-#include "../../Foundation/GELog.h"
+#include "GEEnemyManager.h"
 #include "../../Foundation/GESaveData.h"
-
 
 GEPlayer::GEPlayer()
 	: BaseCharacter("Src/Assets/Textures/player.png", Player) {

@@ -14,8 +14,7 @@ GEMapsManager::~GEMapsManager() {
 	}
 }
 
-void GEMapsManager::load(const std::string& tilesFolderPath, const std::string& saveDatafilePath)
-{
+void GEMapsManager::load(const std::string& tilesFolderPath, const std::string& saveDatafilePath) {
 	loadTileResources(tilesFolderPath);
 	loadSaveData(saveDatafilePath);
 }

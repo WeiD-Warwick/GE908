@@ -20,6 +20,7 @@ private:
     void loadSaveData(const std::string& filePath);
 
 public:
+
     GEMapsManager();
     ~GEMapsManager();
 

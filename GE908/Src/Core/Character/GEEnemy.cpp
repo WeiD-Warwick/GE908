@@ -13,8 +13,10 @@ static const std::string EnemyImagePath(GEEnemyType t) {
 }
 
 GEEnemy::GEEnemy(GEEnemyType type)
-	: BaseCharacter(EnemyImagePath(type), None), _type(type)
-{
+	: BaseCharacter(EnemyImagePath(type), None), _type(type) {
+	_width = image.width;
+	_height = image.height;
+
 	switch (_type) {
 	case Normal:
 		_hp = 100; _speed = 80; break;
@@ -25,8 +27,7 @@ GEEnemy::GEEnemy(GEEnemyType type)
 	case StaticShooter:
 		_hp = 80; _speed = 0; _isStatic = true; _attackRate = 3.0f; break;
 	}
-	_width = image.width;
-	_height = image.height;
+
 }
 
 GEEnemy::~GEEnemy() {}

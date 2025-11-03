@@ -2,15 +2,12 @@
 
 class GECamera {
 private:
-	// ?????????
 	int _x = 0;
 	int _y = 0;
 
-	// ????????
 	int _width = 0;
 	int _height = 0;
 
-	// ??????????
 	int _mapWidth = 0;
 	int _mapHeight = 0;
 
@@ -30,10 +27,4 @@ public:
     int getHeight() const { return _height; }
 
 	void setMapBounds(int mapWidth, int mapHeight);
-
-	int worldToScreenX(int worldX) const;
-	int worldToScreenY(int worldY) const;
-	int screenToWorldX(int screenX) const;
-	int screenToWorldY(int screenY) const;
-
 };

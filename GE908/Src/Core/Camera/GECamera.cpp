@@ -38,19 +38,3 @@ void GECamera::setMapBounds(int mapWidth, int mapHeight) {
 	_mapWidth = mapWidth;
 	_mapHeight = mapHeight;
 }
-
-int GECamera::worldToScreenX(int worldX) const {
-	return worldX - _x;
-}
-
-int GECamera::worldToScreenY(int worldY) const {
-	return worldY - _y;
-}
-
-int GECamera::screenToWorldX(int screenX) const {
-	return screenX + _x;
-}
-
-int GECamera::screenToWorldY(int screenY) const {
-	return screenY + _y;
-}
