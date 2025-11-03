@@ -11,7 +11,7 @@ class BaseCharacter : public GECollisible {
 protected:
 	int _width = 0;
 	int _height = 0;
-	int _speed = 100;
+	int _speed = 70;
 	int _hp = 0;
 	int _mapWidth = 0;
 	int _mapHeight = 0;

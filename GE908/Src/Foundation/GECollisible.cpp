@@ -8,15 +8,15 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
     int winH = window.getHeight();
 
     for (int dy = 0; dy < image.height; dy++) {
-        int sy = _originY + (int)dy - camY;
-        if (sy < 0 || sy >= winH) continue;
+        int screenY = _originY + (int)dy - camY;
+        if (screenY < 0 || screenY >= winH) continue;
 
         for (int dx = 0; dx < image.width; dx++) {
-            int sx = _originX + (int)dx - camX;
-            if (sx < 0 || sx >= winW) continue;
+            int screenX = _originX + (int)dx - camX;
+            if (screenX < 0 || screenX >= winW) continue;
 
             if (image.alphaAtUnchecked(dx, dy) > 0)
-                window.draw(sx, sy, image.atUnchecked(dx, dy));
+                window.draw(screenX, screenY, image.atUnchecked(dx, dy));
         }
     }
 
