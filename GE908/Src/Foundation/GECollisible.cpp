@@ -7,11 +7,11 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
     int winW = window.getWidth();
     int winH = window.getHeight();
 
-    for (unsigned int dy = 0; dy < image.height; dy++) {
+    for (int dy = 0; dy < image.height; dy++) {
         int sy = _originY + (int)dy - camY;
         if (sy < 0 || sy >= winH) continue;
 
-        for (unsigned int dx = 0; dx < image.width; dx++) {
+        for (int dx = 0; dx < image.width; dx++) {
             int sx = _originX + (int)dx - camX;
             if (sx < 0 || sx >= winW) continue;
 
@@ -20,7 +20,7 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
         }
     }
 
-    if (SHOW_COLLISION_CIRCLE) {
+    if (SHOW_COLLISION_CIRCLE && _type != None) {
         int radius = getCollisionRadius();
         int cx = _originX + image.width / 2 - camX;
         int cy = _originY + image.height / 2 - camY;

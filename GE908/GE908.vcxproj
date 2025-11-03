@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\Maps\GETiles.cpp" />
     <ClCompile Include="Src\Core\Character\GEEnemyManager.cpp" />
     <ClCompile Include="Src\Core\Character\GEEnemy.cpp" />
     <ClCompile Include="Src\Core\Character\GEPlayer.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Src\Core\Character\BaseCharacter.h" />
     <ClInclude Include="Src\Core\Character\GEPlayer.h" />
     <ClInclude Include="Src\Core\Maps\GEMapsManager.h" />
+    <ClInclude Include="Src\Core\Maps\GETile.h" />
     <ClInclude Include="Src\Foundation\GESaveData.h" />
     <ClInclude Include="Src\Foundation\GEFont.h" />
     <ClInclude Include="Src\Core\Camera\GECamera.h" />

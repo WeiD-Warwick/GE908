@@ -6,11 +6,11 @@ GEMapsManager::GEMapsManager() {
 }
 
 GEMapsManager::~GEMapsManager() {
-	if (_tileImages) {
+	if (_tiles) {
 		for (int i = 0; i < TILESCOUNT; i++) {
-			delete _tileImages[i];
+			delete _tiles[i];
 		}
-		delete[] _tileImages;
+		delete[] _tiles;
 	}
 }
 
@@ -21,13 +21,15 @@ void GEMapsManager::load(const std::string& tilesFolderPath, const std::string& 
 }
 
 void GEMapsManager::loadTileResources(const std::string& folderPath) {
-	_tileImages = new Image * [TILESCOUNT];
+	_tiles = new GETile * [TILESCOUNT];
 
 	for (int i = 0; i <= 23; i++) {
-		_tileImages[i] = new Image();
 		std::string filePath = folderPath + std::to_string(i) + ".png";
-		if (!_tileImages[i]->load(filePath)) {
-			GELog::shared().error("Load tile: " + std::to_string(i) + " failed.");
+
+		if (i <= 13 || i >= 23) { 
+			_tiles[i] = new GETile(filePath, None);
+		} else {
+			_tiles[i] = new GETile(filePath, Water);
 		}
 	}
 
@@ -50,8 +52,35 @@ void GEMapsManager::loadSaveData(const std::string& filePath) {
 	}
 }
 
-Image* GEMapsManager::getTileImage(int tileID) const {
+GETile* GEMapsManager::getTile(int tileID) const {
 	if (tileID < 0 || tileID >= TILESCOUNT) return nullptr;
-	return _tileImages[tileID];
+	return _tiles[tileID];
 }
 
+void GEMapsManager::draw(GEWindow& window, GECamera& camera) {
+    if (!_saveData) return;
+
+    int layers = _saveData->getLayerCount();
+    int mapWidth = _saveData->getMapColCount();
+    int mapHeight = _saveData->getMapRowCount();
+    int tileWidth = _saveData->getTileWidth();
+    int tileHeight = _saveData->getTileHeight();
+    int cameraOffsetX = _saveData->getCameraOffsetX();
+    int cameraOffsetY = _saveData->getCameraOffsetY();
+
+    int winWidth = _saveData->getScreenWidth();
+    int winHeight = _saveData->getScreenHeight();
+
+    for (int layer = 0; layer < layers; layer++) {
+        for (int row = 0; row < mapHeight; row++) {
+            for (int col = 0; col < mapWidth; col++) {
+                int tileID = _saveData->getTileID(layer, row, col);
+                GETile* tile = getTile(tileID);
+                if (!tile) continue;
+
+				tile->setPosition(col * tileWidth, row * tileHeight);
+				tile->draw(window, camera);
+            }
+        }
+    }
+}

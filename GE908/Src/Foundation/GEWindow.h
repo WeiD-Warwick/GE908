@@ -16,7 +16,5 @@ public:
     void load(int width, int height, const std::string& title, bool isFullstreen);
 
     void drawText(const std::string& text, int startX, int startY, const unsigned char* textColor, int scale);
-
-    void drawMap(GEMapsManager& mapManager, const GECamera& camera);
 };
 

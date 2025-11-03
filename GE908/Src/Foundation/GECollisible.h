@@ -11,20 +11,22 @@ using namespace GamesEngineeringBase;
 enum GECollisionType {
 	None,
 	Player,
+	Enemy,
+	Water,
 };
 
 class GECollisible {
 
 protected:
-	int _originX;
-	int _originY;
+	int _originX = 0;
+	int _originY = 0;
 	GECollisionType _type;
 	Image image;
 
 public:
 
-	GECollisible(int originX, int originY, const std::string& filename, GECollisionType collisionType)
-		: _originX(originX), _originY(originY), _type(collisionType) {
+	GECollisible(const std::string& filename, GECollisionType collisionType)
+		: _type(collisionType) {
 		image.load(filename);
 	}
 
@@ -32,6 +34,7 @@ public:
 
 	virtual void update(GamesEngineeringBase::Window& canvas, float dt) {}
 
+	void setPosition(int x, int y) { _originX = x; _originY = y; }
 	int getOriginX() const { return _originX; }
 	int getOriginY() const { return _originY; }
 	int getImageWidth() const { return image.width; }

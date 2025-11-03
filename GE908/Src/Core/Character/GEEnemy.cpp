@@ -13,7 +13,7 @@ static const std::string EnemyImagePath(GEEnemyType t) {
 }
 
 GEEnemy::GEEnemy(GEEnemyType type)
-	: BaseCharacter(0, 0, EnemyImagePath(type), None), _type(type)
+	: BaseCharacter(EnemyImagePath(type), None), _type(type)
 {
 	switch (_type) {
 	case Normal:

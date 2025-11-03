@@ -1,13 +1,15 @@
 ﻿#pragma once
 #include "../../../ThirdParty/GamesEngineeringBase.h"
 #include "../../Foundation/GESaveData.h"
+#include "../../Foundation/GEWindow.h"
+#include "GETile.h"
 
 using namespace GamesEngineeringBase;
 
 class GEMapsManager {
 private:
 
-    Image** _tileImages = nullptr;                  // image cache
+    GETile** _tiles = nullptr;                  // image cache
     int _tileCount = 0;
     GESaveData* _saveData = nullptr;                // save data
 
@@ -24,9 +26,11 @@ public:
     void load(const std::string& tilesFolderPath, const std::string& saveDatafilePath);
 
     // get tile Image
-    Image* getTileImage(int tileID) const;
+    GETile* getTile(int tileID) const;
 
     // get current save data
     GESaveData* getSaveData() { return _saveData; }
+
+    void draw(GEWindow& window, GECamera& camera);
 };
 

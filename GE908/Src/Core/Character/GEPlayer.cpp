@@ -6,7 +6,7 @@
 
 
 GEPlayer::GEPlayer()
-	: BaseCharacter(0, 0, "Src/Assets/Textures/player.png", Player) {
+	: BaseCharacter("Src/Assets/Textures/player.png", Player) {
 	_hp = 100;
 	_speed = 200;
 }
@@ -18,7 +18,6 @@ static int clamp(int value, int minVal, int maxVal) {
     if (value > maxVal) return maxVal;
     return value;
 }
-
 
 void GEPlayer::loadData(GESaveData* saveData) {
 	_saveData = saveData;

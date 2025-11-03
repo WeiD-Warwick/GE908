@@ -68,7 +68,7 @@ void GameManager::update(float deltaTime) {
 
 void GameManager::render() {
 	_window.clear();
-	_window.drawMap(_mapManager, _camera);
+	_mapManager.draw(_window, _camera);
 	_player.draw(_window, _camera);
 	_enemyManager.draw(_window, _camera);
 

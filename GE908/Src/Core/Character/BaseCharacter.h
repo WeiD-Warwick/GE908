@@ -17,8 +17,8 @@ protected:
 	int _mapHeight = 0;
 
 public:
-	BaseCharacter(int x = 0, int y = 0, const std::string& filename = "", GECollisionType type = None)
-		: GECollisible(x, y, filename, type) {
+	BaseCharacter(const std::string& filename = "", GECollisionType type = None)
+		: GECollisible(filename, type) {
 		_width = image.width;
 		_height = image.height;
 	}
@@ -43,8 +43,6 @@ public:
 	int getSpeed() const { return _speed; }
 	int getHP() const { return _hp; }
 	bool isAlive() const { return _hp > 0; }
-
-	void setPosition(int x, int y) { _originX = x; _originY = y; }
 	void setSpeed(int speed) { _speed = speed; }
 	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth; _mapHeight = mapHeight; }
 };
