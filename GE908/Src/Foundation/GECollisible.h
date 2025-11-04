@@ -43,4 +43,5 @@ public:
 
 	void draw(GEWindow& window, const GECamera& camera);
 	bool collide(const GECollisible& other) const;
+	bool collideAt(int x, int y, const GECollisible& other) const;
 };

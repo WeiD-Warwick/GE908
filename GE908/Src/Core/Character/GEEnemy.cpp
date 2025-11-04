@@ -13,7 +13,7 @@ static const std::string EnemyImagePath(GEEnemyType t) {
 }
 
 GEEnemy::GEEnemy(GEEnemyType type)
-	: BaseCharacter(EnemyImagePath(type), None), _type(type) {
+	: BaseCharacter(EnemyImagePath(type), Enemy), _type(type) {
 	_width = image.width;
 	_height = image.height;
 

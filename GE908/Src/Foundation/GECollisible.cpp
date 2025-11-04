@@ -44,3 +44,11 @@ bool GECollisible::collide(const GECollisible& other) const {
     int combinedRadius = getCollisionRadius() + other.getCollisionRadius();
     return distSquared < combinedRadius * combinedRadius;
 }
+
+bool GECollisible::collideAt(int x, int y, const GECollisible& other) const {
+    int dx = (x + image.width / 2) - (other._originX + other.image.width / 2);
+    int dy = (y + image.height / 2) - (other._originY + other.image.height / 2);
+    int distSquared = dx * dx + dy * dy;
+    int combinedRadius = getCollisionRadius() + other.getCollisionRadius();
+    return distSquared < combinedRadius * combinedRadius;
+}

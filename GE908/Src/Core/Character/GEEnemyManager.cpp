@@ -53,10 +53,11 @@ void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
         x = camOffsetX + rand() % screenW;
         y = camOffsetY + screenH + safeDistance; break;
     case 2: 
-        // 
+        // left
         x = camOffsetX - safeDistance;
         y = camOffsetY + rand() % screenH; break;
     case 3: 
+        // right
         x = camOffsetX + screenW + safeDistance;
         y = camOffsetY + rand() % screenH; break;
     }
@@ -84,8 +85,6 @@ void GEEnemyManager::update(float deltaTime, GEPlayer* player) {
     }
 
     for (int i = 0; i < _enemyCount; i++) {
-        //if (_enemies[i])
-        //    _enemies[i]->update(deltaTime, player->getX(), player->getY());
         GEEnemy* enemy = _enemies[i];
         if (!enemy) continue;
 

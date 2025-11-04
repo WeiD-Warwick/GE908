@@ -14,7 +14,7 @@ class GameManager {
 private:
 	GEWindow _window;
 	GEFont _font;
-	GEMapsManager _mapManager;
+	GEMapsManager _mapsManager;
 	GEPlayer _player;
 	GECamera _camera;
 	GEFpsCounter _fpsCounter;

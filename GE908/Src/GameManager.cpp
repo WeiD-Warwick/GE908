@@ -6,7 +6,7 @@
 
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager() : _window(), _font(), _mapManager(), _player(), _camera(), _isRunning(false) {}
+GameManager::GameManager() : _window(), _font(), _mapsManager(), _player(), _camera(), _isRunning(false) {}
 
 GameManager::~GameManager() {
 	_font.release();
@@ -19,9 +19,9 @@ void GameManager::loadComponent() {
 
 	_font.load();
 
-	_mapManager.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
+	_mapsManager.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
 
-	_saveData = _mapManager.getSaveData();
+	_saveData = _mapsManager.getSaveData();
 	if (_saveData) {
 		_player.load("Src/Assets/Textures/player.png");
 		_player.loadData(_saveData);
@@ -48,15 +48,7 @@ void GameManager::update(float deltaTime) {
 
 	if (pause) stop();
 
-	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight, _enemyManager);
-
-	for (int i = 0; i < _enemyManager.getEnemyCount(); ++i) {
-		GEEnemy* enemy = _enemyManager.getEnemyAt(i);
-		if (enemy && enemy->collide(_player)) {
-			GELog::shared().warning("Player hit by enemy!");
-			break;
-		}
-	}
+	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight, _mapsManager ,_enemyManager);
 
 	_camera.followPlayer(_player.getX(), _player.getY(), _player.getWidth(), _player.getHeight());
 
@@ -69,7 +61,7 @@ void GameManager::update(float deltaTime) {
 
 void GameManager::render() {
 	_window.clear();
-	_mapManager.draw(_window, _camera);
+	_mapsManager.draw(_window, _camera);
 	_player.draw(_window, _camera);
 	_enemyManager.draw(_window, _camera);
 
