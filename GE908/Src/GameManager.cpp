@@ -48,20 +48,21 @@ void GameManager::update(float deltaTime) {
 
 	if (pause) stop();
 
-	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight);
+	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight, _enemyManager);
+
+	for (int i = 0; i < _enemyManager.getEnemyCount(); ++i) {
+		GEEnemy* enemy = _enemyManager.getEnemyAt(i);
+		if (enemy && enemy->collide(_player)) {
+			GELog::shared().warning("Player hit by enemy!");
+			break;
+		}
+	}
 
 	_camera.followPlayer(_player.getX(), _player.getY(), _player.getWidth(), _player.getHeight());
 
 	_saveData->setCameraOffset(_camera.getX(), _camera.getY());
 
 	_enemyManager.update(deltaTime, &_player);
-
-	for (int i = 0; i < _enemyManager.getEnemyCount(); ++i) {
-		GEEnemy* enemy = _enemyManager.getEnemyAt(i);
-		if (enemy && enemy->collide(_player)) {
-			GELog::shared().warning("Player hit by enemy!");
-		}
-	}
 
 	_fpsCounter.frameRendered();
 }

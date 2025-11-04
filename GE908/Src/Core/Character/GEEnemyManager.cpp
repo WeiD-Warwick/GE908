@@ -1,4 +1,5 @@
 #include "GEEnemyManager.h"
+#include "GEPlayer.h"
 #include <cstdlib>
 #include <ctime>
 
@@ -82,8 +83,19 @@ void GEEnemyManager::update(float deltaTime, GEPlayer* player) {
         if (_spawnInterval < 0.5f) _spawnInterval = 0.5f;
     }
 
-    for (unsigned int i = 0; i < _enemyCount; i++) {
-        if (_enemies[i])
-            _enemies[i]->update(deltaTime, player->getX(), player->getY());
+    for (int i = 0; i < _enemyCount; i++) {
+        //if (_enemies[i])
+        //    _enemies[i]->update(deltaTime, player->getX(), player->getY());
+        GEEnemy* enemy = _enemies[i];
+        if (!enemy) continue;
+
+        int previousX = enemy->getX();
+        int previousY = enemy->getY();
+
+        enemy->update(deltaTime, player->getX(), player->getY());
+
+        if (enemy->collide(*player)) {
+            enemy->setPosition(previousX, previousY);
+        }
     }
 }
