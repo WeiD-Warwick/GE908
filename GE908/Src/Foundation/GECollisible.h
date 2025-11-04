@@ -1,6 +1,7 @@
 #pragma once
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Core/Camera/GECamera.h"
+#include "GELog.h"
 
 #define SHOW_COLLISION_CIRCLE true
 
@@ -13,6 +14,7 @@ enum GECollisionType {
 	Player,
 	Enemy,
 	Water,
+	Projectile,
 };
 
 class GECollisible {
@@ -27,7 +29,9 @@ public:
 
 	GECollisible(const std::string& filename, GECollisionType collisionType)
 		: _type(collisionType) {
-		image.load(filename);
+		if (image.load(filename)) {
+			GELog::shared().info("Test");
+		}
 	}
 
 	virtual ~GECollisible() = default;
@@ -37,6 +41,8 @@ public:
 	void setPosition(int x, int y) { _originX = x; _originY = y; }
 	int getOriginX() const { return _originX; }
 	int getOriginY() const { return _originY; }
+	int getCenterX() const { return _originX + image.width / 2; }
+	int getCenterY() const { return _originY + image.height / 2; }
 	int getImageWidth() const { return image.width; }
 	int getImageHeight() const { return image.height; }
 	int getCollisionRadius() const { return image.width / 2; }

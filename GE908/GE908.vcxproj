@@ -123,6 +123,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\Skill\GEProjectileManager.cpp" />
+    <ClCompile Include="Src\Core\Skill\GEProjectile.cpp" />
     <ClCompile Include="Src\Core\Maps\GETiles.cpp" />
     <ClCompile Include="Src\Core\Character\GEEnemyManager.cpp" />
     <ClCompile Include="Src\Core\Character\GEEnemy.cpp" />
@@ -140,6 +142,8 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Skill\GEProjectileManager.h" />
+    <ClInclude Include="Src\Core\Skill\GEProjectile.h" />
     <ClInclude Include="Src\Core\Character\GEEnemyManager.h" />
     <ClInclude Include="Src\Core\Character\GEEnemy.h" />
     <ClInclude Include="Src\Core\Character\BaseCharacter.h" />
@@ -274,6 +278,8 @@
     <Image Include="Src\Assets\MapTiles\7.png" />
     <Image Include="Src\Assets\MapTiles\8.png" />
     <Image Include="Src\Assets\MapTiles\9.png" />
+    <Image Include="Src\Assets\Textures\arrow.png" />
+    <Image Include="Src\Assets\Textures\enemy_bullet.png" />
     <Image Include="Src\Assets\Textures\enemy_fast.png" />
     <Image Include="Src\Assets\Textures\enemy_heavy.png" />
     <Image Include="Src\Assets\Textures\enemy_normal.png" />

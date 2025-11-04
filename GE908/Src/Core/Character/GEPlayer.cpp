@@ -3,6 +3,7 @@
 #include "GEEnemyManager.h"
 #include "../../Foundation/GESaveData.h"
 #include "../Maps/GEMapsManager.h"
+#include "../Skill/GEProjectileManager.h"
 
 GEPlayer::GEPlayer()
 	: BaseCharacter("Src/Assets/Textures/player.png", Player) {
@@ -145,3 +146,48 @@ void GEPlayer::update(float deltaTime, bool moveUp, bool moveDown, bool moveLeft
     _originX = clamp(_originX, minOriginX, maxOriginX);
     _originY = clamp(_originY, minOriginY, maxOriginY);
 }
+
+
+void GEPlayer::updateAttack(float deltaTime, const GEEnemyManager& enemyManager, GEProjectileManager& projectileManager) {
+    _attackTimer += deltaTime;
+
+    if (_attackTimer < _attackInterval) return;
+
+    _attackTimer = 0.0f;
+
+    GEEnemy* nearest = nullptr;
+    float nearestDistSq = 99999999.0f;
+
+    int enemyCount = enemyManager.getEnemyCount();
+
+    for (int i = 0; i < enemyCount; i++) {
+
+        GEEnemy* enemy = enemyManager.getEnemyAt(i);
+        if (!enemy || !enemy->isAlive()) continue;
+
+        int dx = enemy->getCenterX() - getCenterX();
+        int dy = enemy->getCenterY() - getCenterY();
+
+        float distSq = static_cast<float>(dx * dx + dy * dy);
+
+        if (distSq < nearestDistSq) {
+            nearestDistSq = distSq;
+            nearest = enemy;
+        }
+    }
+
+    if (!nearest) return;
+
+    int px = getCenterX();
+    int py = getCenterY();
+    int tx = nearest->getCenterX();
+    int ty = nearest->getCenterY();
+    float dirX = static_cast<float>(tx - px);
+    float dirY = static_cast<float>(ty - py);
+    float len = sqrtf(dirX * dirX + dirY * dirY);
+    if (len == 0) return;
+    dirX /= len; dirY /= len;
+
+    projectileManager.addProjectile(FromPlayer, px, py, dirX, dirY, 100.0f, 200);
+}
+

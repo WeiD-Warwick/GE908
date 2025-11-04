@@ -6,7 +6,7 @@
 
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager() : _window(), _font(), _mapsManager(), _player(), _camera(), _isRunning(false) {}
+GameManager::GameManager() : _window(), _font(), _mapsManager(), _player(), _camera(), _projectileManager(), _isRunning(false) {}
 
 GameManager::~GameManager() {
 	_font.release();
@@ -56,6 +56,9 @@ void GameManager::update(float deltaTime) {
 
 	_enemyManager.update(deltaTime, &_player);
 
+	_player.updateAttack(deltaTime, _enemyManager, _projectileManager);
+	_projectileManager.update(deltaTime, _enemyManager, _player);
+
 	_fpsCounter.frameRendered();
 }
 
@@ -64,6 +67,7 @@ void GameManager::render() {
 	_mapsManager.draw(_window, _camera);
 	_player.draw(_window, _camera);
 	_enemyManager.draw(_window, _camera);
+	_projectileManager.draw(_window, _camera);
 
 	const unsigned char fpsColor[3] = { 255, 0, 0 };
 

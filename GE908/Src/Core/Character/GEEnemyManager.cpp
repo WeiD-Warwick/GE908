@@ -21,13 +21,6 @@ void GEEnemyManager::load(GESaveData* saveData) {
     _saveData = saveData;
 }
 
-void GEEnemyManager::draw(GEWindow& window, const GECamera& camera) {
-    for (unsigned int i = 0; i < _enemyCount; i++) {
-        if (_enemies[i])
-            _enemies[i]->draw(window, camera);
-    }
-}
-
 void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
     if (_enemyCount >= MAX_ENEMIES) return;
 
@@ -75,6 +68,14 @@ void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
     _enemies[_enemyCount++] = enemy;
 }
 
+void GEEnemyManager::draw(GEWindow& window, const GECamera& camera) {
+    for (unsigned int i = 0; i < _enemyCount; i++) {
+        GEEnemy* enemy = _enemies[i];
+        if (!enemy || !enemy->isAlive()) continue;
+        enemy->draw(window, camera);
+    }
+}
+
 void GEEnemyManager::update(float deltaTime, GEPlayer* player) {
     _spawnTimer += deltaTime;
     if (_spawnTimer > _spawnInterval) {
@@ -86,7 +87,7 @@ void GEEnemyManager::update(float deltaTime, GEPlayer* player) {
 
     for (int i = 0; i < _enemyCount; i++) {
         GEEnemy* enemy = _enemies[i];
-        if (!enemy) continue;
+        if (!enemy || !enemy->isAlive()) continue;
 
         int previousX = enemy->getX();
         int previousY = enemy->getY();
