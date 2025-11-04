@@ -2,13 +2,14 @@
 #include "GEProjectile.h"
 #include "../../Core/Character/GEEnemyManager.h"
 #include "../../Core/Character/GEPlayer.h"
-
+#define MAX_PROJECTILES 5000
 
 class GEProjectileManager {
 
 private:
+
     GEProjectile* _projectiles[MAX_PROJECTILES];
-    int _count = 0;
+   
 
 public:
     GEProjectileManager();

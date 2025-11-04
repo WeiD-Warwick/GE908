@@ -1,5 +1,4 @@
 #include "GEProjectileManager.h"
-#define MAX_PROJECTILES 200
 
 GEProjectileManager::GEProjectileManager() {
 	for (int i = 0; i < MAX_PROJECTILES; i++) {
@@ -8,51 +7,34 @@ GEProjectileManager::GEProjectileManager() {
 }
 
 GEProjectileManager::~GEProjectileManager() {
-	for (int i = 0; i < MAX_PROJECTILES; i++) {
-		if (_projectiles[i]) {
-			delete _projectiles[i];
-		}
-	}
+    for (int i = 0; i < MAX_PROJECTILES; i++) {
+        delete _projectiles[i];
+    }
 }
 
 void GEProjectileManager::addProjectile(ProjectileOwner from, int x, int y, float dirX, float dirY, float speed, int damage) {
-
-    if (_count < 0 || _count >= MAX_PROJECTILES) {
-        GELog::shared().error("!!! ProjectileManager overflow: count: " + std::to_string(_count));
-        return;
+    for (int i = 0; i < MAX_PROJECTILES; i++) {
+        GEProjectile* projectile = _projectiles[i];
+        // find a destroy place and replace it
+        if (!projectile || !projectile->isActive()) {
+            delete projectile;
+            const std::string& filePath = (from == FromPlayer) ? "Src/Assets/Textures/arrow.png" : "Src/Assets/Textures/enemy_bullet.png";
+            _projectiles[i] = new GEProjectile(filePath, from, x, y, dirX, dirY, speed, damage);
+            return;
+        }
     }
-
-	const std::string& filePath = (from == FromPlayer) ? "Src/Assets/Textures/arrow.png" : "Src/Assets/Textures/enemy_bullet.png";
-
-	GEProjectile* projectile = new GEProjectile(filePath, from, x, y, dirX, dirY, speed, damage);
-
-	_projectiles[_count++] = projectile;
 }
 
-void GEProjectileManager::update(float deltaTime, GEEnemyManager& enemyManager, GEPlayer& player) {
-
-    for (int i = 0; i < _count; ) {
+void GEProjectileManager::update(float dt, GEEnemyManager& enemyManager, GEPlayer& player) {
+    for (int i = 0; i < MAX_PROJECTILES; i++) {
         GEProjectile* projectile = _projectiles[i];
-        if (!projectile) {
-            _projectiles[i] = _projectiles[_count - 1];
-            _projectiles[_count - 1] = nullptr;
-            _count--;
-            continue;
-        }
+        if (!projectile || !projectile->isActive()) continue;
 
-        if (projectile && !projectile->isActive()) {
-            delete projectile;
-            _projectiles[i] = _projectiles[_count - 1];
-            _projectiles[_count - 1] = nullptr;
-            _count--;
-            continue;
-        }
-
-        projectile->update(deltaTime);
+        projectile->update(dt);
 
         if (projectile->getOwner() == FromPlayer) {
-            int enemyCount = enemyManager.getEnemyCount();
-            for (int j = 0; j < enemyCount; j++) {
+            int n = enemyManager.getEnemyCount();
+            for (int j = 0; j < n; j++) {
                 GEEnemy* enemy = enemyManager.getEnemyAt(j);
                 if (enemy && enemy->isAlive() && projectile->collide(*enemy)) {
                     enemy->takeDamage(projectile->getDamage());
@@ -60,24 +42,21 @@ void GEProjectileManager::update(float deltaTime, GEEnemyManager& enemyManager, 
                     break;
                 }
             }
-        }
-        else {
+        } else {
             if (projectile->collide(player)) {
                 player.takeDamage(projectile->getDamage());
                 projectile->deactivate();
             }
         }
-
-        i++;
     }
 }
 
 
 void GEProjectileManager::draw(GEWindow& window, const GECamera& camera) {
-    if (_count <= 0) return;
-    for (int i = 0; i < _count; i++) {
+    for (int i = 0; i < MAX_PROJECTILES; i++) {
         GEProjectile* projectile = _projectiles[i];
-        if (projectile && projectile->isActive())
+        if (projectile && projectile->isActive()) {
             projectile->draw(window, camera);
+        }
     }
 }

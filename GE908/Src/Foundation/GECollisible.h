@@ -29,9 +29,7 @@ public:
 
 	GECollisible(const std::string& filename, GECollisionType collisionType)
 		: _type(collisionType) {
-		if (image.load(filename)) {
-			GELog::shared().info("Test");
-		}
+		image.load(filename);
 	}
 
 	virtual ~GECollisible() = default;
