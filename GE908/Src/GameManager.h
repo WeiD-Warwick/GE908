@@ -6,7 +6,8 @@
 #include "Core/Character/GEPlayer.h"
 #include "Core/Camera/GECamera.h"
 #include "Core/Character/GEEnemyManager.h"
-#include "Core/Skill/GEProjectileManager.h"
+#include "Core/Items/GEProjectileManager.h"
+#include "Core/Items/GEBuffManager.h"
 
 using namespace GamesEngineeringBase;
 
@@ -21,9 +22,11 @@ private:
 	GEFpsCounter _fpsCounter;
 	GEEnemyManager _enemyManager;
 	GEProjectileManager _projectileManager;
+	GEBuffManager _buffManager;
 	GESaveData* _saveData = nullptr;
 
 	bool _isRunning;
+	bool _pressSkill = false;
 
 public:
 	GameManager();

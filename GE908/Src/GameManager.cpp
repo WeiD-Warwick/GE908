@@ -6,7 +6,7 @@
 
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager() : _window(), _font(), _mapsManager(), _player(), _camera(), _projectileManager(), _isRunning(false) {}
+GameManager::GameManager() : _window(), _font(), _mapsManager(), _player(), _camera(), _projectileManager(), _buffManager(), _isRunning(false) {}
 
 GameManager::~GameManager() {
 	_font.release();
@@ -30,6 +30,7 @@ void GameManager::loadComponent() {
 		int mapWorldHeight = _saveData->getMapTotalHeight();
 		_camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
 		_enemyManager.load(_saveData);
+		_buffManager.load(_saveData);
 	}
 	else {
 		GELog::shared().warning("Map data not loaded, player starts at (0,0)");
@@ -44,6 +45,7 @@ void GameManager::update(float deltaTime) {
 	bool moveDown = _window.keyPressed('S');
 	bool moveLeft = _window.keyPressed('A');
 	bool moveRight = _window.keyPressed('D');
+	bool castSkill = _window.keyPressed('Q');
 	bool pause = _window.keyPressed(VK_ESCAPE);
 
 	if (pause) stop();
@@ -56,7 +58,13 @@ void GameManager::update(float deltaTime) {
 
 	_enemyManager.update(deltaTime, &_player);
 
-	_player.updateAttack(deltaTime, _enemyManager, _projectileManager);
+	//_player.updateAttack(deltaTime, _enemyManager, _projectileManager);
+
+	bool triggerSkill = castSkill && !_pressSkill;
+	_pressSkill = castSkill;
+	_player.updateSkill(deltaTime, triggerSkill, _enemyManager);
+
+	_buffManager.update(deltaTime, _player);
 	_projectileManager.update(deltaTime, _enemyManager, _player);
 
 	_fpsCounter.frameRendered();
@@ -68,6 +76,7 @@ void GameManager::render() {
 	_player.draw(_window, _camera);
 	_enemyManager.draw(_window, _camera);
 	_projectileManager.draw(_window, _camera);
+	_buffManager.draw(_window, _camera);
 
 	const unsigned char fpsColor[3] = { 255, 0, 0 };
 

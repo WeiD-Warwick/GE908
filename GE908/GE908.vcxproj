@@ -123,8 +123,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Core\Skill\GEProjectileManager.cpp" />
-    <ClCompile Include="Src\Core\Skill\GEProjectile.cpp" />
+    <ClCompile Include="Src\Core\Items\GEBuffManager.cpp" />
+    <ClCompile Include="Src\Core\Items\GEBuff.cpp" />
+    <ClCompile Include="Src\Core\Items\GEProjectileManager.cpp" />
+    <ClCompile Include="Src\Core\Items\GEProjectile.cpp" />
     <ClCompile Include="Src\Core\Maps\GETiles.cpp" />
     <ClCompile Include="Src\Core\Character\GEEnemyManager.cpp" />
     <ClCompile Include="Src\Core\Character\GEEnemy.cpp" />
@@ -142,8 +144,10 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Core\Skill\GEProjectileManager.h" />
-    <ClInclude Include="Src\Core\Skill\GEProjectile.h" />
+    <ClInclude Include="Src\Core\Items\GEBuffManager.h" />
+    <ClInclude Include="Src\Core\Items\GEBuff.h" />
+    <ClInclude Include="Src\Core\Items\GEProjectileManager.h" />
+    <ClInclude Include="Src\Core\Items\GEProjectile.h" />
     <ClInclude Include="Src\Core\Character\GEEnemyManager.h" />
     <ClInclude Include="Src\Core\Character\GEEnemy.h" />
     <ClInclude Include="Src\Core\Character\BaseCharacter.h" />

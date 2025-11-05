@@ -60,10 +60,16 @@
     <ClCompile Include="Src\Core\Maps\GETiles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Skill\GEProjectile.cpp">
+    <ClCompile Include="Src\Core\Items\GEProjectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Skill\GEProjectileManager.cpp">
+    <ClCompile Include="Src\Core\Items\GEProjectileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Items\GEBuff.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Items\GEBuffManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,10 +113,16 @@
     <ClInclude Include="Src\Core\Maps\GETile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Skill\GEProjectile.h">
+    <ClInclude Include="Src\Core\Items\GEProjectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Skill\GEProjectileManager.h">
+    <ClInclude Include="Src\Core\Items\GEProjectileManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\Items\GEBuff.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\Items\GEBuffManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,7 +3,7 @@
 #include "../Core/Camera/GECamera.h"
 #include "GELog.h"
 
-#define SHOW_COLLISION_CIRCLE true
+#define SHOW_COLLISION_CIRCLE false
 
 class GEWindow;
 
