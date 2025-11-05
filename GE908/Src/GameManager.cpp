@@ -6,7 +6,7 @@
 
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager() : _window(), _font(), _mapsManager(), _player(), _camera(), _projectileManager(), _buffManager(), _isRunning(false) {}
+GameManager::GameManager() : _window(), _font(), _mapsManager(), _player(), _camera(), _projectileManager(), _buffManager(), _frameTimer(), _isRunning(false) {}
 
 GameManager::~GameManager() {
 	_font.release();
@@ -66,8 +66,6 @@ void GameManager::update(float deltaTime) {
 
 	_buffManager.update(deltaTime, _player);
 	_projectileManager.update(deltaTime, _enemyManager, _player);
-
-	_fpsCounter.frameRendered();
 }
 
 void GameManager::render() {
@@ -80,7 +78,7 @@ void GameManager::render() {
 
 	const unsigned char fpsColor[3] = { 255, 0, 0 };
 
-	_font.draw("FPS:" + std::to_string(static_cast<int>(_fpsCounter.getFps())), 200, 400, fpsColor, 1, _window);
+	_font.draw("FPS:" + std::to_string(static_cast<int>(_frameTimer.getFPS())), 200, 400, fpsColor, 1, _window);
 	_font.draw("HP:" + std::to_string(_player.getHP()), 400, 400, fpsColor, 1, _window);
 
 	_window.present();
@@ -90,9 +88,18 @@ void GameManager::run() {
 	_isRunning = true;
 	loadComponent();
 
+
+
 	while (_isRunning) {
-		update(0.016f);
+		_frameTimer.beginFrame();
+
+		float dt = _frameTimer.getDeltaTime();
+
+		update(dt);
+
 		render();
+
+		_frameTimer.endFrame();
 	}
 }
 

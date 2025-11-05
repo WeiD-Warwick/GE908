@@ -1,35 +1,35 @@
-// FpsCounter.h
-#pragma once
-#include <chrono>
+﻿#pragma once
+#include "../../ThirdParty/GamesEngineeringBase.h"
 
-class GEFpsCounter {
+using namespace GamesEngineeringBase;
+
+class GEFrameTimer : public Timer {
 private:
-    std::size_t _frameCount;
-    std::chrono::steady_clock::time_point _lastTime;
-    double _fps;
-    double _updateIntervalSec{ 1.0 };
+    float _deltaTime = 0.0f;
+    float _fps = 0.0f;
+    float _accumTime = 0.0f;
+    int _frameCount = 0;
+    const float _updateInterval = 1.0f;
 
 public:
-    GEFpsCounter()
-        : _frameCount(0),
-        _lastTime(std::chrono::steady_clock::now()),
-        _fps(0.0)
-    {
+    GEFrameTimer() = default;
+
+    void beginFrame() {
+        reset();
     }
 
-    void frameRendered() {
-        ++_frameCount;
-        auto now = std::chrono::steady_clock::now();
-        std::chrono::duration<double> diff = now - _lastTime;
+    void endFrame() {
+        _deltaTime = dt();  
+        _frameCount++;
+        _accumTime += _deltaTime;
 
-        if (diff.count() >= _updateIntervalSec) {
-            _fps = _frameCount / diff.count();
+        if (_accumTime >= _updateInterval) {
+            _fps = static_cast<float>(_frameCount) / _accumTime;
+            _accumTime = 0.0f;
             _frameCount = 0;
-            _lastTime = now;
         }
     }
 
-    double getFps() const {
-        return _fps;
-    }
+    float getDeltaTime() const { return _deltaTime; }
+    float getFPS() const { return _fps; }
 };

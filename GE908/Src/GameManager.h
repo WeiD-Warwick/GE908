@@ -19,7 +19,7 @@ private:
 	GEMapsManager _mapsManager;
 	GEPlayer _player;
 	GECamera _camera;
-	GEFpsCounter _fpsCounter;
+	GEFrameTimer _frameTimer;
 	GEEnemyManager _enemyManager;
 	GEProjectileManager _projectileManager;
 	GEBuffManager _buffManager;
