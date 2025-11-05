@@ -33,45 +33,37 @@ GEEnemy::GEEnemy(GEEnemyType type)
 
 GEEnemy::~GEEnemy() {}
 
-void GEEnemy::update(float deltaTime, float playerCenterX, float playerCenterY, GEProjectileManager& projectileManager) {
-	if (!isAlive()) return;
+void GEEnemy::update(float deltaTime,
+    float playerCenterX, float playerCenterY,
+    GEProjectileManager& projectileManager)
+{
+    if (!isAlive()) return;
 
-	float currentCenterX = getCenterX();
-	float currentCenterY = getCenterY();
+    const float cx = getCenterX();
+    const float cy = getCenterY();
 
-	if (!_isStatic) {
-		float dirX = (playerCenterX > currentCenterX) - (playerCenterX < currentCenterX);
-		float dirY = (playerCenterY > currentCenterY) - (playerCenterY < currentCenterY);
+    if (!_isStatic) {
+        const float dx = playerCenterX - cx;
+        const float dy = playerCenterY - cy;
 
-		float moveDelta = _speed * deltaTime;
-		float moveAmount = moveDelta > 1.0f ? moveDelta : 1.0f;
+        if (dx != 0.0f || dy != 0.0f) {
+            moveUpdate(deltaTime, dx, dy);
+        }
+        return;
+    }
+    else {
+        _attackCooldown += deltaTime;
+        if (_attackCooldown < _attackRate) return;
+        _attackCooldown = 0.0f;
 
-		_accumX += dirX * moveDelta;
-		_accumY += dirY * moveDelta;
+        float vx = playerCenterX - cx;
+        float vy = playerCenterY - cy;
+        const float len = std::sqrt(vx * vx + vy * vy);
+        if (len == 0.0f) return;
 
-		float moveX = std::floor(std::abs(_accumX)) * ((_accumX >= 0) ? 1 : -1);
-		float moveY = std::floor(std::abs(_accumY)) * ((_accumY >= 0) ? 1 : -1);
-		_accumX -= moveX;
-		_accumY -= moveY;
+        vx /= len;
+        vy /= len;
 
-		setCenter(currentCenterX + moveX, currentCenterY + moveY);
-	}
-	else {
-		_attackCooldown += deltaTime;
-		if (_attackCooldown < _attackRate) return;
-		_attackCooldown = 0.0f;
-
-		float targetX = playerCenterX;
-		float targetY = playerCenterY;
-		float dirX = targetX - currentCenterX;
-		float dirY = targetY - currentCenterY;
-		float len = sqrtf(dirX * dirX + dirY * dirY);
-
-		if (len == 0.0f) return;
-
-		dirX /= len;
-		dirY /= len;
-
-		projectileManager.addProjectile(FromEnemy, currentCenterX, currentCenterY, dirX, dirY, 100.0f, 200);
-	}
+        projectileManager.addProjectile(FromEnemy, cx, cy, vx, vy, 100.0f, 200);
+    }
 }

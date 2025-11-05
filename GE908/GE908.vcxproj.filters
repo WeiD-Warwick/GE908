@@ -24,9 +24,6 @@
     <ClCompile Include="Src\Core\Camera\GECamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Foundation\GEWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Foundation\GEFont.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,7 +39,7 @@
     <ClCompile Include="Src\Core\Character\GEPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Foundation\GEFPSCounter.cpp">
+    <ClCompile Include="Src\Foundation\GEFrameTimer.h">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Core\Character\GEEnemy.cpp">
@@ -66,10 +63,7 @@
     <ClCompile Include="Src\Core\Items\GEProjectileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Items\GEBuff.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Core\Items\GEBuffManager.cpp">
+    <ClCompile Include="Src\Core\Character\BaseCharacter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -117,12 +111,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Core\Items\GEProjectileManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Core\Items\GEBuff.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Core\Items\GEBuffManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -30,7 +30,7 @@ public:
     GETile* getTile(int tileID) const;
 
     // get current save data
-    GESaveData* getSaveData() { return _saveData; }
+    GESaveData* getSaveData() const { return _saveData; }
 
     void draw(GEWindow& window, GECamera& camera);
 };

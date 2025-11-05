@@ -6,6 +6,12 @@
 
 using namespace GamesEngineeringBase;
 
+static float clamp(float value, float minVal, float maxVal) {
+    if (value < minVal) return minVal;
+    if (value > maxVal) return maxVal;
+    return value;
+}
+
 class BaseCharacter : public GECollisible {
 
 protected:
@@ -16,6 +22,14 @@ protected:
 	int _mapWidth = 0;
 	int _mapHeight = 0;
 
+	float _accumX = 0.0f;
+	float _accumY = 0.0f;
+
+    virtual bool isBlockedAt(float x, float y) const { return false; }
+
+    // move character and check collision and boundary
+	void moveUpdate(float deltaTime, float dirX, float dirY);
+
 public:
 	BaseCharacter(const std::string& filename = "", GECollisionType type = None)
 		: GECollisible(filename, type) {
@@ -25,25 +39,11 @@ public:
 
 	virtual ~BaseCharacter() {}
 
-	void load(const std::string& characterImagePath) {
-		if (!_image.load(characterImagePath)) {
-			GELog::shared().error("Load character image failed: " + characterImagePath);
-		}
-		else {
-			_width = _image.width;
-			_height = _image.height;
-			GELog::shared().info("Loaded character image: " + characterImagePath);
-		}
-	}
-
 	int getSpeed() const { return _speed; }
 	int getHP() const { return _hp; }
 	bool isAlive() const { return _hp > 0; }
 	void setSpeed(int speed) { _speed = speed; }
 	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth; _mapHeight = mapHeight; }
 
-	void takeDamage(int value) {
-		int newValue = _hp - value;
-		_hp = newValue > 0 ? newValue : 0;
-	}
+	void takeDamage(int value);
 };

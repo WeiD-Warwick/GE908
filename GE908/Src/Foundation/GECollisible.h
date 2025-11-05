@@ -1,11 +1,10 @@
 #pragma once
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Core/Camera/GECamera.h"
+#include "../Foundation/GEWindow.h"
 #include "GELog.h"
 
 #define SHOW_COLLISION_CIRCLE false
-
-class GEWindow;
 
 using namespace GamesEngineeringBase;
 

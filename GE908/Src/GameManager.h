@@ -1,13 +1,12 @@
 #pragma once
 #include "Foundation/GEWindow.h"
 #include "Foundation/GEFont.h"
-#include "Foundation/GEFPSCounter.cpp"
+#include "Foundation/GEFrameTimer.h"
 #include "Core/Maps/GEMapsManager.h"
 #include "Core/Character/GEPlayer.h"
 #include "Core/Camera/GECamera.h"
 #include "Core/Character/GEEnemyManager.h"
 #include "Core/Items/GEProjectileManager.h"
-#include "Core/Items/GEBuffManager.h"
 
 using namespace GamesEngineeringBase;
 
@@ -16,17 +15,14 @@ class GameManager {
 private:
 	GEWindow _window;
 	GEFont _font;
-	GEMapsManager _mapsManager;
 	GEPlayer _player;
 	GECamera _camera;
-	GEFrameTimer _frameTimer;
+	GEMapsManager _mapsManager;
 	GEEnemyManager _enemyManager;
 	GEProjectileManager _projectileManager;
-	GEBuffManager _buffManager;
 	GESaveData* _saveData = nullptr;
 
 	bool _isRunning;
-	bool _pressSkill = false;
 
 public:
 	GameManager();

@@ -1,5 +1,4 @@
 ﻿#include "GECollisible.h"
-#include "GEWindow.h"
 
 void GECollisible::draw(GEWindow& window, const GECamera& camera) {
     int camX = camera.getX();
@@ -21,11 +20,6 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
     }
 
     if (SHOW_COLLISION_CIRCLE && _type != None) {
-        const int camX = camera.getX();
-        const int camY = camera.getY();
-        const int winW = window.getWidth();
-        const int winH = window.getHeight();
-
         if (_type == Water) {
             int left = getOriginX() - camX;
             int top = getOriginY() - camY;
@@ -51,13 +45,17 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
                     const int yB = bottom - 1;
 
                     for (int x = xL; x <= xR; ++x) {
-                        if (yT >= 0 && yT < winH) window.draw(x, yT, 0, 0, 255);
-                        if (yB >= 0 && yB < winH) window.draw(x, yB, 0, 0, 255);
+                        if (yT >= 0 && yT < winH) 
+                            window.draw(x, yT, 0, 0, 255);
+                        if (yB >= 0 && yB < winH) 
+                            window.draw(x, yB, 0, 0, 255);
                     }
  
                     for (int y = yT; y <= yB; ++y) {
-                        if (xL >= 0 && xL < winW) window.draw(xL, y, 0, 0, 255);
-                        if (xR >= 0 && xR < winW) window.draw(xR, y, 0, 0, 255);
+                        if (xL >= 0 && xL < winW) 
+                            window.draw(xL, y, 0, 0, 255);
+                        if (xR >= 0 && xR < winW) 
+                            window.draw(xR, y, 0, 0, 255);
                     }
                 }
             }
@@ -78,8 +76,10 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
 
                 const int y1 = cy + dy;
                 const int y2 = cy - dy;
-                if (y1 >= 0 && y1 < winH) window.draw(x, y1, 255, 0, 0);
-                if (y2 >= 0 && y2 < winH) window.draw(x, y2, 255, 0, 0);
+                if (y1 >= 0 && y1 < winH) 
+                    window.draw(x, y1, 255, 0, 0);
+                if (y2 >= 0 && y2 < winH) 
+                    window.draw(x, y2, 255, 0, 0);
             }
         }
     }

@@ -4,9 +4,13 @@
 #define WINDOW_WIDTH 854
 #define WINDOW_HEIGHT 480
 
+const unsigned char fpsColor[3] = { 255, 0, 0 };
+
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager() : _window(), _font(), _mapsManager(), _player(), _camera(), _projectileManager(), _buffManager(), _frameTimer(), _isRunning(false) {}
+GameManager::GameManager() : _isRunning(false) {
+	_window.create(WINDOW_WIDTH, WINDOW_HEIGHT, "WM908", false);
+}
 
 GameManager::~GameManager() {
 	_font.release();
@@ -14,23 +18,19 @@ GameManager::~GameManager() {
 
 // load Game Resource, like maps, player, enemies
 void GameManager::loadComponent() {
-
-	_window.load(WINDOW_WIDTH, WINDOW_HEIGHT, "WM908", false);
-
 	_font.load();
 
 	_mapsManager.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
 
 	_saveData = _mapsManager.getSaveData();
+
 	if (_saveData) {
-		_player.load("Src/Assets/Textures/player.png");
-		_player.loadData(_saveData);
+		_player.bindWorldContext(&_mapsManager, &_enemyManager);
 
 		int mapWorldWidth = _saveData->getMapTotalWidth();
 		int mapWorldHeight = _saveData->getMapTotalHeight();
 		_camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
 		_enemyManager.load(_saveData);
-		_buffManager.load(_saveData);
 	}
 	else {
 		GELog::shared().warning("Map data not loaded, player starts at (0,0)");
@@ -41,16 +41,7 @@ void GameManager::loadComponent() {
 void GameManager::update(float deltaTime) {
 	_window.checkInput();
 
-	bool moveUp = _window.keyPressed('W');
-	bool moveDown = _window.keyPressed('S');
-	bool moveLeft = _window.keyPressed('A');
-	bool moveRight = _window.keyPressed('D');
-	bool castSkill = _window.keyPressed('Q');
-	bool pause = _window.keyPressed(VK_ESCAPE);
-
-	if (pause) stop();
-
-	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight, _mapsManager ,_enemyManager);
+	_player.update(deltaTime, _window);
 
 	_camera.followPlayer(_player.getOriginX(), _player.getOriginY(), _player.getWidth(), _player.getHeight());
 
@@ -59,12 +50,6 @@ void GameManager::update(float deltaTime) {
 	_enemyManager.update(deltaTime, &_player, _projectileManager);
 
 	_player.updateAttack(deltaTime, _enemyManager, _projectileManager);
-
-	bool triggerSkill = castSkill && !_pressSkill;
-	_pressSkill = castSkill;
-	_player.updateSkill(deltaTime, triggerSkill, _enemyManager);
-
-	_buffManager.update(deltaTime, _player);
 	_projectileManager.update(deltaTime, _enemyManager, _player);
 }
 
@@ -74,11 +59,8 @@ void GameManager::render() {
 	_player.draw(_window, _camera);
 	_enemyManager.draw(_window, _camera);
 	_projectileManager.draw(_window, _camera);
-	_buffManager.draw(_window, _camera);
 
-	const unsigned char fpsColor[3] = { 255, 0, 0 };
-
-	_font.draw("FPS:" + std::to_string(static_cast<int>(_frameTimer.getFPS())), 200, 400, fpsColor, 1, _window);
+	_font.draw("FPS:" + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())), 200, 400, fpsColor, 1, _window);
 	_font.draw("HP:" + std::to_string(_player.getHP()), 400, 400, fpsColor, 1, _window);
 
 	_window.present();
@@ -88,18 +70,14 @@ void GameManager::run() {
 	_isRunning = true;
 	loadComponent();
 
-
-
 	while (_isRunning) {
-		_frameTimer.beginFrame();
-
-		float dt = _frameTimer.getDeltaTime();
+		GEFrameTimer::shared().beginFrame();
+		float dt = GEFrameTimer::shared().getDeltaTime();
 
 		update(dt);
-
 		render();
 
-		_frameTimer.endFrame();
+		GEFrameTimer::shared().endFrame();
 	}
 }
 

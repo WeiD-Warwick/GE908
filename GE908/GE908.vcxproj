@@ -123,8 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Core\Items\GEBuffManager.cpp" />
-    <ClCompile Include="Src\Core\Items\GEBuff.cpp" />
+    <ClCompile Include="Src\Core\Character\BaseCharacter.cpp" />
     <ClCompile Include="Src\Core\Items\GEProjectileManager.cpp" />
     <ClCompile Include="Src\Core\Items\GEProjectile.cpp" />
     <ClCompile Include="Src\Core\Maps\GETiles.cpp" />
@@ -134,18 +133,15 @@
     <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp" />
     <ClCompile Include="Src\Foundation\GECollisible.cpp" />
     <ClCompile Include="Src\Foundation\GECollisible.h" />
-    <ClCompile Include="Src\Foundation\GEFPSCounter.cpp" />
+    <ClCompile Include="Src\Foundation\GEFrameTimer.h" />
     <ClCompile Include="Src\Foundation\GESaveData.cpp" />
     <ClCompile Include="Src\Foundation\GELog.cpp" />
     <ClCompile Include="Src\Core\Camera\GECamera.cpp" />
     <ClCompile Include="Src\Foundation\GEFont.cpp" />
-    <ClCompile Include="Src\Foundation\GEWindow.cpp" />
     <ClCompile Include="Src\GameManager.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Core\Items\GEBuffManager.h" />
-    <ClInclude Include="Src\Core\Items\GEBuff.h" />
     <ClInclude Include="Src\Core\Items\GEProjectileManager.h" />
     <ClInclude Include="Src\Core\Items\GEProjectile.h" />
     <ClInclude Include="Src\Core\Character\GEEnemyManager.h" />
