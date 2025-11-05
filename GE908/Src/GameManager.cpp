@@ -25,7 +25,7 @@ void GameManager::loadComponent() {
 	_saveData = _mapsManager.getSaveData();
 
 	if (_saveData) {
-		_player.bindWorldContext(&_mapsManager, &_enemyManager);
+		_player.bindWorldContext(&_mapsManager, &_enemyManager, &_projectileManager);
 
 		int mapWorldWidth = _saveData->getMapTotalWidth();
 		int mapWorldHeight = _saveData->getMapTotalHeight();
@@ -48,8 +48,6 @@ void GameManager::update(float deltaTime) {
 	_saveData->setCameraOffset(_camera.getX(), _camera.getY());
 
 	_enemyManager.update(deltaTime, &_player, _projectileManager);
-
-	_player.updateAttack(deltaTime, _enemyManager, _projectileManager);
 	_projectileManager.update(deltaTime, _enemyManager, _player);
 }
 

@@ -13,8 +13,8 @@ private:
 
 public:
 
-	GECamera();
-	~GECamera();
+	GECamera() {}
+	~GECamera() {}
 
     void load(int windowWidth, int windowHeight, int mapWidth, int mapHeight);
 

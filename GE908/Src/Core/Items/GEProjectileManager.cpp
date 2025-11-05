@@ -12,7 +12,7 @@ GEProjectileManager::~GEProjectileManager() {
     }
 }
 
-void GEProjectileManager::addProjectile(ProjectileOwner from, int startPointX, int startPointY, float dirX, float dirY, float speed, int damage) {
+void GEProjectileManager::addProjectile(ProjectileOwner from, float startPointX, float startPointY, float dirX, float dirY, float speed, int damage) {
     for (int i = 0; i < MAX_PROJECTILES; i++) {
         GEProjectile* projectile = _projectiles[i];
         // find a destroy place and replace it
@@ -51,7 +51,6 @@ void GEProjectileManager::update(float deltaTime, GEEnemyManager& enemyManager, 
         }
     }
 }
-
 
 void GEProjectileManager::draw(GEWindow& window, const GECamera& camera) {
     for (int i = 0; i < MAX_PROJECTILES; i++) {

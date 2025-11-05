@@ -13,6 +13,16 @@ static const std::string EnemyImagePath(GEEnemyType t) {
 	}
 }
 
+void GEEnemy::applyMovementBounds(float& newX, float& newY) {
+    float minCenterX = _width / 2.0f;
+    float maxCenterX = _mapWidth - _width / 2.0f;
+    float minCenterY = _height / 2.0f;
+    float maxCenterY = _mapHeight - _height / 2.0f;
+
+    newX = clamp(newX, minCenterX, maxCenterX);
+    newY = clamp(newY, minCenterY, maxCenterY);
+}
+
 GEEnemy::GEEnemy(GEEnemyType type)
 	: BaseCharacter(EnemyImagePath(type), Enemy), _type(type) {
 	_width = _image.width;

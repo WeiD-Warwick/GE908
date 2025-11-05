@@ -17,10 +17,11 @@ private:
 	const GESaveData* _saveData = nullptr;
 	const GEMapsManager* _mapsManager = nullptr;
 	const GEEnemyManager* _enemyManager = nullptr;
+	GEProjectileManager* _projectileManager = nullptr;
 
-	float _attackTimer = 0.0f;
-	float _attackIntervalBase = 3.0f;
-	float _attackSpeedMultiplier = 1.0f;
+	float _autoAttackTimer = 0.0f;
+	float _autoAttackIntervalBase = 3.0f;
+	float _autoAttackSpeedMultiplier = 1.0f;
 
 	GEProjectile* _projectiles[MAX_PROJECTILES];
 	int _projectileCount = 0;
@@ -31,15 +32,17 @@ private:
 
 	bool isBlockedAt(float x, float y) const;
 
+	void applyMovementBounds(float& newX, float& newY) override;
+
 public:
 
 	GEPlayer();
 	~GEPlayer();
 
-	void bindWorldContext(const GEMapsManager* maps, const GEEnemyManager* enemies);
+	void bindWorldContext(const GEMapsManager* maps, const GEEnemyManager* enemies, GEProjectileManager* projectiles);
 	
 	void update(float deltaTime, GEWindow& window);
 
-	void updateAttack(float deltaTime, const GEEnemyManager& enemyManager, GEProjectileManager& projectileManager);
+	void autoAttack(float deltaTime);
 
 };

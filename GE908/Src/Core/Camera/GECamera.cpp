@@ -1,9 +1,6 @@
 #include "GECamera.h"
 #include <algorithm>
 
-GECamera::GECamera() = default;
-GECamera::~GECamera() = default;
-
 void GECamera::load(int windowWidth, int windowHeight, int mapWidth, int mapHeight) {
 	_width = windowWidth;
 	_height = windowHeight;
@@ -13,7 +10,7 @@ void GECamera::load(int windowWidth, int windowHeight, int mapWidth, int mapHeig
 	_y = 0;
 }
 
-static float clampValue(float value, float minVal, float maxVal) {
+static float clamp(float value, float minVal, float maxVal) {
 	if (value < minVal) return minVal;
 	if (value > maxVal) return maxVal;
 	return value;
@@ -24,12 +21,12 @@ void GECamera::followPlayer(float playerX, float playerY, int playerWidth, int p
 	float targetY = playerY + (playerHeight / 2.0f) - (_height / 2.0f);
 
 	if (_mapWidth > _width)
-		_x = clampValue(targetX, 0, _mapWidth - _width);
+		_x = clamp(targetX, 0, _mapWidth - _width);
 	else
 		_x = (_mapWidth - _width) / 2;
 
 	if (_mapHeight > _height)
-		_y = clampValue(targetY, 0, _mapHeight - _height);
+		_y = clamp(targetY, 0, _mapHeight - _height);
 	else
 		_y = (_mapHeight - _height) / 2;
 }

@@ -1,10 +1,9 @@
 #include "GEPlayer.h"
 #include "BaseCharacter.h"
 #include "GEEnemyManager.h"
-#include "../../Foundation/GESaveData.h"
 #include "../Maps/GEMapsManager.h"
 #include "../Items/GEProjectileManager.h"
-#include <algorithm>
+#include "../../Foundation/GESaveData.h"
 
 GEPlayer::GEPlayer()
 	: BaseCharacter("", Player) {
@@ -14,9 +13,10 @@ GEPlayer::GEPlayer()
 
 GEPlayer::~GEPlayer() {}
 
-void GEPlayer::bindWorldContext(const GEMapsManager* maps, const GEEnemyManager* enemies) {
+void GEPlayer::bindWorldContext(const GEMapsManager* maps, const GEEnemyManager* enemies, GEProjectileManager* projectiles) {
     _mapsManager = maps;
     _enemyManager = enemies;
+    _projectileManager = projectiles;
     _saveData = maps->getSaveData();
 
     int mapWorldWidth = _saveData->getMapTotalWidth();
@@ -37,6 +37,8 @@ void GEPlayer::update(float deltaTime, GEWindow& window) {
     if (window.keyPressed('D')) dirX += 1.0f;
 
     moveUpdate(deltaTime, dirX, dirY);
+
+    autoAttack(deltaTime);
 }
 
 static bool isWaterTile(int tileID) {
@@ -103,35 +105,53 @@ bool GEPlayer::isBlockedAt(float x, float y) const {
     return false;
 }
 
-void GEPlayer::updateAttack(float deltaTime, const GEEnemyManager& enemyManager, GEProjectileManager& projectileManager) {
-    _attackTimer += deltaTime;
+void GEPlayer::applyMovementBounds(float& newX, float& newY) {
+    float camW = _saveData->getScreenWidth();
+    float camH = _saveData->getScreenHeight();
+    float mapW = _saveData->getMapTotalWidth();
+    float mapH = _saveData->getMapTotalHeight();
 
-    if (_attackTimer < 3) return;
+    float minCenterX = camW / 2.0f;
+    float maxCenterX = mapW - camW / 2.0f;
+    float minCenterY = camH / 2.0f;
+    float maxCenterY = mapH - camH / 2.0f;
 
-    _attackTimer = 0.0f;
+
+    newX = clamp(newX, minCenterX, maxCenterX);
+    newY = clamp(newY, minCenterY, maxCenterY);
+}
+
+void GEPlayer::autoAttack(float deltaTime) {
+
+    _autoAttackTimer += deltaTime;
+
+    float interval = _autoAttackIntervalBase / _autoAttackSpeedMultiplier;
+
+    if (_autoAttackTimer < interval) {
+        return;
+    }
+
+    _autoAttackTimer -= interval;
 
     GEEnemy* nearest = nullptr;
-    float nearestDistSq = 99999999.0f;
+    float nearestDistSq = FLT_MAX;
 
-    int enemyCount = enemyManager.getEnemyCount();
-
+    int enemyCount = _enemyManager->getEnemyCount();
     for (int i = 0; i < enemyCount; i++) {
-
-        GEEnemy* enemy = enemyManager.getEnemyAt(i);
+        GEEnemy* enemy = _enemyManager->getEnemyAt(i);
         if (!enemy || !enemy->isAlive()) continue;
-
-        float distanceX = enemy->getCenterX() - getCenterX();
-        float distanceY = enemy->getCenterY() - getCenterY();
-
-        float distSq = distanceX * distanceX + distanceY * distanceY;
-
+        float dx = enemy->getCenterX() - getCenterX();
+        float dy = enemy->getCenterY() - getCenterY();
+        float distSq = dx * dx + dy * dy;
         if (distSq < nearestDistSq) {
             nearestDistSq = distSq;
             nearest = enemy;
         }
     }
 
-    if (!nearest) return;
+    if (!nearest) {
+        return;
+    }
 
     float playerCenterX = getCenterX();
     float playerCenterY = getCenterY();
@@ -140,11 +160,11 @@ void GEPlayer::updateAttack(float deltaTime, const GEEnemyManager& enemyManager,
     float dirX = targetCenterX - playerCenterX;
     float dirY = targetCenterY - playerCenterY;
     float len = sqrtf(dirX * dirX + dirY * dirY);
+    if (len == 0.0f) {
+        return;
+    }
+    dirX /= len;
+    dirY /= len;
 
-    if (len == 0) return;
-
-    dirX /= len; dirY /= len;
-
-    projectileManager.addProjectile(FromPlayer, playerCenterX, playerCenterY, dirX, dirY, 100.0f, 200);
+    _projectileManager->addProjectile(FromPlayer, playerCenterX, playerCenterY, dirX, dirY, 100.0f, 200);
 }
-

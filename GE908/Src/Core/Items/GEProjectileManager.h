@@ -16,7 +16,7 @@ public:
     GEProjectileManager();
     ~GEProjectileManager();
 
-    void addProjectile(ProjectileOwner from, int x, int y,
+    void addProjectile(ProjectileOwner from, float startPointX, float startPointY,
         float dirX, float dirY, float speed, int damage);
 
     void update(float deltaTime, GEEnemyManager& enemyManager, GEPlayer& player);

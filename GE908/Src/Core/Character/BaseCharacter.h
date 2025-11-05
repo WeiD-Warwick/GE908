@@ -30,6 +30,8 @@ protected:
     // move character and check collision and boundary
 	void moveUpdate(float deltaTime, float dirX, float dirY);
 
+	virtual void applyMovementBounds(float& newX, float& newY) = 0;
+
 public:
 	BaseCharacter(const std::string& filename = "", GECollisionType type = None)
 		: GECollisible(filename, type) {
@@ -44,6 +46,5 @@ public:
 	bool isAlive() const { return _hp > 0; }
 	void setSpeed(int speed) { _speed = speed; }
 	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth; _mapHeight = mapHeight; }
-
 	void takeDamage(int value);
 };

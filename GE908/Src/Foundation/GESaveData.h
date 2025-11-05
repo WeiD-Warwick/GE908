@@ -42,8 +42,8 @@ public:
 	float getCameraOffsetY() { return _cameraOffsetY; }
 
 	void setWindowSize(int width, int height) { _windowWidth = width; _windowHeight = height; }
-	int getScreenWidth() { return _windowWidth; }
-	int getScreenHeight() { return _windowHeight;  }
+	int getScreenWidth() const { return _windowWidth; }
+	int getScreenHeight() const { return _windowHeight;  }
 
 	int getLayerCount() const { return _layerCount; }
 

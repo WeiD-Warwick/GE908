@@ -19,6 +19,8 @@ private:
 	float _attackRate = 2.0f;
 	bool _isStatic = false;
 
+	void applyMovementBounds(float& newX, float& newY) override;
+
 public:
 	GEEnemy(GEEnemyType type);
 	~GEEnemy();

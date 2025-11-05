@@ -24,19 +24,13 @@ void BaseCharacter::moveUpdate(float deltaTime, float dirX, float dirY) {
 
     if (deltaX == 0 && deltaY == 0) return;
 
-    // check boarder
-    float minX = _width / 2.0f;
-    float maxX = _mapWidth - _width / 2.0f;
-    float minY = _height / 2.0f;
-    float maxY = _mapHeight - _height / 2.0f;
-
     float newX = getCenterX();
     float newY = getCenterY();
     const int COLLISION_MARGIN = 2;
 
     // X
     if (deltaX != 0) {
-        float nextX = clamp(getCenterX() + deltaX, minX, maxX);
+        float nextX = newX + deltaX;
         if (isBlockedAt(nextX, getCenterY())) {
             int startX = static_cast<int>(getCenterX());
             int endX = static_cast<int>(nextX);
@@ -56,7 +50,7 @@ void BaseCharacter::moveUpdate(float deltaTime, float dirX, float dirY) {
 
     // Y
     if (deltaY != 0) {
-        float nextY = clamp(getCenterY() + deltaY, minY, maxY);
+        float nextY = newY + deltaY;
         if (isBlockedAt(getCenterX(), nextY)) {
             int startY = static_cast<int>(getCenterY());
             int endY = static_cast<int>(nextY);
@@ -74,7 +68,10 @@ void BaseCharacter::moveUpdate(float deltaTime, float dirX, float dirY) {
         }
     }
 
-    setCenter(clamp(newX, minX, maxX), clamp(newY, minY, maxY));
+    // check boundary
+    applyMovementBounds(newX, newY);
+    // set position
+    setCenter(newX, newY);
 }
 
 void BaseCharacter::takeDamage(int value) {
