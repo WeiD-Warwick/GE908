@@ -1,6 +1,8 @@
 #pragma once
 #include "BaseCharacter.h"
 
+class GEProjectileManager;
+
 enum GEEnemyType {
 	Normal,
 	Fast,
@@ -22,6 +24,6 @@ public:
 	GEEnemy(GEEnemyType type);
 	~GEEnemy();
 
-	void update(float deltaTime, int playerX, int playerY);
+	void update(float deltaTime, float playerCenterX, float playerCenterY, GEProjectileManager& projectileManager);
 	bool getIsStatic() const { return _isStatic; }
 };

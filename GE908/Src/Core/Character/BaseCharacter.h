@@ -19,27 +19,23 @@ protected:
 public:
 	BaseCharacter(const std::string& filename = "", GECollisionType type = None)
 		: GECollisible(filename, type) {
-		_width = image.width;
-		_height = image.height;
+		_width = _image.width;
+		_height = _image.height;
 	}
 
 	virtual ~BaseCharacter() {}
 
 	void load(const std::string& characterImagePath) {
-		if (!image.load(characterImagePath)) {
+		if (!_image.load(characterImagePath)) {
 			GELog::shared().error("Load character image failed: " + characterImagePath);
 		}
 		else {
-			_width = image.width;
-			_height = image.height;
+			_width = _image.width;
+			_height = _image.height;
 			GELog::shared().info("Loaded character image: " + characterImagePath);
 		}
 	}
 
-	int getX() const { return _originX; }
-	int getY() const { return _originY; }
-	int getWidth() const { return _width; }
-	int getHeight() const { return _height; }
 	int getSpeed() const { return _speed; }
 	int getHP() const { return _hp; }
 	bool isAlive() const { return _hp > 0; }

@@ -15,7 +15,7 @@ GEPlayer::GEPlayer()
 
 GEPlayer::~GEPlayer() {}
 
-static int clamp(int value, int minVal, int maxVal) {
+static float clamp(float value, float minVal, float maxVal) {
     if (value < minVal) return minVal;
     if (value > maxVal) return maxVal;
     return value;
@@ -27,10 +27,7 @@ void GEPlayer::loadData(GESaveData* saveData) {
 	int mapWorldWidth = _saveData->getMapTotalWidth();
 	int mapWorldHeight = _saveData->getMapTotalHeight();
 
-	int playerStartX = static_cast<int>((mapWorldWidth / 2.0f) - (_width / 2.0f));
-	int playerStartY = static_cast<int>((mapWorldHeight / 2.0f) - (_height / 2.0f));
-
-	setPosition(playerStartX, playerStartY);
+	setCenter(mapWorldWidth / 2.0f, mapWorldHeight / 2.0f);
 	setMapBounds(mapWorldWidth, mapWorldHeight);
 }
 
@@ -62,9 +59,10 @@ bool GEPlayer::collidesWithWater(int newX, int newY, const GEMapsManager& mapsMa
             GETile* tile = mapsManager.getTile(tileID);
             if (!tile) continue;
 
-            int tileWorldX = tileX * tileW;
-            int tileWorldY = tileY * tileH;
-            tile->setPosition(tileWorldX, tileWorldY);
+            float tileWorldX = tileX * tileW + (tileW / 2.0f);
+            float tileWorldY = tileY * tileH + (tileH / 2.0f);
+            
+            tile->setCenter(tileWorldX, tileWorldY);
 
             if (this->collideAt(newX, newY, *tile))
                 return true;
@@ -87,8 +85,7 @@ bool GEPlayer::collidesWithEnemies(int newX, int newY, const GEEnemyManager& ene
 }
 
 void GEPlayer::update(float deltaTime, bool moveUp, bool moveDown, bool moveLeft, bool moveRight,
-    const GEMapsManager& mapsManager, const GEEnemyManager& enemyManager)
-{
+    const GEMapsManager& mapsManager, const GEEnemyManager& enemyManager) {
     if (!_saveData) return;
 
     float moveDelta = _speed * deltaTime;
@@ -109,63 +106,65 @@ void GEPlayer::update(float deltaTime, bool moveUp, bool moveDown, bool moveLeft
     int mapW = _mapWidth;
     int mapH = _mapHeight;
 
-    int minX = (mapW > camW) ? camW / 2 - _width / 2 : mapW / 2 - _width / 2;
-    int maxX = (mapW > camW) ? mapW - camW / 2 - _width / 2 : mapW / 2 - _width / 2;
-    int minY = (mapH > camH) ? camH / 2 - _height / 2 : mapH / 2 - _height / 2;
-    int maxY = (mapH > camH) ? mapH - camH / 2 - _height / 2 : mapH / 2 - _height / 2;
+    float minCenterX = camW / 2.0f;
+    float maxCenterX = mapW - camW / 2.0f;
+    float minCenterY = camH / 2.0f;
+    float maxCenterY = mapH - camH / 2.0f;
 
-    const int COLLISION_MARGIN = 2;
+    const int COLLISION_MARGIN = 2; 
 
-    // X
+    float newCenterX = getCenterX();
+    float newCenterY = getCenterY();
+
+    // deal X axis
     if (deltaX != 0) {
-        int proposedX = clamp(_originX + deltaX, minX, maxX);
+        float nextCenterX = clamp(getCenterX() + deltaX, minCenterX, maxCenterX);
 
         // loose boundary detection
-        bool blockedX = collidesWithWater(proposedX, _originY, mapsManager)
-            || collidesWithEnemies(proposedX, _originY, enemyManager);
+        bool blockedX = collidesWithWater(nextCenterX, getCenterY(), mapsManager) || collidesWithEnemies(nextCenterX, getCenterY(), enemyManager);
 
-        if (!blockedX) {
-            _originX = proposedX;
-        }
-        else {
-            // debounce
-            int stepX = (deltaX > 0) ? 1 : -1;
-            for (int x = _originX; x != proposedX; x += stepX) {
-                if (collidesWithWater(x, _originY, mapsManager)
-                    || collidesWithEnemies(x, _originY, enemyManager)) {
-                    _originX = x - stepX * COLLISION_MARGIN;
+        if (blockedX) {
+            // debounce, back to check if still have collision
+            int backStepX = (deltaX > 0) ? 1 : -1;
+            for (int x = getCenterX(); x != nextCenterX; x += backStepX) {
+                if (collidesWithWater(x, getCenterY(), mapsManager) || collidesWithEnemies(x, getCenterY(), enemyManager)) {
+                    newCenterX = x - backStepX * COLLISION_MARGIN;
                     break;
                 }
-                _originX = x;
+                newCenterX = x;
             }
+        }
+        else {
+            newCenterX = nextCenterX;
         }
     }
 
-    // Y
+    // deal Y axis
     if (deltaY != 0) {
-        int proposedY = clamp(_originY + deltaY, minY, maxY);
+        float nextCenterY = clamp(getCenterY() + deltaY, minCenterY, maxCenterY);
 
-        bool blockedY = collidesWithWater(_originX, proposedY, mapsManager)
-            || collidesWithEnemies(_originX, proposedY, enemyManager);
+        bool blockedY = collidesWithWater(getCenterX(), nextCenterY, mapsManager) || collidesWithEnemies(getCenterX(), nextCenterY, enemyManager);
 
-        if (!blockedY) {
-            _originY = proposedY;
-        }
-        else {
-            int stepY = (deltaY > 0) ? 1 : -1;
-            for (int y = _originY; y != proposedY; y += stepY) {
-                if (collidesWithWater(_originX, y, mapsManager)
-                    || collidesWithEnemies(_originX, y, enemyManager)) {
-                    _originY = y - stepY * COLLISION_MARGIN;
+        if (blockedY) {
+            int backStepY = (deltaY > 0) ? 1 : -1;
+            for (int y = getCenterY(); y != nextCenterY; y += backStepY) {
+                if (collidesWithWater(getCenterX(), y, mapsManager) || collidesWithEnemies(getCenterX(), y, enemyManager)) {
+                    newCenterY = y - backStepY * COLLISION_MARGIN;
                     break;
                 }
-                _originY = y;
+                newCenterY = y;
             }
+        }
+        else {
+            newCenterY = nextCenterY;
+
         }
     }
 
-    _originX = clamp(_originX, minX, maxX);
-    _originY = clamp(_originY, minY, maxY);
+    newCenterX = clamp(newCenterX, minCenterX, maxCenterX);
+    newCenterY = clamp(newCenterY, minCenterY, maxCenterY);
+
+    setCenter(newCenterX, newCenterY);
 }
 
 void GEPlayer::updateAttack(float deltaTime, const GEEnemyManager& enemyManager, GEProjectileManager& projectileManager) {
@@ -185,10 +184,10 @@ void GEPlayer::updateAttack(float deltaTime, const GEEnemyManager& enemyManager,
         GEEnemy* enemy = enemyManager.getEnemyAt(i);
         if (!enemy || !enemy->isAlive()) continue;
 
-        int dx = enemy->getCenterX() - getCenterX();
-        int dy = enemy->getCenterY() - getCenterY();
+        float distanceX = enemy->getCenterX() - getCenterX();
+        float distanceY = enemy->getCenterY() - getCenterY();
 
-        float distSq = static_cast<float>(dx * dx + dy * dy);
+        float distSq = distanceX * distanceX + distanceY * distanceY;
 
         if (distSq < nearestDistSq) {
             nearestDistSq = distSq;
@@ -198,17 +197,19 @@ void GEPlayer::updateAttack(float deltaTime, const GEEnemyManager& enemyManager,
 
     if (!nearest) return;
 
-    int px = getCenterX();
-    int py = getCenterY();
-    int tx = nearest->getCenterX();
-    int ty = nearest->getCenterY();
-    float dirX = static_cast<float>(tx - px);
-    float dirY = static_cast<float>(ty - py);
+    float playerCenterX = getCenterX();
+    float playerCenterY = getCenterY();
+    float targetCenterX = nearest->getCenterX();
+    float targetCenterY = nearest->getCenterY();
+    float dirX = targetCenterX - playerCenterX;
+    float dirY = targetCenterY - playerCenterY;
     float len = sqrtf(dirX * dirX + dirY * dirY);
+
     if (len == 0) return;
+
     dirX /= len; dirY /= len;
 
-    projectileManager.addProjectile(FromPlayer, px, py, dirX, dirY, 100.0f, 200);
+    projectileManager.addProjectile(FromPlayer, playerCenterX, playerCenterY, dirX, dirY, 100.0f, 200);
 }
 
 void GEPlayer::updateSkill(float deltaTime, bool triggerSkill, GEEnemyManager& enemyManager) {

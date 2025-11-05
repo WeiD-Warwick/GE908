@@ -75,9 +75,9 @@ void GEMapsManager::draw(GEWindow& window, GECamera& camera) {
             for (int colNumber = 0; colNumber < mapWidth; colNumber++) {
                 int tileID = _saveData->getTileID(layer, rowNumber, colNumber);
                 GETile* tile = getTile(tileID);
-                if (!tile) continue;
+				if (!tile) continue;
 
-				tile->setPosition(colNumber * tileWidth, rowNumber * tileHeight);
+				tile->setCenter(colNumber * tileWidth, rowNumber * tileHeight);
 				tile->draw(window, camera);
             }
         }

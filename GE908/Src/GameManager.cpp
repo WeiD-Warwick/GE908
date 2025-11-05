@@ -52,13 +52,13 @@ void GameManager::update(float deltaTime) {
 
 	_player.update(deltaTime, moveUp, moveDown, moveLeft, moveRight, _mapsManager ,_enemyManager);
 
-	_camera.followPlayer(_player.getX(), _player.getY(), _player.getWidth(), _player.getHeight());
+	_camera.followPlayer(_player.getOriginX(), _player.getOriginY(), _player.getWidth(), _player.getHeight());
 
 	_saveData->setCameraOffset(_camera.getX(), _camera.getY());
 
-	_enemyManager.update(deltaTime, &_player);
+	_enemyManager.update(deltaTime, &_player, _projectileManager);
 
-	//_player.updateAttack(deltaTime, _enemyManager, _projectileManager);
+	_player.updateAttack(deltaTime, _enemyManager, _projectileManager);
 
 	bool triggerSkill = castSkill && !_pressSkill;
 	_pressSkill = castSkill;
@@ -81,6 +81,7 @@ void GameManager::render() {
 	const unsigned char fpsColor[3] = { 255, 0, 0 };
 
 	_font.draw("FPS:" + std::to_string(static_cast<int>(_fpsCounter.getFps())), 200, 400, fpsColor, 1, _window);
+	_font.draw("HP:" + std::to_string(_player.getHP()), 400, 400, fpsColor, 1, _window);
 
 	_window.present();
 }

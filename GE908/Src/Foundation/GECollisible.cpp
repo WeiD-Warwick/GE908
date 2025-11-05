@@ -7,16 +7,16 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
     int winW = window.getWidth();
     int winH = window.getHeight();
 
-    for (int dy = 0; dy < image.height; dy++) {
-        int screenY = _originY + (int)dy - camY;
+    for (int dy = 0; dy < _image.height; dy++) {
+        int screenY = getOriginY() + dy - camY;
         if (screenY < 0 || screenY >= winH) continue;
 
-        for (int dx = 0; dx < image.width; dx++) {
-            int screenX = _originX + (int)dx - camX;
+        for (int dx = 0; dx < _image.width; dx++) {
+            int screenX = getOriginX() + dx - camX;
             if (screenX < 0 || screenX >= winW) continue;
 
-            if (image.alphaAtUnchecked(dx, dy) > 0)
-                window.draw(screenX, screenY, image.atUnchecked(dx, dy));
+            if (_image.alphaAtUnchecked(dx, dy) > 0)
+                window.draw(screenX, screenY, _image.atUnchecked(dx, dy));
         }
     }
 
@@ -27,10 +27,10 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
         const int winH = window.getHeight();
 
         if (_type == Water) {
-            int left = _originX - camX;
-            int top = _originY - camY;
-            int right = left + image.width;   
-            int bottom = top + image.height; 
+            int left = getOriginX() - camX;
+            int top = getOriginY() - camY;
+            int right = left + _image.width;   
+            int bottom = top + _image.height; 
 
 
             if (right <= 0 || bottom <= 0 || left >= winW || top >= winH) {
@@ -64,8 +64,8 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
         }
         else {
             const int radius = getCollisionRadius();
-            const int cx = _originX + image.width / 2 - camX;
-            const int cy = _originY + image.height / 2 - camY;
+            const int cx = getOriginX() + _image.width / 2 - camX;
+            const int cy = getOriginY() + _image.height / 2 - camY;
             const int r2 = radius * radius;
 
             for (int dx = -radius; dx <= radius; ++dx) {
@@ -88,15 +88,15 @@ void GECollisible::draw(GEWindow& window, const GECamera& camera) {
 bool GECollisible::collide(const GECollisible& other) const {
     // water -> reatangle
     if (_type == Water || other._type == Water) {
-        int leftA = _originX;
-        int rightA = _originX + image.width;
-        int topA = _originY;
-        int bottomA = _originY + image.height;
+        float leftA = getOriginX();
+        float rightA = getOriginX() + _image.width;
+        float topA = getOriginY();
+        float bottomA = getOriginY() + _image.height;
 
-        int leftB = other._originX;
-        int rightB = other._originX + other.image.width;
-        int topB = other._originY;
-        int bottomB = other._originY + other.image.height;
+        float leftB = other.getOriginX();
+        float rightB = other.getOriginX() + other._image.width;
+        float topB = other.getOriginY();
+        float bottomB = other.getOriginY() + other._image.height;
 
         bool overlapX = (leftA < rightB) && (rightA > leftB);
         bool overlapY = (topA < bottomB) && (bottomA > topB);
@@ -105,24 +105,24 @@ bool GECollisible::collide(const GECollisible& other) const {
     }
 
     // circle
-    int dx = (_originX + image.width / 2) - (other._originX + other.image.width / 2);
-    int dy = (_originY + image.height / 2) - (other._originY + other.image.height / 2);
-    int distSquared = dx * dx + dy * dy;
-    int combinedRadius = getCollisionRadius() + other.getCollisionRadius();
+    float dx = (getOriginX() + _image.width / 2.0f) - (other.getOriginX() + other._image.width / 2.0f);
+    float dy = (getOriginY() + _image.height / 2.0f) - (other.getOriginY() + other._image.height / 2.0f);
+    float distSquared = dx * dx + dy * dy;
+    float combinedRadius = getCollisionRadius() + other.getCollisionRadius();
     return distSquared < combinedRadius * combinedRadius;
 }
 
-bool GECollisible::collideAt(int x, int y, const GECollisible& other) const {
+bool GECollisible::collideAt(float x, float y, const GECollisible& other) const {
     if (_type == Water || other._type == Water) {
-        int leftA = x;
-        int rightA = x + image.width;
-        int topA = y;
-        int bottomA = y + image.height;
+        float leftA = x;
+        float rightA = x + _image.width;
+        float topA = y;
+        float bottomA = y + _image.height;
 
-        int leftB = other._originX;
-        int rightB = other._originX + other.image.width;
-        int topB = other._originY;
-        int bottomB = other._originY + other.image.height;
+        float leftB = other.getOriginX();
+        float rightB = other.getOriginX() + other._image.width;
+        float topB = other.getOriginY();
+        float bottomB = other.getOriginY() + other._image.height;
 
         bool overlapX = (leftA < rightB) && (rightA > leftB);
         bool overlapY = (topA < bottomB) && (bottomA > topB);
@@ -130,9 +130,9 @@ bool GECollisible::collideAt(int x, int y, const GECollisible& other) const {
         return overlapX && overlapY;
     }
 
-    int dx = (x + image.width / 2) - (other._originX + other.image.width / 2);
-    int dy = (y + image.height / 2) - (other._originY + other.image.height / 2);
-    int distSquared = dx * dx + dy * dy;
-    int combinedRadius = getCollisionRadius() + other.getCollisionRadius();
+    float dx = (x + _image.width / 2.0f) - (other.getOriginX() + other._image.width / 2.0f);
+    float dy = (y + _image.height / 2.0f) - (other.getOriginY() + other._image.height / 2.0f);
+    float distSquared = dx * dx + dy * dy;
+    float combinedRadius = getCollisionRadius() + other.getCollisionRadius();
     return distSquared < combinedRadius * combinedRadius;
 }

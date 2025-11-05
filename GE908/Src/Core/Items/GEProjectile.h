@@ -11,13 +11,14 @@ enum ProjectileOwner {
 class GEProjectile : public GECollisible {
 private:
     float _speed;
-    float _dirX, _dirY;
+    float _dirX;
+    float _dirY;
     int _damage;
     bool _active;
     ProjectileOwner _owner;
 
 public:
-    GEProjectile(const std::string& texturePath, ProjectileOwner owner, int startX, int startY, float dirX, float dirY, float speed, int damage);
+    GEProjectile(const std::string& texturePath, ProjectileOwner owner, float centerX, float centerY, float dirX, float dirY, float speed, int damage);
 
     bool isActive() const { return _active; }
     void deactivate() { _active = false; }

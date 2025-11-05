@@ -6,6 +6,8 @@
 
 class GEPlayer;
 
+class GEProjectileManager;
+
 class GEEnemyManager {
 
 private:
@@ -26,7 +28,7 @@ public:
     GEEnemy* getEnemyAt(int index) const { return _enemies[index]; }
 
     void load(GESaveData* saveData);
-    void update(float deltaTime, GEPlayer* player);
+    void update(float deltaTime, GEPlayer* player, GEProjectileManager& projectileManager);
     void draw(GEWindow& window, const GECamera& camera);
 
     bool isWaterTile(int tileID) { return tileID >= 14 && tileID <= 22; }

@@ -1,5 +1,6 @@
 #include <string>
 #include "GEEnemy.h"
+#include "../Items/GEProjectileManager.h"
 #include "../../Foundation/GELog.h"
 
 static const std::string EnemyImagePath(GEEnemyType t) {
@@ -14,8 +15,8 @@ static const std::string EnemyImagePath(GEEnemyType t) {
 
 GEEnemy::GEEnemy(GEEnemyType type)
 	: BaseCharacter(EnemyImagePath(type), Enemy), _type(type) {
-	_width = image.width;
-	_height = image.height;
+	_width = _image.width;
+	_height = _image.height;
 
 	switch (_type) {
 	case Normal:
@@ -32,33 +33,45 @@ GEEnemy::GEEnemy(GEEnemyType type)
 
 GEEnemy::~GEEnemy() {}
 
-void GEEnemy::update(float dt, int characterX, int characterY) {
+void GEEnemy::update(float deltaTime, float playerCenterX, float playerCenterY, GEProjectileManager& projectileManager) {
 	if (!isAlive()) return;
 
+	float currentCenterX = getCenterX();
+	float currentCenterY = getCenterY();
+
 	if (!_isStatic) {
-		int currentX = getX();
-		int currentY = getY();
+		float dirX = (playerCenterX > currentCenterX) - (playerCenterX < currentCenterX);
+		float dirY = (playerCenterY > currentCenterY) - (playerCenterY < currentCenterY);
 
-		int dirX = (characterX > currentX) - (characterX < currentX);
-		int dirY = (characterY > currentY) - (characterY < currentY);
+		float moveDelta = _speed * deltaTime;
+		float moveAmount = moveDelta > 1.0f ? moveDelta : 1.0f;
 
-		float step = _speed * dt;
-		_accumX += dirX * step;
-		_accumY += dirY * step;
+		_accumX += dirX * moveDelta;
+		_accumY += dirY * moveDelta;
 
-		// Debouncer
-		int moveX = (int)std::floor(std::abs(_accumX)) * ((_accumX >= 0) ? 1 : -1);
-		int moveY = (int)std::floor(std::abs(_accumY)) * ((_accumY >= 0) ? 1 : -1);
+		float moveX = std::floor(std::abs(_accumX)) * ((_accumX >= 0) ? 1 : -1);
+		float moveY = std::floor(std::abs(_accumY)) * ((_accumY >= 0) ? 1 : -1);
 		_accumX -= moveX;
 		_accumY -= moveY;
 
-		setPosition(currentX + moveX, currentY + moveY);
+		setCenter(currentCenterX + moveX, currentCenterY + moveY);
 	}
 	else {
-		_attackCooldown += dt;
-		if (_attackCooldown > _attackRate) {
-			_attackCooldown = 0.f;
-			GELog::shared().info("Static enemy fired projectile");
-		}
+		_attackCooldown += deltaTime;
+		if (_attackCooldown < _attackRate) return;
+		_attackCooldown = 0.0f;
+
+		float targetX = playerCenterX;
+		float targetY = playerCenterY;
+		float dirX = targetX - currentCenterX;
+		float dirY = targetY - currentCenterY;
+		float len = sqrtf(dirX * dirX + dirY * dirY);
+
+		if (len == 0.0f) return;
+
+		dirX /= len;
+		dirY /= len;
+
+		projectileManager.addProjectile(FromEnemy, currentCenterX, currentCenterY, dirX, dirY, 100.0f, 200);
 	}
 }

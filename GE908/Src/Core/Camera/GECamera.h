@@ -2,8 +2,8 @@
 
 class GECamera {
 private:
-	int _x = 0;
-	int _y = 0;
+	float _x = 0;
+	float _y = 0;
 
 	int _width = 0;
 	int _height = 0;
@@ -18,10 +18,10 @@ public:
 
     void load(int windowWidth, int windowHeight, int mapWidth, int mapHeight);
 
-    void followPlayer(int playerX, int playerY, int playerWidth, int playerHeight);
+    void followPlayer(float playerX, float playerY, int playerWidth, int playerHeight);
 
-    int getX() const { return _x; }
-    int getY() const { return _y; }
+	float getX() const { return _x; }
+	float getY() const { return _y; }
 
     int getWidth() const { return _width; }
     int getHeight() const { return _height; }

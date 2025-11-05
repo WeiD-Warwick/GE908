@@ -20,32 +20,32 @@ enum GECollisionType {
 class GECollisible {
 
 protected:
-	int _originX = 0;
-	int _originY = 0;
+	float _centerX = 0.0f;
+	float _centerY = 0.0f;
 	GECollisionType _type;
-	Image image;
+	Image _image;
 
 public:
 
 	GECollisible(const std::string& filename, GECollisionType collisionType)
 		: _type(collisionType) {
-		image.load(filename);
+		_image.load(filename);
 	}
 
 	virtual ~GECollisible() = default;
 
 	virtual void update(GamesEngineeringBase::Window& canvas, float dt) {}
 
-	void setPosition(int x, int y) { _originX = x; _originY = y; }
-	int getOriginX() const { return _originX; }
-	int getOriginY() const { return _originY; }
-	int getCenterX() const { return _originX + image.width / 2; }
-	int getCenterY() const { return _originY + image.height / 2; }
-	int getImageWidth() const { return image.width; }
-	int getImageHeight() const { return image.height; }
-	int getCollisionRadius() const { return image.width / 2; }
+	void setCenter(float centerX, float centerY) { _centerX = centerX; _centerY = centerY; }
+	float getOriginX() const { return _centerX - _image.width / 2.0f; }
+	float getOriginY() const { return _centerY - _image.height / 2.0f; }
+	float getCenterX() const { return _centerX; }
+	float getCenterY() const { return _centerY; }
+	int getWidth() const { return _image.width; }
+	int getHeight() const { return _image.height; }
+	int getCollisionRadius() const { return _image.width / 2; }
 
 	void draw(GEWindow& window, const GECamera& camera);
 	bool collide(const GECollisible& other) const;
-	bool collideAt(int x, int y, const GECollisible& other) const;
+	bool collideAt(float x, float y, const GECollisible& other) const;
 };

@@ -18,9 +18,9 @@ GEBuff::GEBuff(GEBuffType type)
 }
 
 void GEBuff::activateAt(int worldX, int worldY, float lifeTimeSeconds) {
-    int adjustedX = worldX - image.width / 2;
-    int adjustedY = worldY - image.height / 2;
-    setPosition(adjustedX, adjustedY);
+    int adjustedX = worldX - _image.width / 2;
+    int adjustedY = worldY - _image.height / 2;
+    setCenter(adjustedX, adjustedY);
     _lifeTime = lifeTimeSeconds > 0.0f ? lifeTimeSeconds : DEFAULT_BUFF_LIFETIME;
     _elapsed = 0.0f;
     _active = true;

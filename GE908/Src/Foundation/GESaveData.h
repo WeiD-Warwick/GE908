@@ -8,8 +8,8 @@ private:
 	int _tileWidth = 0;
 	int _tileHeight = 0;
 
-	int _cameraOffsetX = 0;
-	int _cameraOffsetY = 0;
+	float _cameraOffsetX = 0;
+	float _cameraOffsetY = 0;
 
 	int _windowWidth = 854;
 	int _windowHeight = 480;
@@ -38,8 +38,8 @@ public:
 	int getMapTotalHeight() const { return _mapRowCount * _tileHeight; }
 
 	void setCameraOffset(int x, int y) { _cameraOffsetX = x; _cameraOffsetY = y; }
-	int getCameraOffsetX() { return _cameraOffsetX; }
-	int getCameraOffsetY() { return _cameraOffsetY; }
+	float getCameraOffsetX() { return _cameraOffsetX; }
+	float getCameraOffsetY() { return _cameraOffsetY; }
 
 	void setWindowSize(int width, int height) { _windowWidth = width; _windowHeight = height; }
 	int getScreenWidth() { return _windowWidth; }

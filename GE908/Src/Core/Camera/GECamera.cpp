@@ -13,15 +13,15 @@ void GECamera::load(int windowWidth, int windowHeight, int mapWidth, int mapHeig
 	_y = 0;
 }
 
-static int clampValue(int value, int minVal, int maxVal) {
+static float clampValue(float value, float minVal, float maxVal) {
 	if (value < minVal) return minVal;
 	if (value > maxVal) return maxVal;
 	return value;
 }
 
-void GECamera::followPlayer(int playerX, int playerY, int playerWidth, int playerHeight) {
-	int targetX = playerX + (playerWidth / 2) - (_width / 2);
-	int targetY = playerY + (playerHeight / 2) - (_height / 2);
+void GECamera::followPlayer(float playerX, float playerY, int playerWidth, int playerHeight) {
+	float targetX = playerX + (playerWidth / 2.0f) - (_width / 2.0f);
+	float targetY = playerY + (playerHeight / 2.0f) - (_height / 2.0f);
 
 	if (_mapWidth > _width)
 		_x = clampValue(targetX, 0, _mapWidth - _width);

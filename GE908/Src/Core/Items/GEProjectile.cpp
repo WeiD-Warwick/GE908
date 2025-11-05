@@ -1,16 +1,19 @@
 #include "GEProjectile.h"
 
-GEProjectile::GEProjectile(const std::string& texturePath, ProjectileOwner owner, int startX, int startY, float dirX, float dirY, float speed, int damage)
+GEProjectile::GEProjectile(const std::string& texturePath, ProjectileOwner owner, float startPointX, float startPointY, float dirX, float dirY, float speed, int damage)
     : GECollisible(texturePath, Projectile),
     _owner(owner), _speed(speed), _dirX(dirX), _dirY(dirY),
-    _damage(damage), _active(true)
-{
+    _damage(damage), _active(true) {
 
-    setPosition(startX, startY);
+    setCenter(startPointX, startPointY);
 }
 
 void GEProjectile::update(float deltaTime) {
     if (!_active) return;
-    _originX += static_cast<int>(_dirX * _speed * deltaTime);
-    _originY += static_cast<int>(_dirY * _speed * deltaTime);
+    float newCenterX = getCenterX();
+    float newCenterY = getCenterY();
+    newCenterX += _dirX * _speed * deltaTime;
+    newCenterY += _dirY * _speed * deltaTime;
+
+    setCenter(newCenterX, newCenterY);
 }
