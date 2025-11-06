@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Foundation\GEAnimation.cpp" />
     <ClCompile Include="Src\Core\Character\BaseCharacter.cpp" />
     <ClCompile Include="Src\Core\Items\GEProjectileManager.cpp" />
     <ClCompile Include="Src\Core\Items\GEProjectile.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Foundation\GEAnimation.h" />
     <ClInclude Include="Src\Core\Items\GEProjectileManager.h" />
     <ClInclude Include="Src\Core\Items\GEProjectile.h" />
     <ClInclude Include="Src\Core\Character\GEEnemyManager.h" />

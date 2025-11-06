@@ -88,7 +88,7 @@ void GEEnemyManager::update(float deltaTime, GEPlayer* player, GEProjectileManag
     if (_spawnTimer > _spawnInterval) {
         spawnEnemyOutsideCamera(player);
         _spawnTimer = 0.0f;
-        _spawnInterval -= 0.2f;
+        _spawnInterval -= 3.0f;
         if (_spawnInterval < 0.5f) _spawnInterval = 0.5f;
     }
 

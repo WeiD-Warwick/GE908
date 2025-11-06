@@ -66,6 +66,9 @@
     <ClCompile Include="Src\Core\Character\BaseCharacter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Foundation\GEAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ThirdParty\GamesEngineeringBase.h">
@@ -111,6 +114,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Core\Items\GEProjectileManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Foundation\GEAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
