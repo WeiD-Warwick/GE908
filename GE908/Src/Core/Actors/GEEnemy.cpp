@@ -73,6 +73,6 @@ void GEEnemy::update(float deltaTime,
         vx /= len;
         vy /= len;
 
-        //projectileManager.addProjectile(FromEnemy, cx, cy, vx, vy, 100.0f, 200);
+        projectileManager.addProjectile(FromEnemy, cx, cy, vx, vy, 100.0f, 200);
     }
 }
