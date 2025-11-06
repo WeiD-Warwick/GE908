@@ -13,6 +13,7 @@ enum GECollisionType {
 	Player,
 	Enemy,
 	Water,
+	Fire,
 	Projectile,
 };
 

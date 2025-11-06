@@ -60,6 +60,7 @@ void GameManager::render() {
 
 	_font.draw("FPS:" + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())), 200, 400, fpsColor, 1, _window);
 	_font.draw("HP:" + std::to_string(_player.getHP()), 400, 400, fpsColor, 1, _window);
+	_font.draw("Skill: " + std::to_string(_player.getAOECooldownTime()), 600, 400, fpsColor, 1, _window);
 
 	_window.present();
 }

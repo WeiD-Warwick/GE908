@@ -40,11 +40,11 @@ public:
 	}
 
 	virtual ~BaseCharacter() {}
+	virtual void takeDamage(int value);
 
 	int getSpeed() const { return _speed; }
 	int getHP() const { return _hp; }
 	bool isAlive() const { return _hp > 0; }
 	void setSpeed(int speed) { _speed = speed; }
 	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth; _mapHeight = mapHeight; }
-	void takeDamage(int value);
 };

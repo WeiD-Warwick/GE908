@@ -1,9 +1,11 @@
 #include "GEPlayer.h"
 #include "BaseCharacter.h"
 #include "GEEnemyManager.h"
+#include "GEEnemy.h"
 #include "../Maps/GEMapsManager.h"
 #include "../Items/GEProjectileManager.h"
 #include "../../Foundation/GESaveData.h"
+
 
 GEPlayer::GEPlayer()
 	: BaseCharacter("", Player) {
@@ -189,93 +191,92 @@ void GEPlayer::autoAttack(float deltaTime) {
 void GEPlayer::aoeAttack(float deltaTime) {
     updateAoeEffects(deltaTime);
 
+    // calculate cooldonw
     if (_aoeCooldownTimer > 0.0f) {
-        _aoeCooldownTimer -= deltaTime;
-        if (_aoeCooldownTimer < 0.0f) {
-            _aoeCooldownTimer = 0.0f;
-        }
+        _aoeCooldownTimer = _aoeCooldownTimer - deltaTime > 0.0f ? _aoeCooldownTimer - deltaTime : 0.0f;
     }
 
+    // check user input
     if (_aoeKeyHeld && _aoeCooldownTimer <= 0.0f) {
-        castAoeSkill();
+        executeAoeSkill();
     }
-
     _aoeKeyHeld = false;
 }
 
-void GEPlayer::castAoeSkill() {
-    if (!_enemyManager) {
-        return;
-    }
+void GEPlayer::executeAoeSkill() {
+    if (!_enemyManager) return;
 
-    int maxTargets = _aoeTargetCount;
-    if (maxTargets > PLAYER_MAX_AOE_TARGETS) {
-        maxTargets = PLAYER_MAX_AOE_TARGETS;
-    }
+    const float originX = getCenterX();
+    const float originY = getCenterY();
 
-    if (maxTargets <= 0) {
-        return;
-    }
+    // get enemies near the player
+    GEEnemy* nearby[PLAYER_MAX_AOE_TARGETS];
+    int nearbyCount = findEnemiesWithinRadius(originX, originY, _aoeRadius, nearby, PLAYER_MAX_AOE_TARGETS);
+    if (nearbyCount <= 0) return;
 
-    GEEnemy* selected[PLAYER_MAX_AOE_TARGETS];
-    int selectedHP[PLAYER_MAX_AOE_TARGETS];
-    int selectedCount = 0;
+    // select top n HP enemies
+    GEEnemy* topTargets[PLAYER_MAX_AOE_TARGETS];
+    int topCount = selectTopEnemiesByHP(nearby, nearbyCount, _aoeTargetCount, topTargets);
+    if (topCount <= 0) return;
 
-    float radiusSq = _aoeRadius * _aoeRadius;
+    // show range of aoe
+    const unsigned char RANGE_COLOR[3] = { 0, 0, 255 };   // blue
+    spawnAoeEffect(originX, originY, _aoeRadius, RANGE_COLOR[0], RANGE_COLOR[1], RANGE_COLOR[2]);
 
-    int enemyCount = _enemyManager->getEnemyCount();
-    for (int i = 0; i < enemyCount; i++) {
-        GEEnemy* enemy = _enemyManager->getEnemyAt(i);
-        if (!enemy || !enemy->isAlive()) continue;
+    // show hit vfx of aoe
+    const unsigned char IMPACT_COLOR[3] = { 255, 0, 0 };  // red
+    const float IMPACT_RADIUS = 30.0f;
 
-        float dx = enemy->getCenterX() - getCenterX();
-        float dy = enemy->getCenterY() - getCenterY();
-        float distSq = dx * dx + dy * dy;
-        if (distSq > radiusSq) {
-            continue;
-        }
-
-        int hp = enemy->getHP();
-
-        int insertIndex = selectedCount;
-        for (int j = 0; j < selectedCount; j++) {
-            if (hp > selectedHP[j]) {
-                insertIndex = j;
-                break;
-            }
-        }
-
-        if (selectedCount < maxTargets) {
-            for (int j = selectedCount; j > insertIndex; --j) {
-                selected[j] = selected[j - 1];
-                selectedHP[j] = selectedHP[j - 1];
-            }
-            selected[insertIndex] = enemy;
-            selectedHP[insertIndex] = hp;
-            selectedCount++;
-        }
-        else if (insertIndex < maxTargets) {
-            for (int j = maxTargets - 1; j > insertIndex; --j) {
-                selected[j] = selected[j - 1];
-                selectedHP[j] = selectedHP[j - 1];
-            }
-            selected[insertIndex] = enemy;
-            selectedHP[insertIndex] = hp;
-        }
-    }
-
-    if (selectedCount == 0) {
-        return;
-    }
-
-    for (int i = 0; i < selectedCount; i++) {
-        GEEnemy* enemy = selected[i];
+    for (int i = 0; i < topCount; ++i) {
+        GEEnemy* enemy = topTargets[i];
         enemy->takeDamage(_aoeDamage);
-        spawnAoeEffect(enemy->getCenterX(), enemy->getCenterY(), 30, 255, 140, 0);
+        spawnAoeEffect(enemy->getCenterX(), enemy->getCenterY(), IMPACT_RADIUS,
+            IMPACT_COLOR[0], IMPACT_COLOR[1], IMPACT_COLOR[2]);
     }
 
-    spawnAoeEffect(getCenterX(), getCenterY(), _aoeRadius, 0, 200, 255);
+    // reset skill cooldown time
     _aoeCooldownTimer = _aoeCooldown;
+}
+
+int GEPlayer::findEnemiesWithinRadius(float cx, float cy, float radius, GEEnemy** outList, int maxCount) const {
+    if (!_enemyManager) return 0;
+
+    const float radiusSq = radius * radius;
+    int count = 0;
+    const int enemyCount = _enemyManager->getEnemyCount();
+
+    for (int i = 0; i < enemyCount; ++i) {
+        GEEnemy* e = _enemyManager->getEnemyAt(i);
+        if (!e || !e->isAlive()) continue;
+
+        float dx = e->getCenterX() - cx;
+        float dy = e->getCenterY() - cy;
+        if (dx * dx + dy * dy <= radiusSq) {
+            if (count < maxCount) {
+                outList[count++] = e;
+            }
+        }
+    }
+    return count;
+}
+
+int GEPlayer::selectTopEnemiesByHP(GEEnemy** input, int count, int topN, GEEnemy** output) const {
+    if (count == 0 || topN <= 0) return 0;
+
+    // Sort
+    for (int i = 0; i < count - 1; ++i) {
+        for (int j = i + 1; j < count; ++j) {
+            if (input[j]->getHP() > input[i]->getHP()) {
+                std::swap(input[i], input[j]);
+            }
+        }
+    }
+
+    const int resultCount = min(topN, count);
+    for (int i = 0; i < resultCount; ++i) {
+        output[i] = input[i];
+    }
+    return resultCount;
 }
 
 void GEPlayer::updateAoeEffects(float deltaTime) {
@@ -324,11 +325,18 @@ void GEPlayer::drawAoeIndicator(GEWindow& window, const GECamera& camera) const 
         return;
     }
 
-    if (_aoeCooldownTimer > 0.0f) {
-        return;
-    }
+    const bool ready = _aoeCooldownTimer <= 0.0f;
+    const unsigned char readyR = 0;
+    const unsigned char readyG = 200;
+    const unsigned char readyB = 255;
+    const unsigned char cooldownTint = 90;
 
-    drawCircle(window, camera, getCenterX(), getCenterY(), _aoeRadius, 0, 200, 255);
+    if (ready) {
+        drawCircle(window, camera, getCenterX(), getCenterY(), _aoeRadius, readyR, readyG, readyB);
+    }
+    else {
+        drawCircle(window, camera, getCenterX(), getCenterY(), _aoeRadius, cooldownTint, cooldownTint, cooldownTint);
+    }
 }
 
 void GEPlayer::drawAoeEffects(GEWindow& window, const GECamera& camera) const {

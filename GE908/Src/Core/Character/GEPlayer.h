@@ -5,11 +5,13 @@
 #include "../Items/GEProjectile.h"
 
 #define MAX_PROJECTILES 20
-#define SHOW_PLAYER_AOE_INDICATOR false
+#define SHOW_PLAYER_AOE_INDICATOR true
 #define PLAYER_MAX_AOE_EFFECTS 8
 #define PLAYER_MAX_AOE_TARGETS 16
 
 class GEMapsManager;
+
+class GEEnemy;
 
 class GEEnemyManager;
 
@@ -32,7 +34,7 @@ private:
 	// aoe
 	float _aoeCooldownTimer = 0.0f;
 	float _aoeCooldown = 6.0f;
-	float _aoeRadius = 160.0f;
+	float _aoeRadius = 320.0f;
 	float _aoeEffectDuration = 0.4f;
 	int _aoeDamage = 200;
 	int _aoeTargetCount = 3;
@@ -50,7 +52,7 @@ private:
 		unsigned char colorR = 255;
 		unsigned char colorG = 255;
 		unsigned char colorB = 255;
-		float remainingTime = 0.0f;
+		float remainingTime = 1.0f;
 	};
 
 	PlayerAoeEffect _aoeEffects[PLAYER_MAX_AOE_EFFECTS];
@@ -66,14 +68,15 @@ private:
 	void autoAttack(float deltaTime);
 
 	void aoeAttack(float deltaTime);
-	void castAoeSkill();
+	void executeAoeSkill();
+	int findEnemiesWithinRadius(float cx, float cy, float radius, GEEnemy** outList, int maxCount) const;
+	int selectTopEnemiesByHP(GEEnemy** input, int count, int topN, GEEnemy** output) const;
 	void updateAoeEffects(float deltaTime);
 	void spawnAoeEffect(float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b);
 	void drawAoeIndicator(GEWindow& window, const GECamera& camera) const;
 	void drawAoeEffects(GEWindow& window, const GECamera& camera) const;
 	void drawCircle(GEWindow& window, const GECamera& camera, float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) const;
 	
-
 public:
 
 	GEPlayer();
@@ -84,5 +87,7 @@ public:
 	void update(float deltaTime, GEWindow& window);
 
 	void draw(GEWindow& window, const GECamera& camera);
+
+	int getAOECooldownTime() const { return _aoeCooldownTimer; }
 
 };
