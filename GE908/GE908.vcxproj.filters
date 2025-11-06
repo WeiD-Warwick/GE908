@@ -21,15 +21,6 @@
     <ClCompile Include="Src\GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Foundation\GECamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Foundation\GEFont.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Foundation\GELog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Foundation\GESaveData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -57,9 +48,6 @@
     <ClCompile Include="Src\Core\Maps\GETiles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Actors\GEProjectile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Core\Actors\GEProjectileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,12 +63,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\GameManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Foundation\GEWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Foundation\GELog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Foundation\GECamera.h">
@@ -108,9 +90,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Core\Maps\GETile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Core\Actors\GEProjectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Core\Actors\GEProjectileManager.h">
@@ -404,9 +383,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Src\Assets\Fonts\126.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Src\SaveGames\landscape.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Src\Assets\MapTiles\0.png">

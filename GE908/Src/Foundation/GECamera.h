@@ -1,5 +1,11 @@
 #pragma once
 
+static float clamp(float value, float minVal, float maxVal) {
+	if (value < minVal) return minVal;
+	if (value > maxVal) return maxVal;
+	return value;
+}
+
 class GECamera {
 private:
 	float _x = 0;
@@ -16,15 +22,38 @@ public:
 	GECamera() {}
 	~GECamera() {}
 
-    void load(int windowWidth, int windowHeight, int mapWidth, int mapHeight);
+	float getX() const { return _x; }
+	float getY() const { return _y; }
 
-    void followPlayer(float playerX, float playerY, int playerWidth, int playerHeight);
+	int getWidth() const { return _width; }
+	int getHeight() const { return _height; }
 
-	float getX() const { return _x;}
-	float getY() const { return _y;}
+    void load(int windowWidth, int windowHeight, int mapWidth, int mapHeight) {
+		_width = windowWidth;
+		_height = windowHeight;
+		_mapWidth = mapWidth;
+		_mapHeight = mapHeight;
+		_x = 0;
+		_y = 0;
+	}
 
-    int getWidth() const { return _width;}
-    int getHeight() const { return _height;}
+    void followPlayer(float playerX, float playerY, int playerWidth, int playerHeight) {
+		float targetX = playerX + (playerWidth / 2.0f) - (_width / 2.0f);
+		float targetY = playerY + (playerHeight / 2.0f) - (_height / 2.0f);
 
-	void setMapBounds(int mapWidth, int mapHeight);
+		if (_mapWidth > _width)
+			_x = clamp(targetX, 0, _mapWidth - _width);
+		else
+			_x = (_mapWidth - _width) / 2;
+
+		if (_mapHeight > _height)
+			_y = clamp(targetY, 0, _mapHeight - _height);
+		else
+			_y = (_mapHeight - _height) / 2;
+	}
+
+	void setMapBounds(int mapWidth, int mapHeight) {
+		_mapWidth = mapWidth;
+		_mapHeight = mapHeight;
+	}
 };

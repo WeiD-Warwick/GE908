@@ -52,7 +52,7 @@ void GEProjectileManager::update(float deltaTime, GEEnemyManager& enemyManager, 
     }
 }
 
-void GEProjectileManager::draw(GEWindow& window, const GECamera& camera) {
+void GEProjectileManager::draw(Window& window, const GECamera& camera) {
     for (int i = 0;i < MAX_PROJECTILES;i++) {
         GEProjectile* projectile = _projectiles[i];
         if (projectile && projectile->isActive()) {

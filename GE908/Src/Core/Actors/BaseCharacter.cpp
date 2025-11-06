@@ -1,4 +1,5 @@
 #include "BaseCharacter.h"
+#include <cmath>
 
 void BaseCharacter::moveUpdate(float deltaTime, float dirX, float dirY) {
     if (dirX == 0 && dirY == 0) return;
@@ -34,7 +35,4 @@ void BaseCharacter::moveUpdate(float deltaTime, float dirX, float dirY) {
 }
 
 
-void BaseCharacter::takeDamage(int value) {
-    int newValue = _hp - value;
-    _hp = newValue > 0 ? newValue : 0;
-}
+void BaseCharacter::takeDamage(int value) { _hp = max(0, _hp - value); }

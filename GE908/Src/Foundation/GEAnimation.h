@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "../../ThirdParty/GamesEngineeringBase.h"
-#include "GEWindow.h"
 
 #define GE_ANIMATION_MAX_FRAMES 32
 
@@ -34,7 +33,7 @@ public:
     void reset();
 
     void update(float deltaTime);
-    void draw(GEWindow& window, int topLeftX, int topLeftY) const;
+    void draw(Window& window, int topLeftX, int topLeftY) const;
 
     const Image* getCurrentFrame() const;
     int getFrameCount() const;

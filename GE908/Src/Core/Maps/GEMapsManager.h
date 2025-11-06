@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "../../../ThirdParty/GamesEngineeringBase.h"
 #include "../../Foundation/GESaveData.h"
-#include "../../Foundation/GEWindow.h"
 #include "GETile.h"
 
 using namespace GamesEngineeringBase;
@@ -32,6 +31,6 @@ public:
     // get current save data
     GESaveData* getSaveData() const { return _saveData;}
 
-    void draw(GEWindow& window, GECamera& camera);
+    void draw(Window& window, GECamera& camera);
 };
 

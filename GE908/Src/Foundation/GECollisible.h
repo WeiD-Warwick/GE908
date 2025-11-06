@@ -1,12 +1,10 @@
 #pragma once
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Foundation/GECamera.h"
-#include "../Foundation/GEWindow.h"
-#include "GELog.h"
-
-#define SHOW_COLLISION_CIRCLE true
 
 using namespace GamesEngineeringBase;
+
+#define SHOW_COLLISION_CIRCLE true
 
 enum GECollisionType {
 	None,
@@ -16,12 +14,6 @@ enum GECollisionType {
 	Fire,
 	Projectile,
 };
-
-static float clamp(float value, float minVal, float maxVal) {
-	if (value < minVal) return minVal;
-	if (value > maxVal) return maxVal;
-	return value;
-}
 
 static bool circleRectCollision(float circleX, float circleY, float radius,
 	float rectLeft, float rectTop, float rectRight, float rectBottom) {
@@ -62,7 +54,7 @@ public:
 	int getHeight() const { return _image.height;}
 	int getCollisionRadius() const { return _image.width / 2;}
 
-	void draw(GEWindow& window, const GECamera& camera);
+	void draw(Window& window, const GECamera& camera);
 	bool collide(const GECollisible& other) const;
 	bool collideAt(float x, float y, const GECollisible& other) const;
 };

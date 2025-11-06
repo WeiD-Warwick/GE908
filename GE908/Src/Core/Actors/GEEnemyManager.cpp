@@ -1,5 +1,4 @@
 #include "GEEnemyManager.h"
-#include "../../Foundation/GEWindow.h"
 #include "../Actors/GEProjectileManager.h"
 #include "GEPlayer.h"
 #include <cstdlib>
@@ -79,7 +78,7 @@ void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
     _enemies[_enemyCount++] = enemy;
 }
 
-void GEEnemyManager::draw(GEWindow& window, const GECamera& camera) {
+void GEEnemyManager::draw(Window& window, const GECamera& camera) {
     for (unsigned int i = 0;i < _enemyCount;i++) {
         GEEnemy* enemy = _enemies[i];
         if (!enemy || !enemy->isAlive()) continue;

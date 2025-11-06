@@ -1,5 +1,4 @@
 #include "GEAnimation.h"
-#include "GELog.h"
 
 GEAnimation::GEAnimation()
     : _frameCount(0)
@@ -39,20 +38,14 @@ float GEAnimation::frameDurationAt(int index) const {
 }
 
 bool GEAnimation::loadFromFiles(const std::string filenames[], int frameCount, float frameDuration) {
-    if (frameCount <= 0 || frameCount > GE_ANIMATION_MAX_FRAMES) {
-        GELog::shared().warning("GEAnimation::loadFromFiles frame count out of range");
-        return false;
-    }
+    if (frameCount <= 0 || frameCount > GE_ANIMATION_MAX_FRAMES) return false;
 
-    if (frameDuration <= 0.0f) {
-        frameDuration = 0.1f;
-    }
+    if (frameDuration <= 0.0f) frameDuration = 0.1f;
 
     clearFrames();
 
     for (int i = 0;i < frameCount;++i) {
         if (!_frames[i].load(filenames[i])) {
-            GELog::shared().error("GEAnimation::loadFromFiles failed to load frame " + std::to_string(i));
             clearFrames();
             return false;
         }
@@ -70,16 +63,12 @@ bool GEAnimation::loadFromFiles(const std::string filenames[], const float durat
         return loadFromFiles(filenames, frameCount, 0.1f);
     }
 
-    if (frameCount <= 0 || frameCount > GE_ANIMATION_MAX_FRAMES) {
-        GELog::shared().warning("GEAnimation::loadFromFiles(frame durations) frame count out of range");
-        return false;
-    }
+    if (frameCount <= 0 || frameCount > GE_ANIMATION_MAX_FRAMES) return false;
 
     clearFrames();
 
     for (int i = 0;i < frameCount;++i) {
         if (!_frames[i].load(filenames[i])) {
-            GELog::shared().error("GEAnimation::loadFromFiles(frame durations) failed to load frame " + std::to_string(i));
             clearFrames();
             return false;
         }
@@ -164,7 +153,7 @@ void GEAnimation::update(float deltaTime) {
     }
 }
 
-void GEAnimation::draw(GEWindow& window, int topLeftX, int topLeftY) const {
+void GEAnimation::draw(Window& window, int topLeftX, int topLeftY) const {
     if (_frameCount <= 0) {
         return;
     }

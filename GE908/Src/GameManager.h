@@ -1,10 +1,10 @@
 #pragma once
-#include "Foundation/GEWindow.h"
 #include "Foundation/GEFont.h"
 #include "Foundation/GEFrameTimer.h"
+#include "Foundation/GECamera.h"
+#include "Foundation/GESaveData.h"
 #include "Core/Maps/GEMapsManager.h"
 #include "Core/Actors/GEPlayer.h"
-#include "Foundation/GECamera.h"
 #include "Core/Actors/GEEnemyManager.h"
 #include "Core/Actors/GEProjectileManager.h"
 
@@ -13,7 +13,7 @@ using namespace GamesEngineeringBase;
 class GameManager {
 
 private:
-	GEWindow _window;
+	Window _window;
 	GEFont _font;
 	GEPlayer _player;
 	GECamera _camera;

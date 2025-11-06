@@ -1,3 +1,4 @@
+#include <cmath>
 #include "GEPlayer.h"
 #include "BaseCharacter.h"
 #include "GEEnemyManager.h"
@@ -40,7 +41,7 @@ void GEPlayer::bindWorldContext(const GEMapsManager* maps, const GEEnemyManager*
     setMapBounds(mapWorldWidth, mapWorldHeight);
 }
 
-void GEPlayer::update(float deltaTime, GEWindow& window) {
+void GEPlayer::update(float deltaTime, Window& window) {
     float dirX = 0.0f;
     float dirY = 0.0f;
 
@@ -206,7 +207,7 @@ void GEPlayer::aoeAttack(float deltaTime) {
 
     // calculate cooldonw
     if (_aoeCooldownTimer > 0.0f) {
-        _aoeCooldownTimer = _aoeCooldownTimer - deltaTime > 0.0f ? _aoeCooldownTimer - deltaTime : 0.0f;
+        _aoeCooldownTimer = max(_aoeCooldownTimer - deltaTime, 0.0f);
     }
 
     // check user input
@@ -333,7 +334,7 @@ void GEPlayer::spawnAoeEffect(float centerX, float centerY, float radius, unsign
     _aoeEffects[slot].remainingTime = _aoeEffectDuration;
 }
 
-void GEPlayer::drawAoeIndicator(GEWindow& window, const GECamera& camera) const {
+void GEPlayer::drawAoeIndicator(Window& window, const GECamera& camera) const {
     if (!SHOW_PLAYER_AOE_INDICATOR) {
         return;
     }
@@ -352,14 +353,14 @@ void GEPlayer::drawAoeIndicator(GEWindow& window, const GECamera& camera) const 
     }
 }
 
-void GEPlayer::drawAoeEffects(GEWindow& window, const GECamera& camera) const {
+void GEPlayer::drawAoeEffects(Window& window, const GECamera& camera) const {
     for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
         if (!_aoeEffects[i].active) continue;
         drawCircle(window, camera, _aoeEffects[i].centerX, _aoeEffects[i].centerY, _aoeEffects[i].radius, _aoeEffects[i].colorR, _aoeEffects[i].colorG, _aoeEffects[i].colorB);
     }
 }
 
-void GEPlayer::drawCircle(GEWindow& window, const GECamera& camera, float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) const {
+void GEPlayer::drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) const {
     int camX = camera.getX();
     int camY = camera.getY();
 
@@ -389,7 +390,7 @@ void GEPlayer::drawCircle(GEWindow& window, const GECamera& camera, float center
     }
 }
 
-void GEPlayer::draw(GEWindow& window, const GECamera& camera) {
+void GEPlayer::draw(Window& window, const GECamera& camera) {
     GECollisible::draw(window, camera);
     drawAoeIndicator(window, camera);
     drawAoeEffects(window, camera);

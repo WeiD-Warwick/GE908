@@ -126,7 +126,6 @@
     <ClCompile Include="Src\Foundation\GEAnimation.cpp" />
     <ClCompile Include="Src\Core\Actors\BaseCharacter.cpp" />
     <ClCompile Include="Src\Core\Actors\GEProjectileManager.cpp" />
-    <ClCompile Include="Src\Core\Actors\GEProjectile.cpp" />
     <ClCompile Include="Src\Core\Maps\GETiles.cpp" />
     <ClCompile Include="Src\Core\Actors\GEEnemyManager.cpp" />
     <ClCompile Include="Src\Core\Actors\GEEnemy.cpp" />
@@ -134,18 +133,15 @@
     <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp" />
     <ClCompile Include="Src\Foundation\GECollisible.cpp" />
     <ClCompile Include="Src\Foundation\GECollisible.h" />
+    <ClCompile Include="Src\Foundation\GEFont.cpp" />
     <ClCompile Include="Src\Foundation\GEFrameTimer.h" />
     <ClCompile Include="Src\Foundation\GESaveData.cpp" />
-    <ClCompile Include="Src\Foundation\GELog.cpp" />
-    <ClCompile Include="Src\Foundation\GECamera.cpp" />
-    <ClCompile Include="Src\Foundation\GEFont.cpp" />
     <ClCompile Include="Src\GameManager.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Foundation\GEAnimation.h" />
     <ClInclude Include="Src\Core\Actors\GEProjectileManager.h" />
-    <ClInclude Include="Src\Core\Actors\GEProjectile.h" />
     <ClInclude Include="Src\Core\Actors\GEEnemyManager.h" />
     <ClInclude Include="Src\Core\Actors\GEEnemy.h" />
     <ClInclude Include="Src\Core\Actors\BaseCharacter.h" />
@@ -155,8 +151,6 @@
     <ClInclude Include="Src\Foundation\GESaveData.h" />
     <ClInclude Include="Src\Foundation\GEFont.h" />
     <ClInclude Include="Src\Foundation\GECamera.h" />
-    <ClInclude Include="Src\Foundation\GELog.h" />
-    <ClInclude Include="Src\Foundation\GEWindow.h" />
     <ClInclude Include="Src\GameManager.h" />
     <ClInclude Include="ThirdParty\GamesEngineeringBase.h" />
   </ItemGroup>
@@ -287,7 +281,6 @@
     <Image Include="Src\Assets\Textures\enemy_normal.png" />
     <Image Include="Src\Assets\Textures\enemy_static.png" />
     <Image Include="Src\Assets\Textures\player.png" />
-    <Image Include="Src\SaveGames\landscape.png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Src\SaveGames\tiles.txt" />

@@ -1,6 +1,5 @@
 ﻿#include <string>
 #include "GameManager.h"
-#include "Foundation/GELog.h"
 #define WINDOW_WIDTH 854
 #define WINDOW_HEIGHT 480
 
@@ -31,9 +30,6 @@ void GameManager::loadComponent() {
 		int mapWorldHeight = _saveData->getMapTotalHeight();
 		_camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
 		_enemyManager.load(_saveData);
-	}
-	else {
-		GELog::shared().warning("Map data not loaded, player starts at (0,0)");
 	}
 }
 

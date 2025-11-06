@@ -1,7 +1,7 @@
 #include <string>
+#include <cmath>
 #include "GEEnemy.h"
 #include "../Actors/GEProjectileManager.h"
-#include "../../Foundation/GELog.h"
 
 static const std::string EnemyImagePath(GEEnemyType t) {
 	switch (t) {

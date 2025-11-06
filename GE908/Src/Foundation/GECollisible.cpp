@@ -1,6 +1,6 @@
 ﻿#include "GECollisible.h"
 
-void GECollisible::draw(GEWindow& window, const GECamera& camera) {
+void GECollisible::draw(Window& window, const GECamera& camera) {
     int camX = camera.getX();
     int camY = camera.getY();
     int winW = window.getWidth();

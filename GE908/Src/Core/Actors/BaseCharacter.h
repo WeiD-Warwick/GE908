@@ -1,8 +1,6 @@
 #pragma once
 #include "../../../ThirdParty/GamesEngineeringBase.h"
 #include "../../Foundation/GECollisible.h"
-#include "../../Foundation/GELog.h"
-#include "../../Foundation/GEWindow.h"
 
 using namespace GamesEngineeringBase;
 

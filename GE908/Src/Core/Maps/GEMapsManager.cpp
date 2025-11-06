@@ -1,5 +1,4 @@
 #include "GEMapsManager.h"
-#include "../../Foundation/GELog.h"
 
 constexpr auto TILES_COUNT = 24;
 
@@ -31,8 +30,6 @@ void GEMapsManager::loadTileResources(const std::string& folderPath) {
 			_tiles[i] = new GETile(filePath, Water);
 		}
 	}
-
-	GELog::shared().info("Load tiles success.");
 }
 
 void GEMapsManager::loadSaveData(const std::string& filePath) {
@@ -42,12 +39,9 @@ void GEMapsManager::loadSaveData(const std::string& filePath) {
 	}
 	_saveData = new GESaveData();
 
-	if (_saveData->loadGame(filePath)) {
-		GELog::shared().info("Load Save Data: " + filePath + " Success");
-	} else {
+	if (!_saveData->loadGame(filePath)) {
 		delete _saveData;
 		_saveData = nullptr;
-		GELog::shared().error("Load Save Data: " + filePath + " Failed");
 	}
 }
 
@@ -56,7 +50,7 @@ GETile* GEMapsManager::getTile(int tileID) const {
 	return _tiles[tileID];
 }
 
-void GEMapsManager::draw(GEWindow& window, GECamera& camera) {
+void GEMapsManager::draw(Window& window, GECamera& camera) {
     if (!_saveData) return;
 
     int layers = _saveData->getLayerCount();

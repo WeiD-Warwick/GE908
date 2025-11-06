@@ -1,8 +1,6 @@
 #pragma once
 #include "BaseCharacter.h"
-#include "../../Foundation/GEWindow.h"
 #include "../../Foundation/GESaveData.h"
-#include "../Actors/GEProjectile.h"
 
 static constexpr auto SHOW_PLAYER_AOE_INDICATOR = true;
 
@@ -19,6 +17,8 @@ class GEEnemy;
 class GEEnemyManager;
 
 class GEProjectileManager;
+
+class GEProjectile;
 
 class GECamera;
 
@@ -76,9 +76,9 @@ private:
 	int selectTopEnemiesByHP(GEEnemy** input, int count, int topN, GEEnemy** output) const;
 	void updateAoeEffects(float deltaTime);
 	void spawnAoeEffect(float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b);
-	void drawAoeIndicator(GEWindow& window, const GECamera& camera) const;
-	void drawAoeEffects(GEWindow& window, const GECamera& camera) const;
-	void drawCircle(GEWindow& window, const GECamera& camera, float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) const;
+	void drawAoeIndicator(Window& window, const GECamera& camera) const;
+	void drawAoeEffects(Window& window, const GECamera& camera) const;
+	void drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) const;
 	
 public:
 
@@ -87,9 +87,9 @@ public:
 
 	void bindWorldContext(const GEMapsManager* maps, const GEEnemyManager* enemies, GEProjectileManager* projectiles);
 	
-	void update(float deltaTime, GEWindow& window);
+	void update(float deltaTime, Window& window);
 
-	void draw(GEWindow& window, const GECamera& camera);
+	void draw(Window& window, const GECamera& camera);
 
 	float getAOECooldownTime() const { return _aoeCooldownTimer;}
 

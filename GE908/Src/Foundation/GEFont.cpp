@@ -4,15 +4,14 @@ Image* GEFont::fontChar[95] = { nullptr };
 bool GEFont::isLoaded = false;
 
 bool GEFont::load() {
-    for (int i = 0;i < 95;++i) {
+    for (int i = 0; i < 95; ++i) {
         std::string filename = "Src/Assets/Fonts/" + std::to_string(i + 32) + ".png";
 
         Image* img = new Image();
 
         if (!img->load(filename)) {
-            GELog::shared().error("Failed to load font character: " + filename);
             delete img;
-            for (int j = 0;j < i;++j) {
+            for (int j = 0; j < i; ++j) {
                 delete fontChar[j];
                 fontChar[j] = nullptr;
             }
@@ -21,30 +20,25 @@ bool GEFont::load() {
 
         fontChar[i] = img;
     }
-	isLoaded = true;
-    GELog::shared().info("All font characters loaded successfully.");
+    isLoaded = true;
     return true;
 }
 
 Image* GEFont::getChar(char c) {
-    if (!isLoaded) {
-        GELog::shared().warning("Font not loaded! Call loadFont first.");
-        return nullptr;
-    }
+    if (!isLoaded) return nullptr;
 
     if (c < 32 || c > 126) return nullptr;
     return fontChar[c - 32];
 }
 
 void GEFont::release() {
-    for (int i = 0;i < 95;++i) {
+    for (int i = 0; i < 95; ++i) {
         delete fontChar[i];
         fontChar[i] = nullptr;
     }
-    GELog::shared().info("Font characters released.");
 }
 
-void GEFont::draw(const std::string& text, int startX, int startY, const unsigned char* textColor, int scale, GEWindow& window) {
+void GEFont::draw(const std::string& text, int startX, int startY, const unsigned char* textColor, int scale, Window& window) {
     int cursorX = startX;
     int cursorY = startY;
 
@@ -60,8 +54,8 @@ void GEFont::draw(const std::string& text, int startX, int startY, const unsigne
         int scaledH = originH * scale;
 
         // loop through each pixel in the scaled image
-        for (int sy = 0;sy < scaledH;sy++) {
-            for (int sx = 0;sx < scaledW;sx++) {
+        for (int sy = 0; sy < scaledH; sy++) {
+            for (int sx = 0; sx < scaledW; sx++) {
                 int srcX = sx / scale;
                 int srcY = sy / scale;
 

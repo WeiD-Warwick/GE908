@@ -1,5 +1,4 @@
 ﻿#include "GESaveData.h"
-#include "GELog.h"
 #include <fstream>
 #include <sstream>
 
@@ -18,10 +17,6 @@ bool GESaveData::_allocateLayers(int layerCount) {
     }
 
     _layerCount = layerCount;
-    GELog::shared().info("Allocated new mapLayers: " + std::to_string(_layerCount)
-                        + ", width: " + std::to_string(_mapColCount) 
-                        + ", height: " + std::to_string(_mapRowCount));
-
     return true;
 }
 
@@ -36,8 +31,6 @@ void GESaveData::_releaseLayers() {
     delete[] _layers;
     _layers = nullptr;
     _layerCount = 0;
-
-	GELog::shared().info("Released all map layers.");
 }
 
 bool GESaveData::_parseKeywordLine(const std::string& line) {
@@ -70,10 +63,7 @@ bool GESaveData::saveGame(const std::string& filename) {
 bool GESaveData::loadGame(const std::string& filename) {
     std::ifstream file(filename);
 
-    if (!file.is_open()) {
-        GELog::shared().error("Failed to open save file: " + std::string(filename));
-        return false;
-    }
+    if (!file.is_open()) return false;
     
     _releaseLayers();
     _layerCount = 0;

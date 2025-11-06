@@ -40,7 +40,7 @@ public:
 
     void load(GESaveData* saveData);
     void update(float deltaTime, GEPlayer* player, GEProjectileManager& projectileManager);
-    void draw(GEWindow& window, const GECamera& camera);
+    void draw(Window& window, const GECamera& camera);
 
     bool isWaterTile(int tileID) { return tileID >= 14 && tileID <= 22;}
 };
