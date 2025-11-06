@@ -20,10 +20,10 @@ private:
 public:
     GEProjectile(const std::string& texturePath, ProjectileOwner owner, float centerX, float centerY, float dirX, float dirY, float speed, int damage);
 
-    bool isActive() const { return _active; }
-    void deactivate() { _active = false; }
-    ProjectileOwner getOwner() const { return _owner; }
-    int getDamage() const { return _damage; }
+    bool isActive() const { return _active;}
+    void deactivate() { _active = false;}
+    ProjectileOwner getOwner() const { return _owner;}
+    int getDamage() const { return _damage;}
 
     void update(float deltaTime);
 };

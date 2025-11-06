@@ -1,13 +1,13 @@
 #include "GEMapsManager.h"
 #include "../../Foundation/GELog.h"
-#define TILESCOUNT 24
 
-GEMapsManager::GEMapsManager() {
-}
+constexpr auto TILES_COUNT = 24;
+
+GEMapsManager::GEMapsManager() {}
 
 GEMapsManager::~GEMapsManager() {
 	if (_tiles) {
-		for (int i = 0; i < TILESCOUNT; i++) {
+		for (int i = 0;i < TILES_COUNT;i++) {
 			delete _tiles[i];
 		}
 		delete[] _tiles;
@@ -20,9 +20,9 @@ void GEMapsManager::load(const std::string& tilesFolderPath, const std::string& 
 }
 
 void GEMapsManager::loadTileResources(const std::string& folderPath) {
-	_tiles = new GETile * [TILESCOUNT];
+	_tiles = new GETile * [TILES_COUNT];
 
-	for (int i = 0; i <= 23; i++) {
+	for (int i = 0;i <= 23;i++) {
 		std::string filePath = folderPath + std::to_string(i) + ".png";
 
 		if (i <= 13 || i >= 23) { 
@@ -52,7 +52,7 @@ void GEMapsManager::loadSaveData(const std::string& filePath) {
 }
 
 GETile* GEMapsManager::getTile(int tileID) const {
-	if (tileID < 0 || tileID >= TILESCOUNT) return nullptr;
+	if (tileID < 0 || tileID >= TILES_COUNT) return nullptr;
 	return _tiles[tileID];
 }
 
@@ -70,14 +70,16 @@ void GEMapsManager::draw(GEWindow& window, GECamera& camera) {
     int winWidth = _saveData->getScreenWidth();
     int winHeight = _saveData->getScreenHeight();
 
-    for (int layer = 0; layer < layers; layer++) {
-        for (int rowNumber = 0; rowNumber < mapHeight; rowNumber++) {
-            for (int colNumber = 0; colNumber < mapWidth; colNumber++) {
+    for (int layer = 0;layer < layers;layer++) {
+        for (int rowNumber = 0;rowNumber < mapHeight;rowNumber++) {
+            for (int colNumber = 0;colNumber < mapWidth;colNumber++) {
                 int tileID = _saveData->getTileID(layer, rowNumber, colNumber);
                 GETile* tile = getTile(tileID);
 				if (!tile) continue;
 
-				tile->setCenter(colNumber * tileWidth, rowNumber * tileHeight);
+				const float tileCenterX = (colNumber + 0.5f) * tileWidth;
+				const float tileCenterY = (rowNumber + 0.5f) * tileHeight;
+				tile->setCenter(tileCenterX, tileCenterY);
 				tile->draw(window, camera);
             }
         }

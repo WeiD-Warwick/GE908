@@ -1,19 +1,19 @@
 #include "GEProjectileManager.h"
 
 GEProjectileManager::GEProjectileManager() {
-	for (int i = 0; i < MAX_PROJECTILES; i++) {
+	for (int i = 0;i < MAX_PROJECTILES;i++) {
 		_projectiles[i] = nullptr;
 	}
 }
 
 GEProjectileManager::~GEProjectileManager() {
-    for (int i = 0; i < MAX_PROJECTILES; i++) {
+    for (int i = 0;i < MAX_PROJECTILES;i++) {
         delete _projectiles[i];
     }
 }
 
 void GEProjectileManager::addProjectile(ProjectileOwner from, float startPointX, float startPointY, float dirX, float dirY, float speed, int damage) {
-    for (int i = 0; i < MAX_PROJECTILES; i++) {
+    for (int i = 0;i < MAX_PROJECTILES;i++) {
         GEProjectile* projectile = _projectiles[i];
         // find a destroy place and replace it
         if (!projectile || !projectile->isActive()) {
@@ -26,7 +26,7 @@ void GEProjectileManager::addProjectile(ProjectileOwner from, float startPointX,
 }
 
 void GEProjectileManager::update(float deltaTime, GEEnemyManager& enemyManager, GEPlayer& player) {
-    for (int i = 0; i < MAX_PROJECTILES; i++) {
+    for (int i = 0;i < MAX_PROJECTILES;i++) {
         GEProjectile* projectile = _projectiles[i];
 
         if (!projectile || !projectile->isActive()) continue;
@@ -35,7 +35,7 @@ void GEProjectileManager::update(float deltaTime, GEEnemyManager& enemyManager, 
 
         if (projectile->getOwner() == FromPlayer) {
             int n = enemyManager.getEnemyCount();
-            for (int j = 0; j < n; j++) {
+            for (int j = 0;j < n;j++) {
                 GEEnemy* enemy = enemyManager.getEnemyAt(j);
                 if (enemy && enemy->isAlive() && projectile->collide(*enemy)) {
                     enemy->takeDamage(projectile->getDamage());
@@ -53,7 +53,7 @@ void GEProjectileManager::update(float deltaTime, GEEnemyManager& enemyManager, 
 }
 
 void GEProjectileManager::draw(GEWindow& window, const GECamera& camera) {
-    for (int i = 0; i < MAX_PROJECTILES; i++) {
+    for (int i = 0;i < MAX_PROJECTILES;i++) {
         GEProjectile* projectile = _projectiles[i];
         if (projectile && projectile->isActive()) {
             projectile->draw(window, camera);

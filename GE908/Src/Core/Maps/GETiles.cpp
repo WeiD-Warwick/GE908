@@ -4,5 +4,4 @@ GETile::GETile(const std::string& filename, GECollisionType collisionType)
 	: GECollisible(filename, collisionType) {
 }
 
-GETile::~GETile() {
-}
+GETile::~GETile() {}

@@ -1,10 +1,10 @@
 #pragma once
 #include "../../ThirdParty/GamesEngineeringBase.h"
-#include "../Core/Camera/GECamera.h"
+#include "../Foundation/GECamera.h"
 #include "../Foundation/GEWindow.h"
 #include "GELog.h"
 
-#define SHOW_COLLISION_CIRCLE false
+#define SHOW_COLLISION_CIRCLE true
 
 using namespace GamesEngineeringBase;
 
@@ -17,6 +17,23 @@ enum GECollisionType {
 	Projectile,
 };
 
+static float clamp(float value, float minVal, float maxVal) {
+	if (value < minVal) return minVal;
+	if (value > maxVal) return maxVal;
+	return value;
+}
+
+static bool circleRectCollision(float circleX, float circleY, float radius,
+	float rectLeft, float rectTop, float rectRight, float rectBottom) {
+	float closestX = clamp(circleX, rectLeft, rectRight);
+	float closestY = clamp(circleY, rectTop, rectBottom);
+
+	float dx = circleX - closestX;
+	float dy = circleY - closestY;
+
+	return (dx * dx + dy * dy) <= (radius * radius);
+}
+	
 class GECollisible {
 
 protected:
@@ -36,14 +53,14 @@ public:
 
 	virtual void update(GamesEngineeringBase::Window& canvas, float dt) {}
 
-	void setCenter(float centerX, float centerY) { _centerX = centerX; _centerY = centerY; }
-	float getOriginX() const { return _centerX - _image.width / 2.0f; }
-	float getOriginY() const { return _centerY - _image.height / 2.0f; }
-	float getCenterX() const { return _centerX; }
-	float getCenterY() const { return _centerY; }
-	int getWidth() const { return _image.width; }
-	int getHeight() const { return _image.height; }
-	int getCollisionRadius() const { return _image.width / 2; }
+	void setCenter(float centerX, float centerY) { _centerX = centerX;_centerY = centerY;}
+	float getOriginX() const { return _centerX - _image.width / 2.0f;}
+	float getOriginY() const { return _centerY - _image.height / 2.0f;}
+	float getCenterX() const { return _centerX;}
+	float getCenterY() const { return _centerY;}
+	int getWidth() const { return _image.width;}
+	int getHeight() const { return _image.height;}
+	int getCollisionRadius() const { return _image.width / 2;}
 
 	void draw(GEWindow& window, const GECamera& camera);
 	bool collide(const GECollisible& other) const;

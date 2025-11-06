@@ -1,6 +1,6 @@
 #include <string>
 #include "GEEnemy.h"
-#include "../Items/GEProjectileManager.h"
+#include "../Actors/GEProjectileManager.h"
 #include "../../Foundation/GELog.h"
 
 static const std::string EnemyImagePath(GEEnemyType t) {
@@ -29,16 +29,15 @@ GEEnemy::GEEnemy(GEEnemyType type)
 	_height = _image.height;
 
 	switch (_type) {
-	case Normal:
-		_hp = 100; _speed = 80; break;
-	case Fast:
-		_hp = 60; _speed = 80; break;
-	case Heavy:
-		_hp = 200; _speed = 80; break;
-	case StaticShooter:
-		_hp = 80; _speed = 0; _isStatic = true; _attackRate = 3.0f; break;
-	}
-
+    case Normal:
+        _hp = 200;_speed = 150;break;
+    case Fast:
+        _hp = 100;_speed = 270;break;
+    case Heavy:
+        _hp = 300;_speed = 80;break;
+    case StaticShooter:
+        _hp = 150;_speed = 0;_isStatic = true;_attackRate = 2.8f;break;
+    }
 }
 
 GEEnemy::~GEEnemy() {}

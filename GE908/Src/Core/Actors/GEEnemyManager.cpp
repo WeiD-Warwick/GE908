@@ -1,16 +1,17 @@
 #include "GEEnemyManager.h"
-#include "../Items/GEProjectileManager.h"
+#include "../../Foundation/GEWindow.h"
+#include "../Actors/GEProjectileManager.h"
 #include "GEPlayer.h"
 #include <cstdlib>
 #include <ctime>
 
 GEEnemyManager::GEEnemyManager() {
-    for (int i = 0; i < MAX_ENEMIES; i++) _enemies[i] = nullptr;
+    for (int i = 0;i < MAX_ENEMIES;i++) _enemies[i] = nullptr;
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
 GEEnemyManager::~GEEnemyManager() {
-    for (int i = 0; i < MAX_ENEMIES; i++) {
+    for (int i = 0;i < MAX_ENEMIES;i++) {
         if (_enemies[i]) {
             delete _enemies[i];
             _enemies[i] = nullptr;
@@ -20,6 +21,9 @@ GEEnemyManager::~GEEnemyManager() {
 
 void GEEnemyManager::load(GESaveData* saveData) {
     _saveData = saveData;
+    _spawnInterval = DEFAULT_SPAWN_INTERVAL;
+    _spawnTimer = 0.0f;
+    _difficultyTimer = 0.0f;
 }
 
 void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
@@ -42,22 +46,22 @@ void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
     case 0:
         // top
         x = camOffsetX + rand() % screenW;
-        y = camOffsetY - safeDistance; 
+        y = camOffsetY - safeDistance;
         break;
     case 1: 
         // bottom
         x = camOffsetX + rand() % screenW;
-        y = camOffsetY + screenH + safeDistance; 
+        y = camOffsetY + screenH + safeDistance;
         break;
     case 2: 
         // left
         x = camOffsetX - safeDistance;
-        y = camOffsetY + rand() % screenH; 
+        y = camOffsetY + rand() % screenH;
         break;
     case 3: 
         // right
         x = camOffsetX + screenW + safeDistance;
-        y = camOffsetY + rand() % screenH; 
+        y = camOffsetY + rand() % screenH;
         break;
     }
 
@@ -76,7 +80,7 @@ void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
 }
 
 void GEEnemyManager::draw(GEWindow& window, const GECamera& camera) {
-    for (unsigned int i = 0; i < _enemyCount; i++) {
+    for (unsigned int i = 0;i < _enemyCount;i++) {
         GEEnemy* enemy = _enemies[i];
         if (!enemy || !enemy->isAlive()) continue;
         enemy->draw(window, camera);
@@ -85,21 +89,43 @@ void GEEnemyManager::draw(GEWindow& window, const GECamera& camera) {
 
 void GEEnemyManager::update(float deltaTime, GEPlayer* player, GEProjectileManager& projectileManager) {
     _spawnTimer += deltaTime;
-    if (_spawnTimer > _spawnInterval) {
-        spawnEnemyOutsideCamera(player);
-        _spawnTimer = 0.0f;
-        _spawnInterval -= 3.0f;
-        if (_spawnInterval < 0.5f) _spawnInterval = 0.5f;
+    _difficultyTimer += deltaTime;
+    _elapsedTime += deltaTime;
+
+    const int capSteps = static_cast<int>(_elapsedTime / ACTIVE_ENEMY_CAP_STEP_TIME);
+    const int activeEnemyCap = min(MAX_ENEMIES, BASE_ACTIVE_ENEMY_CAP + capSteps * ACTIVE_ENEMY_CAP_INCREMENT);
+
+    if (_enemyCount >= activeEnemyCap) {
+        _spawnTimer = min(_spawnTimer, _spawnInterval);
+    }
+    else {
+        while (_spawnTimer >= _spawnInterval) {
+            const int previousCount = _enemyCount;
+            spawnEnemyOutsideCamera(player);
+            _spawnTimer -= _spawnInterval;
+
+            if (_enemyCount == previousCount || _enemyCount >= activeEnemyCap) {
+                if (_enemyCount == previousCount) {
+                    _spawnTimer = 0.0f;
+                }
+                break;
+            }
+        }
     }
 
-    for (int i = 0; i < _enemyCount; i++) {
+    if (_difficultyTimer >= SPAWN_DIFFICULTY_STEP_TIME) {
+        _difficultyTimer -= SPAWN_DIFFICULTY_STEP_TIME;
+        _spawnInterval = max(_spawnInterval - SPAWN_INTERVAL_STEP, MIN_SPAWN_INTERVAL);
+    }
+
+    for (int i = 0;i < _enemyCount;i++) {
         GEEnemy* enemy = _enemies[i];
         if (!enemy || !enemy->isAlive()) continue;
 
-        int previousX = enemy->getOriginX();
-        int previousY = enemy->getOriginY();
+        const float previousX = enemy->getCenterX();
+        const float previousY = enemy->getCenterY();
 
-        enemy->update(deltaTime, player->getOriginX(), player->getOriginY(), projectileManager);
+        enemy->update(deltaTime, player->getCenterX(), player->getCenterY(), projectileManager);
 
         if (enemy->collide(*player)) {
             enemy->setCenter(previousX, previousY);

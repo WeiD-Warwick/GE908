@@ -3,10 +3,10 @@
 #include "Foundation/GEFont.h"
 #include "Foundation/GEFrameTimer.h"
 #include "Core/Maps/GEMapsManager.h"
-#include "Core/Character/GEPlayer.h"
-#include "Core/Camera/GECamera.h"
-#include "Core/Character/GEEnemyManager.h"
-#include "Core/Items/GEProjectileManager.h"
+#include "Core/Actors/GEPlayer.h"
+#include "Foundation/GECamera.h"
+#include "Core/Actors/GEEnemyManager.h"
+#include "Core/Actors/GEProjectileManager.h"
 
 using namespace GamesEngineeringBase;
 

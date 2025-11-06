@@ -8,11 +8,11 @@ bool GESaveData::_allocateLayers(int layerCount) {
     if (_mapColCount <= 0 || _mapRowCount <= 0 || layerCount <= 0) return false;
 
     _layers = new int** [layerCount];
-    for (int layer = 0; layer < layerCount; ++layer) {
+    for (int layer = 0;layer < layerCount;++layer) {
         _layers[layer] = new int* [_mapRowCount];
-        for (int y = 0; y < _mapRowCount; ++y) {
+        for (int y = 0;y < _mapRowCount;++y) {
             _layers[layer][y] = new int[_mapColCount];
-            for (int x = 0; x < _mapColCount; ++x)
+            for (int x = 0;x < _mapColCount;++x)
                 _layers[layer][y][x] = 0;
         }
     }
@@ -28,8 +28,8 @@ bool GESaveData::_allocateLayers(int layerCount) {
 void GESaveData::_releaseLayers() {
     if (!_layers) return;
 
-    for (int layer = 0; layer < _layerCount; ++layer) {
-        for (int y = 0; y < _mapRowCount; ++y)
+    for (int layer = 0;layer < _layerCount;++layer) {
+        for (int y = 0;y < _mapRowCount;++y)
             delete[] _layers[layer][y];
         delete[] _layers[layer];
     }
@@ -109,12 +109,12 @@ bool GESaveData::loadGame(const std::string& filename) {
 				// need to expand layers array
                 int oldCount = _layerCount;
                 int*** newLayers = new int** [currentLayer + 1];
-                for (int l = 0; l < oldCount; ++l) newLayers[l] = _layers[l];
-                for (int l = oldCount; l <= currentLayer; ++l) {
+                for (int l = 0;l < oldCount;++l) newLayers[l] = _layers[l];
+                for (int l = oldCount;l <= currentLayer;++l) {
                     newLayers[l] = new int* [_mapRowCount];
-                    for (int y = 0; y < _mapRowCount; ++y) {
+                    for (int y = 0;y < _mapRowCount;++y) {
                         newLayers[l][y] = new int[_mapColCount];
-                        for (int x = 0; x < _mapColCount; ++x)
+                        for (int x = 0;x < _mapColCount;++x)
                             newLayers[l][y][x] = 0;
                     }
                 }

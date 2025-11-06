@@ -67,27 +67,27 @@ namespace GamesEngineeringBase
 	{
 	private:
 		// Private member variables
-		HWND hwnd;                               // Handle to the window
-		HINSTANCE hinstance;                     // Handle to the application instance
-		std::string name;                        // Window name/title
-		ID3D11Device* dev;                       // Direct3D device
-		ID3D11DeviceContext* devcontext;         // Direct3D device context
-		IDXGISwapChain* sc;                      // Swap chain for double buffering
-		ID3D11RenderTargetView* rtv;             // Render target view
-		D3D11_VIEWPORT vp;                       // Viewport configuration
-		ID3D11Buffer* buffer;                    // Buffer for pixel data
-		ID3D11ShaderResourceView* srv;           // Shader resource view
-		ID3D11PixelShader* ps;                   // Pixel shader
-		ID3D11VertexShader* vs;                  // Vertex shader
-		unsigned char* image;                    // Back buffer image data
-		bool keys[256];                          // Keyboard state array
-		int mousex;                              // Mouse X-coordinate
-		int mousey;                              // Mouse Y-coordinate
-		bool mouseButtons[3];                    // Mouse button states (left, middle, right)
-		int mouseWheel;                          // Mouse wheel value
-		unsigned int width = 0;                  // Window width
-		unsigned int height = 0;                 // Window height
-		unsigned int paddedDataSize = 0;         // Padding for backbuffer memory allocation
+		HWND hwnd;// Handle to the window
+		HINSTANCE hinstance;// Handle to the application instance
+		std::string name;// Window name/title
+		ID3D11Device* dev;// Direct3D device
+		ID3D11DeviceContext* devcontext;// Direct3D device context
+		IDXGISwapChain* sc;// Swap chain for double buffering
+		ID3D11RenderTargetView* rtv;// Render target view
+		D3D11_VIEWPORT vp;// Viewport configuration
+		ID3D11Buffer* buffer;// Buffer for pixel data
+		ID3D11ShaderResourceView* srv;// Shader resource view
+		ID3D11PixelShader* ps;// Pixel shader
+		ID3D11VertexShader* vs;// Vertex shader
+		unsigned char* image;// Back buffer image data
+		bool keys[256];// Keyboard state array
+		int mousex;// Mouse X-coordinate
+		int mousey;// Mouse Y-coordinate
+		bool mouseButtons[3];// Mouse button states (left, middle, right)
+		int mouseWheel;// Mouse wheel value
+		unsigned int width = 0;// Window width
+		unsigned int height = 0;// Window height
+		unsigned int paddedDataSize = 0;// Padding for backbuffer memory allocation
 
 		// Static window procedure to handle window messages
 		static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -397,7 +397,7 @@ namespace GamesEngineeringBase
             };\
             float4 PS(VSOut psInput) : SV_Target0\
             {\
-				uint pixelIndex = (int(psInput.pos.y) * WIDTH) + int(psInput.pos.x); \
+				uint pixelIndex = (int(psInput.pos.y) * WIDTH) + int(psInput.pos.x);\
 				uint offset = pixelIndex * 3;\
 				uint inner = offset & 3;\
 				uint baseAddress = offset & ~3;\
@@ -410,8 +410,8 @@ namespace GamesEngineeringBase
 					data = ((buf.Load(baseAddress) >> (inner * 8)) | (buf.Load(baseAddress + 4) << ((4 - inner) * 8))) & 0xFFFFFF;\
 				}\
 				float r = (data & 0xFF) / 255.0;\
-				float g = ((data >> 8) & 0xFF) / 255.0; \
-				float b = ((data >> 16) & 0xFF) / 255.0; \
+				float g = ((data >> 8) & 0xFF) / 255.0;\
+				float b = ((data >> 16) & 0xFF) / 255.0;\
                 return float4(r, g, b, 1.0f);\
             }";
 			unsigned int startPos = 0;
@@ -462,7 +462,7 @@ namespace GamesEngineeringBase
 
 			// Allocate memory for the back buffer image data
 			image = new unsigned char[paddedDataSize];
-			clear(); // Clear the image data
+			clear();// Clear the image data
 
 			// Initialize input states
 			memset(keys, 0, 256 * sizeof(bool));
@@ -525,7 +525,7 @@ namespace GamesEngineeringBase
 			devcontext->UpdateSubresource(buffer, 0, nullptr, image, paddedDataSize, 0);
 
 			// Clear the render target view
-			float ClearColor[4] = { 0.0f, 0.0f, 1.0f, 1.0f }; // RGBA
+			float ClearColor[4] = { 0.0f, 0.0f, 1.0f, 1.0f };// RGBA
 			devcontext->ClearRenderTargetView(rtv, ClearColor);
 
 			// Draw the vertices
@@ -673,9 +673,9 @@ namespace GamesEngineeringBase
 	class Sound
 	{
 	private:
-		XAUDIO2_BUFFER buffer;                   // Audio buffer
-		IXAudio2SourceVoice* sourceVoice[128];   // Array of source voices for playback
-		int index;                               // Current index for source voices
+		XAUDIO2_BUFFER buffer;// Audio buffer
+		IXAudio2SourceVoice* sourceVoice[128];// Array of source voices for playback
+		int index;// Current index for source voices
 
 		// Helper function to find a chunk in the WAV file (from documentation)
 		HRESULT FindChunk(HANDLE hFile, DWORD fourcc, DWORD& dwChunkSize, DWORD& dwChunkDataPosition)
@@ -762,7 +762,7 @@ namespace GamesEngineeringBase
 			DWORD dwChunkSize;
 			DWORD dwChunkPosition;
 
-			// Check the file type; it should be 'WAVE'
+			// Check the file type;it should be 'WAVE'
 			FindChunk(hFile, fourccRIFF, dwChunkSize, dwChunkPosition);
 			DWORD filetype;
 			ReadChunkData(hFile, &filetype, sizeof(DWORD), dwChunkPosition);
@@ -785,7 +785,7 @@ namespace GamesEngineeringBase
 
 			HRESULT hr;
 			// Create multiple source voices for concurrent playback
-			for (int i = 0; i < 128; i++)
+			for (int i = 0;i < 128;i++)
 			{
 				if (FAILED(hr = xaudio->CreateSourceVoice(&sourceVoice[i], (WAVEFORMATEX*)&wfx)))
 				{
@@ -799,7 +799,7 @@ namespace GamesEngineeringBase
 				return false;
 			}
 
-			index = 0; // Reset the index
+			index = 0;// Reset the index
 			return true;
 		}
 
@@ -828,10 +828,10 @@ namespace GamesEngineeringBase
 	class SoundManager
 	{
 	private:
-		IXAudio2* xaudio;                          // XAudio2 interface
-		IXAudio2MasteringVoice* xaudioMasterVoice; // Mastering voice
-		std::map<std::string, Sound*> sounds;      // Map of sounds
-		Sound* music = NULL;                              // Music sound
+		IXAudio2* xaudio;// XAudio2 interface
+		IXAudio2MasteringVoice* xaudioMasterVoice;// Mastering voice
+		std::map<std::string, Sound*> sounds;// Map of sounds
+		Sound* music = NULL;// Music sound
 
 		// Helper function to find a sound by filename
 		Sound* find(std::string filename)
@@ -900,8 +900,8 @@ namespace GamesEngineeringBase
 	class Timer
 	{
 	private:
-		LARGE_INTEGER freq;   // Frequency of the performance counter
-		LARGE_INTEGER start;  // Starting time
+		LARGE_INTEGER freq;// Frequency of the performance counter
+		LARGE_INTEGER start;// Starting time
 
 	public:
 		// Constructor that initializes the frequency
@@ -933,10 +933,10 @@ namespace GamesEngineeringBase
 	class Image
 	{
 	public:
-		unsigned int width;       // Image width
-		unsigned int height;      // Image height
-		unsigned int channels;    // Number of color channels
-		unsigned char* data;      // Pointer to image data
+		unsigned int width;// Image width
+		unsigned int height;// Image height
+		unsigned int channels;// Number of color channels
+		unsigned char* data;// Pointer to image data
 
 		// Default constructor
 		Image()
@@ -946,9 +946,9 @@ namespace GamesEngineeringBase
 			channels = 0;
 			data = nullptr;
 		}
-		Image(const Image&) = delete; // No copy constructor
+		Image(const Image&) = delete;// No copy constructor
 		Image& operator=(const Image&) = delete;
-		Image(Image&&) noexcept = default;  // Default move
+		Image(Image&&) noexcept = default;// Default move
 		Image& operator=(Image&&) noexcept = default;
 
 		// Loads an image from a file using WIC
@@ -1003,7 +1003,7 @@ namespace GamesEngineeringBase
 			}
 
 			data = new unsigned char[width * height * channels];
-			unsigned int stride = (width * channels + 3) & ~3; // Align stride to 4 bytes
+			unsigned int stride = (width * channels + 3) & ~3;// Align stride to 4 bytes
 
 			if (stride == (width * channels))
 			{
@@ -1015,7 +1015,7 @@ namespace GamesEngineeringBase
 				// Handle images with padded stride
 				unsigned char* strideData = new unsigned char[stride * height];
 				frame->CopyPixels(0, stride, width * height * channels, strideData);
-				for (unsigned int i = 0; i < height; i++)
+				for (unsigned int i = 0;i < height;i++)
 				{
 					memcpy(&data[i * width * channels], &strideData[i * stride], width * channels * sizeof(unsigned char));
 				}
@@ -1025,7 +1025,7 @@ namespace GamesEngineeringBase
 			if (isRGB == 0)
 			{
 				// Swap red and blue channels for BGR formats
-				for (unsigned int i = 0; i < width * height; i++)
+				for (unsigned int i = 0;i < width * height;i++)
 				{
 					unsigned char p = data[i * channels];
 					data[i * channels] = data[(i * channels) + 2];
@@ -1105,24 +1105,24 @@ namespace GamesEngineeringBase
 	class XBoxController
 	{
 	private:
-		int ID = 0;                 // Controller ID
-		XINPUT_STATE state = {};    // Current state of the controller
-		float lX = 0;               // Left thumbstick X-axis value
-		float lY = 0;               // Left thumbstick Y-axis value
-		float rX = 0;               // Right thumbstick X-axis value
-		float rY = 0;               // Right thumbstick Y-axis value
-		float lT = 0;               // Left trigger value
-		float rT = 0;               // Right trigger value
+		int ID = 0;// Controller ID
+		XINPUT_STATE state = {};// Current state of the controller
+		float lX = 0;// Left thumbstick X-axis value
+		float lY = 0;// Left thumbstick Y-axis value
+		float rX = 0;// Right thumbstick X-axis value
+		float rY = 0;// Right thumbstick Y-axis value
+		float lT = 0;// Left trigger value
+		float rT = 0;// Right trigger value
 
 	public:
 		// Constructor initializes the controller as inactive
-		XBoxController() { ID = -1; }
+		XBoxController() { ID = -1;}
 
 		// Activates the controller with the given ID
-		void activate(int _ID) { ID = _ID; }
+		void activate(int _ID) { ID = _ID;}
 
 		// Deactivates the controller
-		void deactivate() { ID = -1; }
+		void deactivate() { ID = -1;}
 
 		// Updates the controller's state
 		void update()
@@ -1180,20 +1180,20 @@ namespace GamesEngineeringBase
 		}
 
 		// Button state methods
-		bool upPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) > 0); }
-		bool downPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) > 0); }
-		bool leftPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) > 0); }
-		bool rightPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) > 0); }
-		bool startPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_START) > 0); }
-		bool backPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) > 0); }
-		bool lThumbPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) > 0); }
-		bool rThumbPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) > 0); }
-		bool lShoulderPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) > 0); }
-		bool rShoulderPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) > 0); }
-		bool APressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_A) > 0); }
-		bool BPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_B) > 0); }
-		bool XPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_X) > 0); }
-		bool YPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) > 0); }
+		bool upPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) > 0);}
+		bool downPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) > 0);}
+		bool leftPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) > 0);}
+		bool rightPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) > 0);}
+		bool startPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_START) > 0);}
+		bool backPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) > 0);}
+		bool lThumbPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) > 0);}
+		bool rThumbPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) > 0);}
+		bool lShoulderPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) > 0);}
+		bool rShoulderPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) > 0);}
+		bool APressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_A) > 0);}
+		bool BPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_B) > 0);}
+		bool XPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_X) > 0);}
+		bool YPressed() { return ((state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) > 0);}
 
 		// Sets the vibration intensity for the left and right motors
 		void vibrate(float l, float r)
@@ -1218,7 +1218,7 @@ namespace GamesEngineeringBase
 	class XBoxControllers
 	{
 	private:
-		XBoxController controllers[XUSER_MAX_COUNT]; // Array of controllers
+		XBoxController controllers[XUSER_MAX_COUNT];// Array of controllers
 
 	public:
 		// Constructor that probes for connected controllers
@@ -1236,7 +1236,7 @@ namespace GamesEngineeringBase
 		// Returns the first active controller
 		XBoxController getFirstPlayerController()
 		{
-			for (int i = 0; i < XUSER_MAX_COUNT; i++)
+			for (int i = 0;i < XUSER_MAX_COUNT;i++)
 			{
 				if (controllers[i].getID() > -1)
 				{
@@ -1250,7 +1250,7 @@ namespace GamesEngineeringBase
 		// Checks if any controller is connected
 		bool hasController()
 		{
-			for (int i = 0; i < XUSER_MAX_COUNT; i++)
+			for (int i = 0;i < XUSER_MAX_COUNT;i++)
 			{
 				if (controllers[i].getID() > -1)
 				{
@@ -1263,7 +1263,7 @@ namespace GamesEngineeringBase
 		// Probes for connected controllers and updates their status
 		void probeControllers()
 		{
-			for (int i = 0; i < XUSER_MAX_COUNT; i++)
+			for (int i = 0;i < XUSER_MAX_COUNT;i++)
 			{
 				XINPUT_STATE state;
 				memset(&state, 0, sizeof(XINPUT_STATE));

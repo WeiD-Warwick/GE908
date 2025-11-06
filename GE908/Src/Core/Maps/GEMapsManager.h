@@ -9,9 +9,9 @@ using namespace GamesEngineeringBase;
 class GEMapsManager {
 private:
 
-    GETile** _tiles = nullptr;                  // image cache
+    GETile** _tiles = nullptr;// image cache
     int _tileCount = 0;
-    GESaveData* _saveData = nullptr;                // save data
+    GESaveData* _saveData = nullptr;// save data
 
     // load all tiles images from folder
     void loadTileResources(const std::string& folderPath);
@@ -30,7 +30,7 @@ public:
     GETile* getTile(int tileID) const;
 
     // get current save data
-    GESaveData* getSaveData() const { return _saveData; }
+    GESaveData* getSaveData() const { return _saveData;}
 
     void draw(GEWindow& window, GECamera& camera);
 };

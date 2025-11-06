@@ -4,15 +4,15 @@ Image* GEFont::fontChar[95] = { nullptr };
 bool GEFont::isLoaded = false;
 
 bool GEFont::load() {
-    for (int i = 0; i < 95; ++i) {
+    for (int i = 0;i < 95;++i) {
         std::string filename = "Src/Assets/Fonts/" + std::to_string(i + 32) + ".png";
 
         Image* img = new Image();
 
         if (!img->load(filename)) {
             GELog::shared().error("Failed to load font character: " + filename);
-            delete img; 
-            for (int j = 0; j < i; ++j) {
+            delete img;
+            for (int j = 0;j < i;++j) {
                 delete fontChar[j];
                 fontChar[j] = nullptr;
             }
@@ -37,7 +37,7 @@ Image* GEFont::getChar(char c) {
 }
 
 void GEFont::release() {
-    for (int i = 0; i < 95; ++i) {
+    for (int i = 0;i < 95;++i) {
         delete fontChar[i];
         fontChar[i] = nullptr;
     }
@@ -60,8 +60,8 @@ void GEFont::draw(const std::string& text, int startX, int startY, const unsigne
         int scaledH = originH * scale;
 
         // loop through each pixel in the scaled image
-        for (int sy = 0; sy < scaledH; sy++) {
-            for (int sx = 0; sx < scaledW; sx++) {
+        for (int sy = 0;sy < scaledH;sy++) {
+            for (int sx = 0;sx < scaledW;sx++) {
                 int srcX = sx / scale;
                 int srcY = sy / scale;
 

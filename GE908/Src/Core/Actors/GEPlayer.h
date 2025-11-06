@@ -2,12 +2,15 @@
 #include "BaseCharacter.h"
 #include "../../Foundation/GEWindow.h"
 #include "../../Foundation/GESaveData.h"
-#include "../Items/GEProjectile.h"
+#include "../Actors/GEProjectile.h"
 
-#define MAX_PROJECTILES 20
-#define SHOW_PLAYER_AOE_INDICATOR true
-#define PLAYER_MAX_AOE_EFFECTS 8
-#define PLAYER_MAX_AOE_TARGETS 16
+static constexpr auto SHOW_PLAYER_AOE_INDICATOR = true;
+
+static constexpr auto MAX_PROJECTILES = 100;
+static constexpr auto PLAYER_PROJECTILE_SPEED = 150.0f;
+static constexpr auto PLAYER_PROJECTILE_DAMAGE = 20;
+static constexpr auto PLAYER_MAX_AOE_EFFECTS = 10;
+static constexpr auto PLAYER_MAX_AOE_TARGETS = 3;
 
 class GEMapsManager;
 
@@ -28,16 +31,16 @@ private:
 
 	// auto attack
 	float _autoAttackTimer = 0.0f;
-	float _autoAttackIntervalBase = 2.0f;
+	float _autoAttackIntervalBase = 1.4f;
 	float _autoAttackSpeedMultiplier = 1.0f;
 
 	// aoe
 	float _aoeCooldownTimer = 0.0f;
-	float _aoeCooldown = 6.0f;
-	float _aoeRadius = 320.0f;
-	float _aoeEffectDuration = 0.4f;
-	int _aoeDamage = 200;
-	int _aoeTargetCount = 3;
+	float _aoeCooldown = 5.0f;
+	float _aoeRadius = 300.0f;
+	float _aoeEffectDuration = 0.35f;
+	int _aoeDamage = 220;
+	int _aoeTargetCount = 4;
 	bool _aoeKeyHeld = false;
 
 
@@ -57,9 +60,9 @@ private:
 
 	PlayerAoeEffect _aoeEffects[PLAYER_MAX_AOE_EFFECTS];
 
-	bool collidesWithWater(int newX, int newY, const GEMapsManager& mapsManager) const;
+	bool collidesWithWater(float newX, float newY, const GEMapsManager& mapsManager) const;
 
-	bool collidesWithEnemies(int newX, int newY, const GEEnemyManager& enemyManager) const;
+	bool collidesWithEnemies(float newX, float newY, const GEEnemyManager& enemyManager) const;
 
 	bool isBlockedAt(float x, float y) const;
 
@@ -88,6 +91,6 @@ public:
 
 	void draw(GEWindow& window, const GECamera& camera);
 
-	int getAOECooldownTime() const { return _aoeCooldownTimer; }
+	float getAOECooldownTime() const { return _aoeCooldownTimer;}
 
 };

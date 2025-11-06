@@ -21,7 +21,7 @@
     <ClCompile Include="Src\GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Camera\GECamera.cpp">
+    <ClCompile Include="Src\Foundation\GECamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEFont.cpp">
@@ -36,16 +36,16 @@
     <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Character\GEPlayer.cpp">
+    <ClCompile Include="Src\Core\Actors\GEPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEFrameTimer.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Character\GEEnemy.cpp">
+    <ClCompile Include="Src\Core\Actors\GEEnemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Character\GEEnemyManager.cpp">
+    <ClCompile Include="Src\Core\Actors\GEEnemyManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GECollisible.cpp">
@@ -57,13 +57,13 @@
     <ClCompile Include="Src\Core\Maps\GETiles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Items\GEProjectile.cpp">
+    <ClCompile Include="Src\Core\Actors\GEProjectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Items\GEProjectileManager.cpp">
+    <ClCompile Include="Src\Core\Actors\GEProjectileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\Character\BaseCharacter.cpp">
+    <ClCompile Include="Src\Core\Actors\BaseCharacter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEAnimation.cpp">
@@ -83,7 +83,7 @@
     <ClInclude Include="Src\Foundation\GELog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Camera\GECamera.h">
+    <ClInclude Include="Src\Foundation\GECamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Foundation\GEFont.h">
@@ -95,25 +95,25 @@
     <ClInclude Include="Src\Core\Maps\GEMapsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Character\GEPlayer.h">
+    <ClInclude Include="Src\Core\Actors\GEPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Character\BaseCharacter.h">
+    <ClInclude Include="Src\Core\Actors\BaseCharacter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Character\GEEnemy.h">
+    <ClInclude Include="Src\Core\Actors\GEEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Character\GEEnemyManager.h">
+    <ClInclude Include="Src\Core\Actors\GEEnemyManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Core\Maps\GETile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Items\GEProjectile.h">
+    <ClInclude Include="Src\Core\Actors\GEProjectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\Items\GEProjectileManager.h">
+    <ClInclude Include="Src\Core\Actors\GEProjectileManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Foundation\GEAnimation.h">

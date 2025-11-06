@@ -10,7 +10,7 @@ private:
     float _fps = 0.0f;
     float _accumTime = 0.0f;
     int _frameCount = 0;
-    const float _updateInterval = 1.0f; // seconds between FPS updates
+    const float _updateInterval = 1.0f;// seconds between FPS updates
 
     GEFrameTimer() = default;
     ~GEFrameTimer() = default;
@@ -44,6 +44,6 @@ public:
         }
     }
 
-    float getDeltaTime() const { return _deltaTime; }
-    float getFPS() const { return _fps; }
+    float getDeltaTime() const { return _deltaTime;}
+    float getFPS() const { return _fps;}
 };

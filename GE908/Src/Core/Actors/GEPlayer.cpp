@@ -3,16 +3,16 @@
 #include "GEEnemyManager.h"
 #include "GEEnemy.h"
 #include "../Maps/GEMapsManager.h"
-#include "../Items/GEProjectileManager.h"
+#include "../Actors/GEProjectileManager.h"
 #include "../../Foundation/GESaveData.h"
 
 
 GEPlayer::GEPlayer()
 	: BaseCharacter("", Player) {
-	_hp = 100;
-	_speed = 200;
+	_hp = 200;
+	_speed = 240;
 
-    for (int i = 0; i < PLAYER_MAX_AOE_EFFECTS; i++) {
+    for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
         _aoeEffects[i].active = false;
         _aoeEffects[i].centerX = 0.0f;
         _aoeEffects[i].centerY = 0.0f;
@@ -61,7 +61,7 @@ static bool isWaterTile(int tileID) {
     return tileID >= 14 && tileID <= 22;
 }
 
-bool GEPlayer::collidesWithWater(int newX, int newY, const GEMapsManager& mapsManager) const {
+bool GEPlayer::collidesWithWater(float newX, float newY, const GEMapsManager& mapsManager) const {
     if (!_saveData) return false;
 
     int tileW = _saveData->getTileWidth();
@@ -69,28 +69,39 @@ bool GEPlayer::collidesWithWater(int newX, int newY, const GEMapsManager& mapsMa
     int mapCols = _saveData->getMapColCount();
     int mapRows = _saveData->getMapRowCount();
 
-    int centerTileX = newX / tileW;
-    int centerTileY = newY / tileH;
+    float playerCenterX = newX;
+    float playerCenterY = newY;
 
-    for (int dy = -1; dy <= 1; dy++) {
-        for (int dx = -1; dx <= 1; dx++) {
+    float playerHalfW = _image.width / 2.0f;
+    float playerHalfH = _image.height / 2.0f;
+
+    // tiles covered by player
+    int centerTileX = static_cast<int>(playerCenterX / tileW);
+    int centerTileY = static_cast<int>(playerCenterY / tileH);
+
+    for (int dy = -1;dy <= 1;dy++) {
+        for (int dx = -1;dx <= 1;dx++) {
             int tileX = centerTileX + dx;
             int tileY = centerTileY + dy;
             if (tileX < 0 || tileX >= mapCols || tileY < 0 || tileY >= mapRows) continue;
 
             int tileID = _saveData->getTileID(0, tileY, tileX);
-
             if (!isWaterTile(tileID)) continue;
 
             GETile* tile = mapsManager.getTile(tileID);
             if (!tile) continue;
 
-            float tileWorldX = tileX * tileW + (tileW / 2.0f);
-            float tileWorldY = tileY * tileH + (tileH / 2.0f);
-            
-            tile->setCenter(tileWorldX, tileWorldY);
+            float tileCenterX = tileX * tileW + tileW / 2.0f;
+            float tileCenterY = tileY * tileH + tileH / 2.0f;
+            tile->setCenter(tileCenterX, tileCenterY);
 
-            if (this->collideAt(newX, newY, *tile))
+            float dxCenter = std::abs(playerCenterX - tileCenterX);
+            float dyCenter = std::abs(playerCenterY - tileCenterY);
+
+            float combinedHalfW = playerHalfW + tileW / 2.0f;
+            float combinedHalfH = playerHalfH + tileH / 2.0f;
+
+            if (dxCenter < combinedHalfW && dyCenter < combinedHalfH)
                 return true;
         }
     }
@@ -98,11 +109,13 @@ bool GEPlayer::collidesWithWater(int newX, int newY, const GEMapsManager& mapsMa
     return false;
 }
 
-bool GEPlayer::collidesWithEnemies(int newX, int newY, const GEEnemyManager& enemyManager) const {
+bool GEPlayer::collidesWithEnemies(float newX, float newY, const GEEnemyManager& enemyManager) const {
     int enemyCount = enemyManager.getEnemyCount();
-    for (int i = 0; i < enemyCount; i++) {
+    for (int i = 0;i < enemyCount;i++) {
         GEEnemy* enemy = enemyManager.getEnemyAt(i);
-        if (!enemy) continue;
+
+        if (!enemy || !enemy->isAlive()) continue;
+
         if (this->collideAt(newX, newY, *enemy))
             return true;
     }
@@ -156,7 +169,7 @@ void GEPlayer::autoAttack(float deltaTime) {
     float nearestDistSq = FLT_MAX;
 
     int enemyCount = _enemyManager->getEnemyCount();
-    for (int i = 0; i < enemyCount; i++) {
+    for (int i = 0;i < enemyCount;i++) {
         GEEnemy* enemy = _enemyManager->getEnemyAt(i);
         if (!enemy || !enemy->isAlive()) continue;
         float dx = enemy->getCenterX() - getCenterX();
@@ -185,7 +198,7 @@ void GEPlayer::autoAttack(float deltaTime) {
     dirX /= len;
     dirY /= len;
 
-    _projectileManager->addProjectile(FromPlayer, playerCenterX, playerCenterY, dirX, dirY, 100.0f, 200);
+    _projectileManager->addProjectile(FromPlayer, playerCenterX, playerCenterY, dirX, dirY, PLAYER_PROJECTILE_SPEED, PLAYER_PROJECTILE_DAMAGE);
 }
 
 void GEPlayer::aoeAttack(float deltaTime) {
@@ -220,14 +233,14 @@ void GEPlayer::executeAoeSkill() {
     if (topCount <= 0) return;
 
     // show range of aoe
-    const unsigned char RANGE_COLOR[3] = { 0, 0, 255 };   // blue
+    const unsigned char RANGE_COLOR[3] = { 0, 0, 255 };// blue
     spawnAoeEffect(originX, originY, _aoeRadius, RANGE_COLOR[0], RANGE_COLOR[1], RANGE_COLOR[2]);
 
     // show hit vfx of aoe
-    const unsigned char IMPACT_COLOR[3] = { 255, 0, 0 };  // red
+    const unsigned char IMPACT_COLOR[3] = { 255, 0, 0 };// red
     const float IMPACT_RADIUS = 30.0f;
 
-    for (int i = 0; i < topCount; ++i) {
+    for (int i = 0;i < topCount;++i) {
         GEEnemy* enemy = topTargets[i];
         enemy->takeDamage(_aoeDamage);
         spawnAoeEffect(enemy->getCenterX(), enemy->getCenterY(), IMPACT_RADIUS,
@@ -245,7 +258,7 @@ int GEPlayer::findEnemiesWithinRadius(float cx, float cy, float radius, GEEnemy*
     int count = 0;
     const int enemyCount = _enemyManager->getEnemyCount();
 
-    for (int i = 0; i < enemyCount; ++i) {
+    for (int i = 0;i < enemyCount;++i) {
         GEEnemy* e = _enemyManager->getEnemyAt(i);
         if (!e || !e->isAlive()) continue;
 
@@ -264,8 +277,8 @@ int GEPlayer::selectTopEnemiesByHP(GEEnemy** input, int count, int topN, GEEnemy
     if (count == 0 || topN <= 0) return 0;
 
     // Sort
-    for (int i = 0; i < count - 1; ++i) {
-        for (int j = i + 1; j < count; ++j) {
+    for (int i = 0;i < count - 1;++i) {
+        for (int j = i + 1;j < count;++j) {
             if (input[j]->getHP() > input[i]->getHP()) {
                 std::swap(input[i], input[j]);
             }
@@ -273,14 +286,14 @@ int GEPlayer::selectTopEnemiesByHP(GEEnemy** input, int count, int topN, GEEnemy
     }
 
     const int resultCount = min(topN, count);
-    for (int i = 0; i < resultCount; ++i) {
+    for (int i = 0;i < resultCount;++i) {
         output[i] = input[i];
     }
     return resultCount;
 }
 
 void GEPlayer::updateAoeEffects(float deltaTime) {
-    for (int i = 0; i < PLAYER_MAX_AOE_EFFECTS; i++) {
+    for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
         if (!_aoeEffects[i].active) continue;
         _aoeEffects[i].remainingTime -= deltaTime;
         if (_aoeEffects[i].remainingTime <= 0.0f) {
@@ -292,7 +305,7 @@ void GEPlayer::updateAoeEffects(float deltaTime) {
 
 void GEPlayer::spawnAoeEffect(float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) {
     int slot = -1;
-    for (int i = 0; i < PLAYER_MAX_AOE_EFFECTS; i++) {
+    for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
         if (!_aoeEffects[i].active) {
             slot = i;
             break;
@@ -302,7 +315,7 @@ void GEPlayer::spawnAoeEffect(float centerX, float centerY, float radius, unsign
     if (slot == -1) {
         float minTime = _aoeEffects[0].remainingTime;
         slot = 0;
-        for (int i = 1; i < PLAYER_MAX_AOE_EFFECTS; i++) {
+        for (int i = 1;i < PLAYER_MAX_AOE_EFFECTS;i++) {
             if (_aoeEffects[i].remainingTime < minTime) {
                 minTime = _aoeEffects[i].remainingTime;
                 slot = i;
@@ -340,7 +353,7 @@ void GEPlayer::drawAoeIndicator(GEWindow& window, const GECamera& camera) const 
 }
 
 void GEPlayer::drawAoeEffects(GEWindow& window, const GECamera& camera) const {
-    for (int i = 0; i < PLAYER_MAX_AOE_EFFECTS; i++) {
+    for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
         if (!_aoeEffects[i].active) continue;
         drawCircle(window, camera, _aoeEffects[i].centerX, _aoeEffects[i].centerY, _aoeEffects[i].radius, _aoeEffects[i].colorR, _aoeEffects[i].colorG, _aoeEffects[i].colorB);
     }
@@ -361,7 +374,7 @@ void GEPlayer::drawCircle(GEWindow& window, const GECamera& camera, float center
     int cy = static_cast<int>(centerY - camY);
     int radiusSq = radiusInt * radiusInt;
 
-    for (int dx = -radiusInt; dx <= radiusInt; ++dx) {
+    for (int dx = -radiusInt;dx <= radiusInt;++dx) {
         int rem = radiusSq - dx * dx;
         if (rem < 0) continue;
         int dy = static_cast<int>(std::sqrt(static_cast<float>(rem)));

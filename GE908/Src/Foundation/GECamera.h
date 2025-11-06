@@ -20,11 +20,11 @@ public:
 
     void followPlayer(float playerX, float playerY, int playerWidth, int playerHeight);
 
-	float getX() const { return _x; }
-	float getY() const { return _y; }
+	float getX() const { return _x;}
+	float getY() const { return _y;}
 
-    int getWidth() const { return _width; }
-    int getHeight() const { return _height; }
+    int getWidth() const { return _width;}
+    int getHeight() const { return _height;}
 
 	void setMapBounds(int mapWidth, int mapHeight);
 };

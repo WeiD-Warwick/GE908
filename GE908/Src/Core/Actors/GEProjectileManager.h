@@ -1,7 +1,7 @@
 #pragma once
 #include "GEProjectile.h"
-#include "../../Core/Character/GEPlayer.h"
-#include "../../Core/Character/GEEnemyManager.h"
+#include "../../Core/Actors/GEPlayer.h"
+#include "../../Core/Actors/GEEnemyManager.h"
 
 #define MAX_PROJECTILES 5000
 

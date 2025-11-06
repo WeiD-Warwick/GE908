@@ -7,7 +7,7 @@ GEAnimation::GEAnimation()
     , _timeAccumulator(0.0f)
     , _loop(true)
     , _playing(false) {
-    for (int i = 0; i < GE_ANIMATION_MAX_FRAMES; ++i) {
+    for (int i = 0;i < GE_ANIMATION_MAX_FRAMES;++i) {
         _durations[i] = 0.0f;
     }
 }
@@ -17,7 +17,7 @@ GEAnimation::~GEAnimation() {
 }
 
 void GEAnimation::clearFrames() {
-    for (int i = 0; i < GE_ANIMATION_MAX_FRAMES; ++i) {
+    for (int i = 0;i < GE_ANIMATION_MAX_FRAMES;++i) {
         _frames[i].free();
         _durations[i] = 0.0f;
     }
@@ -50,7 +50,7 @@ bool GEAnimation::loadFromFiles(const std::string filenames[], int frameCount, f
 
     clearFrames();
 
-    for (int i = 0; i < frameCount; ++i) {
+    for (int i = 0;i < frameCount;++i) {
         if (!_frames[i].load(filenames[i])) {
             GELog::shared().error("GEAnimation::loadFromFiles failed to load frame " + std::to_string(i));
             clearFrames();
@@ -77,7 +77,7 @@ bool GEAnimation::loadFromFiles(const std::string filenames[], const float durat
 
     clearFrames();
 
-    for (int i = 0; i < frameCount; ++i) {
+    for (int i = 0;i < frameCount;++i) {
         if (!_frames[i].load(filenames[i])) {
             GELog::shared().error("GEAnimation::loadFromFiles(frame durations) failed to load frame " + std::to_string(i));
             clearFrames();
@@ -177,13 +177,13 @@ void GEAnimation::draw(GEWindow& window, int topLeftX, int topLeftY) const {
     const int winW = window.getWidth();
     const int winH = window.getHeight();
 
-    for (int dy = 0; dy < static_cast<int>(frame.height); ++dy) {
+    for (int dy = 0;dy < static_cast<int>(frame.height);++dy) {
         int screenY = topLeftY + dy;
         if (screenY < 0 || screenY >= winH) {
             continue;
         }
 
-        for (int dx = 0; dx < static_cast<int>(frame.width); ++dx) {
+        for (int dx = 0;dx < static_cast<int>(frame.width);++dx) {
             int screenX = topLeftX + dx;
             if (screenX < 0 || screenX >= winW) {
                 continue;

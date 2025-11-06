@@ -6,12 +6,6 @@
 
 using namespace GamesEngineeringBase;
 
-static float clamp(float value, float minVal, float maxVal) {
-    if (value < minVal) return minVal;
-    if (value > maxVal) return maxVal;
-    return value;
-}
-
 class BaseCharacter : public GECollisible {
 
 protected:
@@ -25,7 +19,7 @@ protected:
 	float _accumX = 0.0f;
 	float _accumY = 0.0f;
 
-    virtual bool isBlockedAt(float x, float y) const { return false; }
+    virtual bool isBlockedAt(float x, float y) const { return false;}
 
     // move character and check collision and boundary
 	void moveUpdate(float deltaTime, float dirX, float dirY);
@@ -42,9 +36,9 @@ public:
 	virtual ~BaseCharacter() {}
 	virtual void takeDamage(int value);
 
-	int getSpeed() const { return _speed; }
-	int getHP() const { return _hp; }
-	bool isAlive() const { return _hp > 0; }
-	void setSpeed(int speed) { _speed = speed; }
-	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth; _mapHeight = mapHeight; }
+	int getSpeed() const { return _speed;}
+	int getHP() const { return _hp;}
+	bool isAlive() const { return _hp > 0;}
+	void setSpeed(int speed) { _speed = speed;}
+	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth;_mapHeight = mapHeight;}
 };
