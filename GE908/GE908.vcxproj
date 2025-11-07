@@ -125,7 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Core\GEPowerUp.cpp" />
+    <ClCompile Include="Src\Core\GEPowerUpManager.cpp" />
     <ClCompile Include="Src\Core\Character.cpp" />
     <ClCompile Include="Src\Core\GEProjectileManager.cpp" />
     <ClCompile Include="Src\Core\GEEnemyManager.cpp" />
@@ -135,13 +135,14 @@
     <ClCompile Include="Src\Foundation\GECollisible.h" />
     <ClCompile Include="Src\Foundation\GEDebug.h" />
     <ClCompile Include="Src\Foundation\GEFrameTimer.h" />
-    <ClCompile Include="Src\Foundation\GESaveData.cpp" />
+    <ClCompile Include="Src\Foundation\GEGameConfig.h" />
+    <ClCompile Include="Src\Foundation\GEObservation.h" />
     <ClCompile Include="Src\Foundation\GEUtility.h" />
     <ClCompile Include="Src\GameManager.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Core\GEPowerUp.h" />
+    <ClInclude Include="Src\Core\GEPowerUpManager.h" />
     <ClInclude Include="Src\Core\GEProjectileManager.h" />
     <ClInclude Include="Src\Core\GEEnemyManager.h" />
     <ClInclude Include="Src\Core\GEEnemy.h" />

@@ -48,8 +48,7 @@ private:
     float _spawnTimer = 0.0f;
 
     bool isWaterTile(int tileID) const;
-    bool findSpawnLocation(float& outX, float& outY, const GEPlayer& player, const GEEnemyManager& enemyManager) const;
-    void spawnPowerUp(const GEPlayer& player, const GEEnemyManager& enemyManager);
+    void spawnPowerUpFromEnemy(const GEEnemy& enemy);
 
 public:
     GEPowerUpManager();

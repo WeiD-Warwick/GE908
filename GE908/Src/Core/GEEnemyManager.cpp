@@ -1,8 +1,7 @@
 #include "GEEnemyManager.h"
 #include "GEProjectileManager.h"
 #include "GEPlayer.h"
-#include <cstdlib>
-#include <ctime>
+#include <iostream>
 
 namespace {
     constexpr int PLAYER_COLLISION_DAMAGE = 30;

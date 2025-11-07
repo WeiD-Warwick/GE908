@@ -21,9 +21,6 @@
     <ClCompile Include="Src\GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Foundation\GESaveData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Core\GEMapsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,13 +45,19 @@
     <ClCompile Include="Src\Core\Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\GEPowerUp.cpp">
+    <ClCompile Include="Src\Core\GEPowerUpManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEDebug.h">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEUtility.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Foundation\GEGameConfig.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Foundation\GEObservation.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,7 +95,7 @@
     <ClInclude Include="Src\Core\GEProjectileManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\GEPowerUp.h">
+    <ClInclude Include="Src\Core\GEPowerUpManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Foundation\GEArray.h">

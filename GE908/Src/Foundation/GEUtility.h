@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 
 static float clamp(float value, float minVal, float maxVal) {
 	if (value < minVal) return minVal;
@@ -17,6 +18,13 @@ static bool circleRectCollision(float circleX, float circleY, float radius,
 
     return (dx * dx + dy * dy) <= (radius * radius);
 }
+
+static float randomFloat(float from = 0.0f, float to = 1.0f) {
+    static std::mt19937 gen(std::random_device{}());
+    std::uniform_real_distribution<float> dist(from, to);
+    return dist(gen);
+}
+
 
 struct GEColor {
     unsigned char r = 255;

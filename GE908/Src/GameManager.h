@@ -7,7 +7,7 @@
 #include "Core/GEPlayer.h"
 #include "Core/GEEnemyManager.h"
 #include "Core/GEProjectileManager.h"
-#include "Core/GEPowerUp.h"
+#include "Core/GEPowerUpManager.h"
 
 using namespace GamesEngineeringBase;
 
