@@ -4,6 +4,11 @@
 #include <cstdlib>
 #include <ctime>
 
+namespace {
+    constexpr int PLAYER_COLLISION_DAMAGE = 30;
+    constexpr int ENEMY_COLLISION_DAMAGE = 30;
+}
+
 GEEnemyManager::GEEnemyManager() {
     for (int i = 0;i < MAX_ENEMIES;i++) _enemies[i] = nullptr;
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
@@ -128,6 +133,17 @@ void GEEnemyManager::update(float deltaTime, GEPlayer* player, GEProjectileManag
 
         if (enemy->collide(*player)) {
             enemy->setCenter(previousX, previousY);
+
+
+            if (player->canReceiveContactDamage()) {
+                player->takeDamage(PLAYER_COLLISION_DAMAGE);
+                player->startContactDamageCooldown();
+            }
+
+            if (enemy->canReceiveContactDamage()) {
+                enemy->takeDamage(ENEMY_COLLISION_DAMAGE);
+                enemy->startContactDamageCooldown();
+            }
         }
     }
 }

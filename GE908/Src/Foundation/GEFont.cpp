@@ -54,8 +54,8 @@ void GEFont::draw(const std::string& text, int startX, int startY, const unsigne
         int scaledH = originH * scale;
 
         // loop through each pixel in the scaled image
-        for (int sy = 0; sy < scaledH; sy++) {
-            for (int sx = 0; sx < scaledW; sx++) {
+        for (int sy = 0; sy < scaledH; ++sy) {
+            for (int sx = 0; sx < scaledW; ++sx) {
                 int srcX = sx / scale;
                 int srcY = sy / scale;
 

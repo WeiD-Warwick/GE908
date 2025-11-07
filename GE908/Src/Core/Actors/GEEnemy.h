@@ -26,5 +26,7 @@ public:
 	~GEEnemy();
 
 	void update(float deltaTime, float playerCenterX, float playerCenterY, GEProjectileManager& projectileManager);
-	bool getIsStatic() const { return _isStatic;}
+	bool getIsStatic() const { return _isStatic; }
+	void draw(Window& window, const GECamera& camera) override;
+	void takeDamage(int value) override;
 };

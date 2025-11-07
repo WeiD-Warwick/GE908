@@ -1,4 +1,4 @@
-#include <cmath>
+﻿#include <cmath>
 #include "GEPlayer.h"
 #include "GEPowerUp.h"
 #include "BaseCharacter.h"
@@ -13,9 +13,12 @@ static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
 static constexpr int FIRE_DAMAGE = 15;
 
 GEPlayer::GEPlayer()
-	: BaseCharacter("", GECollisionType::Player) {
-	_hp = 200;
-	_speed = 240;
+    : BaseCharacter("", GECollisionType::Player) {
+    _hp = 200;
+    _speed = 240;
+    _maxHp = _hp;
+
+    setContactDamageCooldownDuration(0.5f);
 
     for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
         _aoeEffects[i].active = false;
@@ -46,6 +49,8 @@ void GEPlayer::bindWorldContext(const GEMapsManager* maps, const GEEnemyManager*
 }
 
 void GEPlayer::update(float deltaTime, Window& window) {
+    updateCharacterState(deltaTime);
+
     float dirX = 0.0f;
     float dirY = 0.0f;
 
@@ -139,22 +144,22 @@ bool GEPlayer::isBlockedAt(float x, float y) const {
 }
 
 void GEPlayer::applyEnvironmentalEffects(float deltaTime) {
-    static bool wasInFire = false;                // ?????????
+    static bool wasInFire = false;                // 上一帧是否在火焰中
     static float fireTimer = 0.0f;
 
-    constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;  // ??????
+    constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;  // 连续灼烧间隔
     constexpr int FIRE_DAMAGE = 15;
 
     bool inFire = collidesWithTileType(getCenterX(), getCenterY(), *_mapsManager, GECollisionType::Fire);
 
     if (inFire) {
-        // ??????? ? ????
+        // 第一次进入火焰 → 立即受伤
         if (!wasInFire) {
             takeDamage(FIRE_DAMAGE);
             fireTimer = 0.0f;
         }
         else {
-            // ?????? ? ????
+            // 持续在火焰中 → 累积计时
             fireTimer += deltaTime;
             if (fireTimer >= FIRE_DAMAGE_INTERVAL) {
                 takeDamage(FIRE_DAMAGE);
@@ -168,7 +173,6 @@ void GEPlayer::applyEnvironmentalEffects(float deltaTime) {
 
     wasInFire = inFire;
 }
-
 
 void GEPlayer::applyMovementBounds(float& newX, float& newY) {
     float camW = _saveData->getScreenWidth();
@@ -426,7 +430,7 @@ void GEPlayer::drawCircle(Window& window, const GECamera& camera, float centerX,
 }
 
 void GEPlayer::draw(Window& window, const GECamera& camera) {
-    GECollisible::draw(window, camera);
+    BaseCharacter::draw(window, camera);
     drawAoeIndicator(window, camera);
     drawAoeEffects(window, camera);
 }
@@ -441,4 +445,10 @@ void GEPlayer::applyPowerUp(GEPowerUpType type) {
         _aoeTargetCount = min(PLAYER_MAX_AOE_TARGETS, _aoeTargetCount + 1);
         break;
     }
+}
+
+void GEPlayer::takeDamage(int value) {
+    if (value <= 0) return;
+    BaseCharacter::takeDamage(value);
+    triggerDamageFlash(255, 0, 0, 0.25f);
 }

@@ -24,19 +24,34 @@ void GEEnemy::applyMovementBounds(float& newX, float& newY) {
 }
 
 GEEnemy::GEEnemy(GEEnemyType type)
-	: BaseCharacter(EnemyImagePath(type), GECollisionType::Enemy), _type(type) {
-	_width = _image.width;
-	_height = _image.height;
+    : BaseCharacter(EnemyImagePath(type), GECollisionType::Enemy), _type(type) {
+    _width = _image.width;
+    _height = _image.height;
+    setContactDamageCooldownDuration(0.5f);
 
 	switch (_type) {
     case GEEnemyType::Normal:
-        _hp = 200;_speed = 150;break;
+        _hp = 200;
+        _speed = 150;
+        _maxHp = _hp;
+        break;
     case GEEnemyType::Fast:
-        _hp = 100;_speed = 270;break;
+        _hp = 100;
+        _speed = 270;
+        _maxHp = _hp;
+        break;
     case GEEnemyType::Heavy:
-        _hp = 300;_speed = 80;break;
+        _hp = 300;
+        _speed = 80;
+        _maxHp = _hp;
+        break;
     case GEEnemyType::StaticShooter:
-        _hp = 150;_speed = 0;_isStatic = true;_attackRate = 2.8f;break;
+        _hp = 150;
+        _speed = 0;
+        _maxHp = _hp;
+        _isStatic = true;
+        _attackRate = 2.8f;
+        break;
     }
 }
 
@@ -44,8 +59,9 @@ GEEnemy::~GEEnemy() {}
 
 void GEEnemy::update(float deltaTime,
     float playerCenterX, float playerCenterY,
-    GEProjectileManager& projectileManager)
-{
+    GEProjectileManager& projectileManager) {
+    updateCharacterState(deltaTime);
+
     if (!isAlive()) return;
 
     const float cx = getCenterX();
@@ -75,4 +91,14 @@ void GEEnemy::update(float deltaTime,
 
         projectileManager.addProjectile(ProjectileOwner::FromEnemy, cx, cy, vx, vy, 100.0f, 200);
     }
+}
+
+void GEEnemy::draw(Window& window, const GECamera& camera) {
+    BaseCharacter::draw(window, camera);
+}
+
+void GEEnemy::takeDamage(int value) {
+    if (value <= 0) return;
+    BaseCharacter::takeDamage(value);
+    triggerDamageFlash(255, 255, 255, 0.25f);
 }

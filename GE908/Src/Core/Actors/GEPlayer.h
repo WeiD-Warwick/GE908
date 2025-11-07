@@ -84,7 +84,6 @@ private:
 	void drawAoeIndicator(Window& window, const GECamera& camera) const;
 	void drawAoeEffects(Window& window, const GECamera& camera) const;
 	void drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) const;
-	
 public:
 
 	GEPlayer();
@@ -94,10 +93,12 @@ public:
 	
 	void update(float deltaTime, Window& window);
 
-	void draw(Window& window, const GECamera& camera);
+	void draw(Window& window, const GECamera& camera) override;
 
 	float getAOECooldownTime() const { return _aoeCooldownTimer;}
 
 	void applyPowerUp(GEPowerUpType type);
+
+	void takeDamage(int value) override;
 
 };

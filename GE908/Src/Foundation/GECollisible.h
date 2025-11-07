@@ -4,7 +4,7 @@
 
 using namespace GamesEngineeringBase;
 
-#define SHOW_COLLISION_CIRCLE true
+#define HIDE_COLLISION_CIRCLE false
 
 enum class GECollisionType {
 	None,
@@ -45,6 +45,8 @@ public:
 	virtual ~GECollisible() = default;
 
 	virtual void update(GamesEngineeringBase::Window& canvas, float dt) {}
+	virtual void draw(Window& window, const GECamera& camera);
+	void drawCollisionBoxIfNeeded(Window& window, const GECamera& camera);
 
 	void setCenter(float centerX, float centerY) { _centerX = centerX; _centerY = centerY;}
 	float getOriginX() const { return _centerX - _image.width / 2.0f;}
@@ -55,8 +57,7 @@ public:
 	int getHeight() const { return _image.height;}
 	int getCollisionRadius() const { return _image.width / 2;}
 	GECollisionType getCollisionType() const { return _type; }
-
-	void draw(Window& window, const GECamera& camera);
+	
 	bool collide(const GECollisible& other) const;
 	bool collideAt(float x, float y, const GECollisible& other) const;
 };

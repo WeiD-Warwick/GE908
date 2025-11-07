@@ -191,7 +191,6 @@ void GEPowerUpManager::update(float deltaTime, GEPlayer& player, const GEEnemyMa
 
         if (powerUp->collide(player)) {
             player.applyPowerUp(powerUp->getType());
-            player.applyPowerUp(powerUp->getType());
             powerUp->deactivate();
         }
     }
