@@ -39,6 +39,9 @@ void GEProjectileManager::update(float deltaTime, GEEnemyManager& enemyManager, 
                 GEEnemy* enemy = enemyManager.getEnemyAt(j);
                 if (enemy && enemy->isAlive() && projectile->collide(*enemy)) {
                     enemy->takeDamage(projectile->getDamage());
+                    if (!enemy->isAlive()) {
+                        enemyManager.registerEnemyKill(enemy->getType());
+                    }
                     projectile->deactivate();
                     break;
                 }

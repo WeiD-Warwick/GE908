@@ -12,6 +12,8 @@ static constexpr int BASE_ACTIVE_ENEMY_CAP = 12;
 static constexpr int ACTIVE_ENEMY_CAP_INCREMENT = 4;
 static constexpr float ACTIVE_ENEMY_CAP_STEP_TIME = 45.0f;
 
+static constexpr int ENEMY_TYPE_COUNT = 4;
+
 class GEPlayer;
 
 class GEProjectileManager;
@@ -25,6 +27,8 @@ private:
     float _spawnInterval = DEFAULT_SPAWN_INTERVAL;
     float _difficultyTimer = 0.0f;
     float _elapsedTime = 0.0f;
+
+    int _killCounts[ENEMY_TYPE_COUNT] = { 0 };
 
     GESaveData* _saveData = nullptr;
 
@@ -41,6 +45,10 @@ public:
     void load(GESaveData* saveData);
     void update(float deltaTime, GEPlayer* player, GEProjectileManager& projectileManager);
     void draw(Window& window, const GECamera& camera);
+
+    void registerEnemyKill(GEEnemyType type);
+    void resetKillCounts();
+    int getKillCount(GEEnemyType type) const;
 
     bool isWaterTile(int tileID) { return tileID >= 14 && tileID <= 22;}
 };

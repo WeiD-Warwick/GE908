@@ -34,7 +34,7 @@ GEPlayer::GEPlayer()
 
 GEPlayer::~GEPlayer() {}
 
-void GEPlayer::bindWorldContext(const GEMapsManager* maps, const GEEnemyManager* enemies, GEProjectileManager* projectiles) {
+void GEPlayer::bindWorldContext(const GEMapsManager* maps, GEEnemyManager* enemies, GEProjectileManager* projectiles) {
     _mapsManager = maps;
     _enemyManager = enemies;
     _projectileManager = projectiles;
@@ -283,6 +283,9 @@ void GEPlayer::executeAoeSkill() {
     for (int i = 0;i < topCount;++i) {
         GEEnemy* enemy = topTargets[i];
         enemy->takeDamage(_aoeDamage);
+        if (!enemy->isAlive() && _enemyManager) {
+            _enemyManager->registerEnemyKill(enemy->getType());
+        }
         spawnAoeEffect(enemy->getCenterX(), enemy->getCenterY(), IMPACT_RADIUS,
             IMPACT_COLOR[0], IMPACT_COLOR[1], IMPACT_COLOR[2]);
     }
@@ -373,10 +376,8 @@ void GEPlayer::spawnAoeEffect(float centerX, float centerY, float radius, unsign
     _aoeEffects[slot].remainingTime = _aoeEffectDuration;
 }
 
-void GEPlayer::drawAoeIndicator(Window& window, const GECamera& camera) const {
-    if (!SHOW_PLAYER_AOE_INDICATOR) {
-        return;
-    }
+void GEPlayer::drawAoeIndicatorIfNeeded(Window& window, const GECamera& camera) const {
+    if (HIDE_PLAYER_AOE_INDICATOR) return;
 
     const bool ready = _aoeCooldownTimer <= 0.0f;
     const unsigned char readyR = 0;
@@ -431,7 +432,7 @@ void GEPlayer::drawCircle(Window& window, const GECamera& camera, float centerX,
 
 void GEPlayer::draw(Window& window, const GECamera& camera) {
     BaseCharacter::draw(window, camera);
-    drawAoeIndicator(window, camera);
+    drawAoeIndicatorIfNeeded(window, camera);
     drawAoeEffects(window, camera);
 }
 

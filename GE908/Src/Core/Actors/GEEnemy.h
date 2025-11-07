@@ -25,6 +25,7 @@ public:
 	GEEnemy(GEEnemyType type);
 	~GEEnemy();
 
+	GEEnemyType getType() const { return _type; }
 	void update(float deltaTime, float playerCenterX, float playerCenterY, GEProjectileManager& projectileManager);
 	bool getIsStatic() const { return _isStatic; }
 	void draw(Window& window, const GECamera& camera) override;

@@ -12,6 +12,7 @@ namespace {
 GEEnemyManager::GEEnemyManager() {
     for (int i = 0;i < MAX_ENEMIES;i++) _enemies[i] = nullptr;
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    resetKillCounts();
 }
 
 GEEnemyManager::~GEEnemyManager() {
@@ -28,6 +29,8 @@ void GEEnemyManager::load(GESaveData* saveData) {
     _spawnInterval = DEFAULT_SPAWN_INTERVAL;
     _spawnTimer = 0.0f;
     _difficultyTimer = 0.0f;
+
+    resetKillCounts();
 }
 
 void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
@@ -143,7 +146,33 @@ void GEEnemyManager::update(float deltaTime, GEPlayer* player, GEProjectileManag
             if (enemy->canReceiveContactDamage()) {
                 enemy->takeDamage(ENEMY_COLLISION_DAMAGE);
                 enemy->startContactDamageCooldown();
+
+                if (!enemy->isAlive()) {
+                    registerEnemyKill(enemy->getType());
+                }
             }
         }
     }
+}
+
+void GEEnemyManager::registerEnemyKill(GEEnemyType type) {
+    const int index = static_cast<int>(type);
+    if (index < 0 || index >= ENEMY_TYPE_COUNT) {
+        return;
+    }
+    _killCounts[index]++;
+}
+
+void GEEnemyManager::resetKillCounts() {
+    for (int i = 0; i < ENEMY_TYPE_COUNT; ++i) {
+        _killCounts[i] = 0;
+    }
+}
+
+int GEEnemyManager::getKillCount(GEEnemyType type) const {
+    const int index = static_cast<int>(type);
+    if (index < 0 || index >= ENEMY_TYPE_COUNT) {
+        return 0;
+    }
+    return _killCounts[index];
 }

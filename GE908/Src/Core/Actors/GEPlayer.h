@@ -2,7 +2,7 @@
 #include "BaseCharacter.h"
 #include "../../Foundation/GESaveData.h"
 
-static constexpr auto SHOW_PLAYER_AOE_INDICATOR = true;
+static constexpr auto HIDE_PLAYER_AOE_INDICATOR = true;
 
 static constexpr auto MAX_PROJECTILES = 100;
 static constexpr auto PLAYER_PROJECTILE_SPEED = 150.0f;
@@ -29,7 +29,7 @@ class GEPlayer : public BaseCharacter {
 private:
 	const GESaveData* _saveData = nullptr;
 	const GEMapsManager* _mapsManager = nullptr;
-	const GEEnemyManager* _enemyManager = nullptr;
+	GEEnemyManager* _enemyManager = nullptr;
 	GEProjectileManager* _projectileManager = nullptr;
 
 	// auto attack
@@ -81,7 +81,7 @@ private:
 	int selectTopEnemiesByHP(GEEnemy** input, int count, int topN, GEEnemy** output) const;
 	void updateAoeEffects(float deltaTime);
 	void spawnAoeEffect(float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b);
-	void drawAoeIndicator(Window& window, const GECamera& camera) const;
+	void drawAoeIndicatorIfNeeded(Window& window, const GECamera& camera) const;
 	void drawAoeEffects(Window& window, const GECamera& camera) const;
 	void drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) const;
 public:
@@ -89,7 +89,7 @@ public:
 	GEPlayer();
 	~GEPlayer();
 
-	void bindWorldContext(const GEMapsManager* maps, const GEEnemyManager* enemies, GEProjectileManager* projectiles);
+	void bindWorldContext(const GEMapsManager* maps, GEEnemyManager* enemies, GEProjectileManager* projectiles);
 	
 	void update(float deltaTime, Window& window);
 
