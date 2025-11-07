@@ -1,10 +1,5 @@
 #pragma once
-
-static float clamp(float value, float minVal, float maxVal) {
-	if (value < minVal) return minVal;
-	if (value > maxVal) return maxVal;
-	return value;
-}
+#include "GEUtility.h"
 
 class GECamera {
 private:
@@ -19,8 +14,8 @@ private:
 
 public:
 
-	GECamera() {}
-	~GECamera() {}
+	GECamera() = default;
+	~GECamera() = default;
 
 	float getX() const { return _x; }
 	float getY() const { return _y; }

@@ -1,6 +1,5 @@
 #include <cmath>
 #include <cstdlib>
-#include <algorithm>
 #include "GEPowerUp.h"
 #include "GEPlayer.h"
 #include "GEEnemyManager.h"

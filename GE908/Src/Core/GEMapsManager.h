@@ -1,13 +1,22 @@
 ﻿#pragma once
-#include "../../../ThirdParty/GamesEngineeringBase.h"
-#include "../../Foundation/GESaveData.h"
-#include "GETile.h"
+#include "../../ThirdParty/GamesEngineeringBase.h"
+#include "../Foundation/GECollisible.h"
+#include "../Foundation/GESaveData.h"
 
 using namespace GamesEngineeringBase;
 
+class GETile : public GECollisible {
+
+public:
+    GETile(const std::string& filename, GECollisionType collisionType)
+        : GECollisible(filename, collisionType) {
+    }
+
+    ~GETile() = default;
+};
+
 class GEMapsManager {
 private:
-
     GETile** _tiles = nullptr;// image cache
     int _tileCount = 0;
     GESaveData* _saveData = nullptr;// save data

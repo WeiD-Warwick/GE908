@@ -3,24 +3,19 @@
 #define WINDOW_WIDTH 854
 #define WINDOW_HEIGHT 480
 
-const unsigned char fpsColor[3] = { 255, 0, 0 };
+const GEColor fpsColor = GEColor(255, 0, 0);
 
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager() : _isRunning(false) {
+GameManager::GameManager() : _font(), _isRunning(false) {
 	_window.create(WINDOW_WIDTH, WINDOW_HEIGHT, "WM908", false);
 }
 
-GameManager::~GameManager() {
-	_font.release();
-}
+GameManager::~GameManager() = default;
 
-// load Game Resource, like maps, player, enemies
 void GameManager::loadComponent() {
 	_font.load();
-
 	_mapsManager.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
-
 	_saveData = _mapsManager.getSaveData();
 
 	if (_saveData) {
@@ -37,13 +32,9 @@ void GameManager::loadComponent() {
 
 void GameManager::update(float deltaTime) {
 	_window.checkInput();
-
 	_player.update(deltaTime, _window);
-
 	_camera.followPlayer(_player.getOriginX(), _player.getOriginY(), _player.getWidth(), _player.getHeight());
-
 	_saveData->setCameraOffset(_camera.getX(), _camera.getY());
-
 	_enemyManager.update(deltaTime, &_player, _projectileManager);
 	_projectileManager.update(deltaTime, _enemyManager, _player);
 	_powerUpManager.update(deltaTime, _player, _enemyManager);
@@ -84,15 +75,15 @@ void GameManager::stop() {
 
 void GameManager::drawText() {
 	int killTextY = 20;
-	_font.draw("Normal: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Normal)), 20, killTextY, fpsColor, 1, _window);
+	_font.draw("Normal: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Normal)), GEPoint(20, killTextY), fpsColor, _window);
 	killTextY += 20;
-	_font.draw("Fast: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Fast)), 20, killTextY, fpsColor, 1, _window);
+	_font.draw("Fast: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Fast)), GEPoint(20, killTextY), fpsColor, _window);
 	killTextY += 20;
-	_font.draw("Heavy: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Heavy)), 20, killTextY, fpsColor, 1, _window);
+	_font.draw("Heavy: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Heavy)), GEPoint(20, killTextY), fpsColor, _window);
 	killTextY += 20;
-	_font.draw("Static: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::StaticShooter)), 20, killTextY, fpsColor, 1, _window);
-
-	_font.draw("FPS:" + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())), 20, 400, fpsColor, 1, _window);
-	_font.draw("HP:" + std::to_string(_player.getHP()), 100, 400, fpsColor, 1, _window);
-	_font.draw("Skill: " + std::to_string(_player.getAOECooldownTime()), 400, 400, fpsColor, 1, _window);
+	_font.draw("Static: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::StaticShooter)), GEPoint(20, killTextY), fpsColor, _window);
+	
+	_font.draw("FPS:" + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())), GEPoint(20, 400), fpsColor, _window);
+	_font.draw("HP:" + std::to_string(_player.getHP()), GEPoint(200, 400), fpsColor, _window);
+	_font.draw("Skill: " + std::to_string(_player.getAOECooldownTime()), GEPoint(400, 400), fpsColor, _window);
 }

@@ -3,11 +3,11 @@
 #include "Foundation/GEFrameTimer.h"
 #include "Foundation/GECamera.h"
 #include "Foundation/GESaveData.h"
-#include "Core/Maps/GEMapsManager.h"
-#include "Core/Actors/GEPlayer.h"
-#include "Core/Actors/GEEnemyManager.h"
-#include "Core/Actors/GEProjectileManager.h"
-#include "Core/Actors/GEPowerUp.h"
+#include "Core//GEMapsManager.h"
+#include "Core/GEPlayer.h"
+#include "Core/GEEnemyManager.h"
+#include "Core/GEProjectileManager.h"
+#include "Core/GEPowerUp.h"
 
 using namespace GamesEngineeringBase;
 
@@ -33,7 +33,7 @@ public:
 	// Start Game Loops
 	void run();
 
-	// load Game Resource, like maps, player, enemies, fonts
+	// load Game Resource, like , player, enemies, fonts
 	void loadComponent();
 
 	// update

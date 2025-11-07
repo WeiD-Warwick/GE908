@@ -1,5 +1,5 @@
 #pragma once
-#include "BaseCharacter.h"
+#include "Character.h"
 
 class GEProjectileManager;
 
@@ -12,7 +12,7 @@ enum class GEEnemyType {
 	StaticShooter
 };
 
-class GEEnemy : public BaseCharacter {
+class GEEnemy : public Character {
 private:
 	GEEnemyType _type;
 	float _attackCooldown = 0.0f;
@@ -28,6 +28,6 @@ public:
 	GEEnemyType getType() const { return _type; }
 	void update(float deltaTime, float playerCenterX, float playerCenterY, GEProjectileManager& projectileManager);
 	bool getIsStatic() const { return _isStatic; }
-	void draw(Window& window, const GECamera& camera) override;
+	void draw(Window& window, const GECamera& camera) const override;
 	void takeDamage(int value) override;
 };

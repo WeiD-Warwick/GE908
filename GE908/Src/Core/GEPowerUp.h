@@ -1,8 +1,8 @@
 #pragma once
-#include "../../../ThirdParty/GamesEngineeringBase.h"
-#include "../../Foundation/GECollisible.h"
-#include "../../Foundation/GESaveData.h"
-#include "../../Foundation/GECamera.h"
+#include "../../ThirdParty/GamesEngineeringBase.h"
+#include "../Foundation/GECollisible.h"
+#include "../Foundation/GESaveData.h"
+#include "../Foundation/GECamera.h"
 
 class GEPlayer;
 class GEEnemyManager;

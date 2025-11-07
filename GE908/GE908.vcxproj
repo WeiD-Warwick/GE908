@@ -125,33 +125,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Core\Actors\GEPowerUp.cpp" />
-    <ClCompile Include="Src\Foundation\GEAnimation.cpp" />
-    <ClCompile Include="Src\Core\Actors\BaseCharacter.cpp" />
-    <ClCompile Include="Src\Core\Actors\GEProjectileManager.cpp" />
-    <ClCompile Include="Src\Core\Maps\GETiles.cpp" />
-    <ClCompile Include="Src\Core\Actors\GEEnemyManager.cpp" />
-    <ClCompile Include="Src\Core\Actors\GEEnemy.cpp" />
-    <ClCompile Include="Src\Core\Actors\GEPlayer.cpp" />
-    <ClCompile Include="Src\Core\Maps\GEMapsManager.cpp" />
-    <ClCompile Include="Src\Foundation\GECollisible.cpp" />
+    <ClCompile Include="Src\Core\GEPowerUp.cpp" />
+    <ClCompile Include="Src\Core\Character.cpp" />
+    <ClCompile Include="Src\Core\GEProjectileManager.cpp" />
+    <ClCompile Include="Src\Core\GEEnemyManager.cpp" />
+    <ClCompile Include="Src\Core\GEEnemy.cpp" />
+    <ClCompile Include="Src\Core\GEPlayer.cpp" />
+    <ClCompile Include="Src\Core\GEMapsManager.cpp" />
     <ClCompile Include="Src\Foundation\GECollisible.h" />
-    <ClCompile Include="Src\Foundation\GEFont.cpp" />
+    <ClCompile Include="Src\Foundation\GEDebugState.h" />
     <ClCompile Include="Src\Foundation\GEFrameTimer.h" />
     <ClCompile Include="Src\Foundation\GESaveData.cpp" />
+    <ClCompile Include="Src\Foundation\GEUtility.h" />
     <ClCompile Include="Src\GameManager.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Core\Actors\GEPowerUp.h" />
-    <ClInclude Include="Src\Foundation\GEAnimation.h" />
-    <ClInclude Include="Src\Core\Actors\GEProjectileManager.h" />
-    <ClInclude Include="Src\Core\Actors\GEEnemyManager.h" />
-    <ClInclude Include="Src\Core\Actors\GEEnemy.h" />
-    <ClInclude Include="Src\Core\Actors\BaseCharacter.h" />
-    <ClInclude Include="Src\Core\Actors\GEPlayer.h" />
-    <ClInclude Include="Src\Core\Maps\GEMapsManager.h" />
-    <ClInclude Include="Src\Core\Maps\GETile.h" />
+    <ClInclude Include="Src\Core\GEPowerUp.h" />
+    <ClInclude Include="Src\Core\GEProjectileManager.h" />
+    <ClInclude Include="Src\Core\GEEnemyManager.h" />
+    <ClInclude Include="Src\Core\GEEnemy.h" />
+    <ClInclude Include="Src\Core\Character.h" />
+    <ClInclude Include="Src\Core\GEPlayer.h" />
+    <ClInclude Include="Src\Core\GEMapsManager.h" />
+    <ClInclude Include="Src\Foundation\GEArray.h" />
     <ClInclude Include="Src\Foundation\GESaveData.h" />
     <ClInclude Include="Src\Foundation\GEFont.h" />
     <ClInclude Include="Src\Foundation\GECamera.h" />

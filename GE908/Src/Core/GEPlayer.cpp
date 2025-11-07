@@ -1,19 +1,19 @@
 ﻿#include <cmath>
 #include "GEPlayer.h"
 #include "GEPowerUp.h"
-#include "BaseCharacter.h"
+#include "Character.h"
 #include "GEEnemyManager.h"
 #include "GEEnemy.h"
-#include "../Maps/GEMapsManager.h"
-#include "../Actors/GEProjectileManager.h"
-#include "../../Foundation/GESaveData.h"
+#include "GEMapsManager.h"
+#include "GEProjectileManager.h"
+#include "../Foundation/GESaveData.h"
 
 static float fireTimer = 0.0f;
 static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
 static constexpr int FIRE_DAMAGE = 15;
 
 GEPlayer::GEPlayer()
-    : BaseCharacter("", GECollisionType::Player) {
+    : Character("", GECollisionType::Player) {
     _hp = 200;
     _speed = 240;
     _maxHp = _hp;
@@ -25,14 +25,10 @@ GEPlayer::GEPlayer()
         _aoeEffects[i].centerX = 0.0f;
         _aoeEffects[i].centerY = 0.0f;
         _aoeEffects[i].radius = 0.0f;
-        _aoeEffects[i].colorR = 255;
-        _aoeEffects[i].colorG = 255;
-        _aoeEffects[i].colorB = 255;
+        _aoeEffects[i].color = GEColor();
         _aoeEffects[i].remainingTime = 0.0f;
     }
 }
-
-GEPlayer::~GEPlayer() {}
 
 void GEPlayer::bindWorldContext(const GEMapsManager* maps, GEEnemyManager* enemies, GEProjectileManager* projectiles) {
     _mapsManager = maps;
@@ -69,7 +65,7 @@ void GEPlayer::update(float deltaTime, Window& window) {
     applyEnvironmentalEffects(deltaTime);
 }
 
-bool GEPlayer::collidesWithTileType(float newX, float newY, const GEMapsManager& mapsManager, GECollisionType targetType) const {
+bool GEPlayer::collidesWithTileType(float newX, float newY, const GEMapsManager& Manager, GECollisionType targetType) const {
     if (!_saveData) return false;
 
     int tileW = _saveData->getTileWidth();
@@ -94,7 +90,7 @@ bool GEPlayer::collidesWithTileType(float newX, float newY, const GEMapsManager&
                 continue;
 
             int tileID = _saveData->getTileID(0, tileY, tileX);
-            GETile* tile = mapsManager.getTile(tileID);
+            GETile* tile = Manager.getTile(tileID);
             if (!tile) continue;
 
             if (tile->getCollisionType() != targetType)
@@ -273,11 +269,9 @@ void GEPlayer::executeAoeSkill() {
     if (topCount <= 0) return;
 
     // show range of aoe
-    const unsigned char RANGE_COLOR[3] = { 0, 0, 255 };// blue
-    spawnAoeEffect(originX, originY, _aoeRadius, RANGE_COLOR[0], RANGE_COLOR[1], RANGE_COLOR[2]);
+    spawnAoeEffect(originX, originY, _aoeRadius, GEColor(0, 0, 255));
 
     // show hit vfx of aoe
-    const unsigned char IMPACT_COLOR[3] = { 255, 0, 0 };// red
     const float IMPACT_RADIUS = 30.0f;
 
     for (int i = 0;i < topCount;++i) {
@@ -286,8 +280,7 @@ void GEPlayer::executeAoeSkill() {
         if (!enemy->isAlive() && _enemyManager) {
             _enemyManager->registerEnemyKill(enemy->getType());
         }
-        spawnAoeEffect(enemy->getCenterX(), enemy->getCenterY(), IMPACT_RADIUS,
-            IMPACT_COLOR[0], IMPACT_COLOR[1], IMPACT_COLOR[2]);
+        spawnAoeEffect(enemy->getCenterX(), enemy->getCenterY(), IMPACT_RADIUS, GEColor(255, 0, 0));
     }
 
     // reset skill cooldown time
@@ -346,7 +339,7 @@ void GEPlayer::updateAoeEffects(float deltaTime) {
     }
 }
 
-void GEPlayer::spawnAoeEffect(float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) {
+void GEPlayer::spawnAoeEffect(float centerX, float centerY, float radius, GEColor color) {
     int slot = -1;
     for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
         if (!_aoeEffects[i].active) {
@@ -370,9 +363,7 @@ void GEPlayer::spawnAoeEffect(float centerX, float centerY, float radius, unsign
     _aoeEffects[slot].centerX = centerX;
     _aoeEffects[slot].centerY = centerY;
     _aoeEffects[slot].radius = radius;
-    _aoeEffects[slot].colorR = r;
-    _aoeEffects[slot].colorG = g;
-    _aoeEffects[slot].colorB = b;
+    _aoeEffects[slot].color = color;
     _aoeEffects[slot].remainingTime = _aoeEffectDuration;
 }
 
@@ -380,27 +371,22 @@ void GEPlayer::drawAoeIndicatorIfNeeded(Window& window, const GECamera& camera) 
     if (HIDE_PLAYER_AOE_INDICATOR) return;
 
     const bool ready = _aoeCooldownTimer <= 0.0f;
-    const unsigned char readyR = 0;
-    const unsigned char readyG = 200;
-    const unsigned char readyB = 255;
-    const unsigned char cooldownTint = 90;
-
     if (ready) {
-        drawCircle(window, camera, getCenterX(), getCenterY(), _aoeRadius, readyR, readyG, readyB);
+        drawCircle(window, camera, getCenterX(), getCenterY(), _aoeRadius, GEColor(0, 200, 255));
     }
     else {
-        drawCircle(window, camera, getCenterX(), getCenterY(), _aoeRadius, cooldownTint, cooldownTint, cooldownTint);
+        drawCircle(window, camera, getCenterX(), getCenterY(), _aoeRadius, GEColor(90, 90, 90));
     }
 }
 
 void GEPlayer::drawAoeEffects(Window& window, const GECamera& camera) const {
     for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
         if (!_aoeEffects[i].active) continue;
-        drawCircle(window, camera, _aoeEffects[i].centerX, _aoeEffects[i].centerY, _aoeEffects[i].radius, _aoeEffects[i].colorR, _aoeEffects[i].colorG, _aoeEffects[i].colorB);
+        drawCircle(window, camera, _aoeEffects[i].centerX, _aoeEffects[i].centerY, _aoeEffects[i].radius, _aoeEffects[i].color);
     }
 }
 
-void GEPlayer::drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) const {
+void GEPlayer::drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, GEColor color) const {
     int camX = camera.getX();
     int camY = camera.getY();
 
@@ -425,13 +411,13 @@ void GEPlayer::drawCircle(Window& window, const GECamera& camera, float centerX,
 
         int y1 = cy + dy;
         int y2 = cy - dy;
-        if (y1 >= 0 && y1 < winH) window.draw(x, y1, r, g, b);
-        if (y2 >= 0 && y2 < winH) window.draw(x, y2, r, g, b);
+        if (y1 >= 0 && y1 < winH) window.draw(x, y1, color.r, color.g, color.b);
+        if (y2 >= 0 && y2 < winH) window.draw(x, y2, color.r, color.g, color.b);
     }
 }
 
-void GEPlayer::draw(Window& window, const GECamera& camera) {
-    BaseCharacter::draw(window, camera);
+void GEPlayer::draw(Window& window, const GECamera& camera) const {
+    Character::draw(window, camera);
     drawAoeIndicatorIfNeeded(window, camera);
     drawAoeEffects(window, camera);
 }
@@ -450,6 +436,6 @@ void GEPlayer::applyPowerUp(GEPowerUpType type) {
 
 void GEPlayer::takeDamage(int value) {
     if (value <= 0) return;
-    BaseCharacter::takeDamage(value);
-    triggerDamageFlash(255, 0, 0, 0.25f);
+    Character::takeDamage(value);
+    triggerDamageFlash(GEColor(255, 0, 0), 0.25f);
 }

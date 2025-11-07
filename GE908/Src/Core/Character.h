@@ -1,10 +1,9 @@
 #pragma once
-#include "../../../ThirdParty/GamesEngineeringBase.h"
-#include "../../Foundation/GECollisible.h"
+#include "../Foundation/GECollisible.h"
 
 using namespace GamesEngineeringBase;
 
-class BaseCharacter : public GECollisible {
+class Character : public GECollisible {
 
 protected:
 	int _width = 0;
@@ -20,15 +19,7 @@ protected:
 
     float _damageFlashTimer = 0.0f;
     float _damageFlashDuration = 0.0f;
-    unsigned char _damageFlashR = 255;
-    unsigned char _damageFlashG = 255;
-    unsigned char _damageFlashB = 255;
-
-    float _damageNumberTimer = 0.0f;
-    float _damageNumberDuration = 0.0f;
-    unsigned char _damageNumberR = 255;
-    unsigned char _damageNumberG = 255;
-    unsigned char _damageNumberB = 255;
+    GEColor _damageColor = GEColor();
 
     float _contactDamageCooldownTimer = 0.0f;
     float _contactDamageCooldownDuration = 0.5f;
@@ -40,21 +31,21 @@ protected:
     virtual void applyMovementBounds(float& newX, float& newY) = 0;
 
     virtual void applyEnvironmentalEffects(float deltaTime) {}
-    void triggerDamageFlash(unsigned char r, unsigned char g, unsigned char b, float duration);
+    void triggerDamageFlash(GEColor color, float duration);
     void updateCharacterState(float deltaTime);
-    void draw(Window& window, const GECamera& camera) override;
-    void drawHP(Window& window, const GECamera& camera);
-    void drawHurt(Window& window, const GECamera& camera);
+    void draw(Window& window, const GECamera& camera) const override;
+    void drawHP(Window& window, const GECamera& camera) const;
+    void drawHurt(Window& window, const GECamera& camera) const;
     void setContactDamageCooldownDuration(float duration) { _contactDamageCooldownDuration = max(0.0f, duration); }
 
 public:
-    BaseCharacter(const std::string& filename = "", GECollisionType type = GECollisionType::None)
+    Character(const std::string& filename = "", GECollisionType type = GECollisionType::None)
         : GECollisible(filename, type) {
         _width = _image.width;
         _height = _image.height;
     }
 
-    virtual ~BaseCharacter() {}
+    virtual ~Character() = default;
     virtual void takeDamage(int value);
 
     bool canReceiveContactDamage() const { return _contactDamageCooldownTimer <= 0.0f; }

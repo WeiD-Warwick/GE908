@@ -1,7 +1,7 @@
 #include <string>
 #include <cmath>
 #include "GEEnemy.h"
-#include "../Actors/GEProjectileManager.h"
+#include "GEProjectileManager.h"
 
 static const std::string EnemyImagePath(GEEnemyType t) {
 	switch (t) {
@@ -24,7 +24,7 @@ void GEEnemy::applyMovementBounds(float& newX, float& newY) {
 }
 
 GEEnemy::GEEnemy(GEEnemyType type)
-    : BaseCharacter(EnemyImagePath(type), GECollisionType::Enemy), _type(type) {
+    : Character(EnemyImagePath(type), GECollisionType::Enemy), _type(type) {
     _width = _image.width;
     _height = _image.height;
     setContactDamageCooldownDuration(0.5f);
@@ -55,7 +55,7 @@ GEEnemy::GEEnemy(GEEnemyType type)
     }
 }
 
-GEEnemy::~GEEnemy() {}
+GEEnemy::~GEEnemy() = default;
 
 void GEEnemy::update(float deltaTime,
     float playerCenterX, float playerCenterY,
@@ -93,12 +93,12 @@ void GEEnemy::update(float deltaTime,
     }
 }
 
-void GEEnemy::draw(Window& window, const GECamera& camera) {
-    BaseCharacter::draw(window, camera);
+void GEEnemy::draw(Window& window, const GECamera& camera) const {
+    Character::draw(window, camera);
 }
 
 void GEEnemy::takeDamage(int value) {
     if (value <= 0) return;
-    BaseCharacter::takeDamage(value);
-    triggerDamageFlash(255, 255, 255, 0.25f);
+    Character::takeDamage(value);
+    triggerDamageFlash(GEColor(255, 255, 255), 0.25f);
 }

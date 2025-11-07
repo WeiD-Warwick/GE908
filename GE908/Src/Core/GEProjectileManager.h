@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Core/Actors/GEPlayer.h"
-#include "../../Core/Actors/GEEnemyManager.h"
+#include "GEPlayer.h"
+#include "GEEnemyManager.h"
 
 #define MAX_PROJECTILES 5000
 

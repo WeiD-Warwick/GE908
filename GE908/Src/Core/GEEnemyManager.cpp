@@ -1,5 +1,5 @@
 #include "GEEnemyManager.h"
-#include "../Actors/GEProjectileManager.h"
+#include "GEProjectileManager.h"
 #include "GEPlayer.h"
 #include <cstdlib>
 #include <ctime>

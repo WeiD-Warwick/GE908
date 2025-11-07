@@ -1,6 +1,6 @@
 #pragma once
-#include "BaseCharacter.h"
-#include "../../Foundation/GESaveData.h"
+#include "Character.h"
+#include "../Foundation/GESaveData.h"
 
 static constexpr auto HIDE_PLAYER_AOE_INDICATOR = true;
 
@@ -25,7 +25,7 @@ class GECamera;
 
 enum class GEPowerUpType;
 
-class GEPlayer : public BaseCharacter {
+class GEPlayer : public Character {
 private:
 	const GESaveData* _saveData = nullptr;
 	const GEMapsManager* _mapsManager = nullptr;
@@ -47,7 +47,7 @@ private:
 	bool _aoeKeyHeld = false;
 
 
-	GEProjectile* _projectiles[MAX_PROJECTILES];
+	GEProjectile* _projectiles[MAX_PROJECTILES] = { nullptr };
 	int _projectileCount = 0;
 
 	struct PlayerAoeEffect {
@@ -55,15 +55,13 @@ private:
 		float centerX = 0.0f;
 		float centerY = 0.0f;
 		float radius = 0.0f;
-		unsigned char colorR = 255;
-		unsigned char colorG = 255;
-		unsigned char colorB = 255;
+		GEColor color = GEColor();
 		float remainingTime = 1.0f;
 	};
 
 	PlayerAoeEffect _aoeEffects[PLAYER_MAX_AOE_EFFECTS];
 
-	bool collidesWithTileType(float newX, float newY, const GEMapsManager& mapsManager, GECollisionType targetType) const;
+	bool collidesWithTileType(float newX, float newY, const GEMapsManager& Manager, GECollisionType targetType) const;
 
 	bool collidesWithEnemies(float newX, float newY, const GEEnemyManager& enemyManager) const;
 
@@ -80,20 +78,21 @@ private:
 	int findEnemiesWithinRadius(float cx, float cy, float radius, GEEnemy** outList, int maxCount) const;
 	int selectTopEnemiesByHP(GEEnemy** input, int count, int topN, GEEnemy** output) const;
 	void updateAoeEffects(float deltaTime);
-	void spawnAoeEffect(float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b);
+	void spawnAoeEffect(float centerX, float centerY, float radius, GEColor color);
 	void drawAoeIndicatorIfNeeded(Window& window, const GECamera& camera) const;
 	void drawAoeEffects(Window& window, const GECamera& camera) const;
-	void drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, unsigned char r, unsigned char g, unsigned char b) const;
+	void drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, GEColor color) const;
 public:
 
 	GEPlayer();
-	~GEPlayer();
 
-	void bindWorldContext(const GEMapsManager* maps, GEEnemyManager* enemies, GEProjectileManager* projectiles);
+	~GEPlayer() = default;
+
+	void bindWorldContext(const GEMapsManager* , GEEnemyManager* enemies, GEProjectileManager* projectiles);
 	
 	void update(float deltaTime, Window& window);
 
-	void draw(Window& window, const GECamera& camera) override;
+	void draw(Window& window, const GECamera& camera) const override;
 
 	float getAOECooldownTime() const { return _aoeCooldownTimer;}
 

@@ -50,7 +50,7 @@ bool GESaveData::_parseKeywordLine(const std::string& line) {
 	return true;
 }
 
-GESaveData::GESaveData() {}
+GESaveData::GESaveData() = default;
 
 GESaveData::~GESaveData() {
 	_releaseLayers();

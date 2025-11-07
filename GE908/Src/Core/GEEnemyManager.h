@@ -1,6 +1,6 @@
 #pragma once
 #include "GEEnemy.h"
-#include "../../Foundation/GESaveData.h"
+#include "../Foundation/GESaveData.h"
 
 static constexpr auto MAX_ENEMIES = 1000;
 static constexpr float DEFAULT_SPAWN_INTERVAL = 6.0f;

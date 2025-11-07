@@ -2,7 +2,7 @@
 
 constexpr auto TILES_COUNT = 26;
 
-GEMapsManager::GEMapsManager() {}
+GEMapsManager::GEMapsManager() = default;
 
 GEMapsManager::~GEMapsManager() {
 	if (_tiles) {

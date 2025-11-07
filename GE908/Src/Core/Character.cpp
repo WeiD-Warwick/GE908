@@ -1,7 +1,7 @@
-#include "BaseCharacter.h"
+#include "Character.h"
 #include <cmath>
 
-void BaseCharacter::moveUpdate(float deltaTime, float dirX, float dirY) {
+void Character::moveUpdate(float deltaTime, float dirX, float dirY) {
     if (dirX == 0 && dirY == 0) return;
 
     // normalize
@@ -32,23 +32,20 @@ void BaseCharacter::moveUpdate(float deltaTime, float dirX, float dirY) {
 
     applyMovementBounds(newX, newY);
     setCenter(newX, newY);
-
 }
 
-void BaseCharacter::takeDamage(int value) { 
+void Character::takeDamage(int value) { 
     _hp = max(0, _hp - value); 
 }
 
-void BaseCharacter::triggerDamageFlash(unsigned char r, unsigned char g, unsigned char b, float duration) {
-    _damageFlashR = r;
-    _damageFlashG = g;
-    _damageFlashB = b;
+void Character::triggerDamageFlash(GEColor color, float duration) {
+    _damageColor = color;
 
     _damageFlashDuration = max(0, duration);
     _damageFlashTimer = _damageFlashDuration;
 }
 
-void BaseCharacter::updateCharacterState(float deltaTime) {
+void Character::updateCharacterState(float deltaTime) {
     if (_damageFlashTimer > 0.0f) {
         _damageFlashTimer = max(0.0f, _damageFlashTimer - deltaTime);
     }
@@ -58,7 +55,7 @@ void BaseCharacter::updateCharacterState(float deltaTime) {
     }
 }
 
-void BaseCharacter::startContactDamageCooldown() {
+void Character::startContactDamageCooldown() {
     if (_contactDamageCooldownDuration <= 0.0f) {
         _contactDamageCooldownTimer = 0.0f;
     } else {
@@ -66,7 +63,7 @@ void BaseCharacter::startContactDamageCooldown() {
     }
 }
 
-void BaseCharacter::draw(Window& window, const GECamera& camera) {
+void Character::draw(Window& window, const GECamera& camera) const {
 
     // draw character Image
     GECollisible::draw(window, camera);
@@ -78,7 +75,7 @@ void BaseCharacter::draw(Window& window, const GECamera& camera) {
     drawHurt(window, camera);
 }
 
-void BaseCharacter::drawHP(Window& window, const GECamera& camera) {
+void Character::drawHP(Window& window, const GECamera& camera) const {
 
     const int camX = camera.getX();
     const int camY = camera.getY();
@@ -121,7 +118,7 @@ void BaseCharacter::drawHP(Window& window, const GECamera& camera) {
     }
 }
 
-void BaseCharacter::drawHurt(Window& window, const GECamera& camera) {
+void Character::drawHurt(Window& window, const GECamera& camera) const {
     if (_damageFlashTimer <= 0.0f) return;
 
     int camX = camera.getX();
@@ -139,7 +136,7 @@ void BaseCharacter::drawHurt(Window& window, const GECamera& camera) {
 
             if (_image.alphaAtUnchecked(dx, dy) <= 0) continue;
 
-            window.draw(screenX, screenY, _damageFlashR, _damageFlashG, _damageFlashB);
+            window.draw(screenX, screenY, _damageColor.r, _damageColor.g, _damageColor.b);
         }
     }
 }
