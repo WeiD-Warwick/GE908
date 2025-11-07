@@ -1,7 +1,7 @@
 ﻿#include <cmath>
 #include "GEPlayer.h"
 #include "GEPowerUpManager.h"
-#include "Character.h"
+#include "GECharacter.h"
 #include "GEEnemyManager.h"
 #include "GEEnemy.h"
 #include "GEMapsManager.h"
@@ -14,7 +14,7 @@ static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
 static constexpr int FIRE_DAMAGE = 15;
 
 GEPlayer::GEPlayer()
-    : Character("", GECollisionType::Player) {
+    : GECharacter("", GECollisionType::Player) {
     _hp = 200;
     _speed = 240;
     _maxHp = _hp;
@@ -418,7 +418,7 @@ void GEPlayer::drawCircle(Window& window, const GECamera& camera, float centerX,
 }
 
 void GEPlayer::draw(Window& window, const GECamera& camera) const {
-    Character::draw(window, camera);
+    GECharacter::draw(window, camera);
     drawAoeIndicatorIfNeeded(window, camera);
     drawAoeEffects(window, camera);
 }
@@ -437,6 +437,6 @@ void GEPlayer::applyPowerUp(GEPowerUpType type) {
 
 void GEPlayer::takeDamage(int value) {
     if (value <= 0) return;
-    Character::takeDamage(value);
+    GECharacter::takeDamage(value);
     triggerDamageFlash(GEColor(255, 0, 0), 0.25f);
 }

@@ -24,7 +24,7 @@ void GEEnemy::applyMovementBounds(float& newX, float& newY) {
 }
 
 GEEnemy::GEEnemy(GEEnemyType type)
-    : Character(EnemyImagePath(type), GECollisionType::Enemy), _type(type) {
+    : GECharacter(EnemyImagePath(type), GECollisionType::Enemy), _type(type) {
     _width = _image.width;
     _height = _image.height;
     setContactDamageCooldownDuration(0.5f);
@@ -94,11 +94,11 @@ void GEEnemy::update(float deltaTime,
 }
 
 void GEEnemy::draw(Window& window, const GECamera& camera) const {
-    Character::draw(window, camera);
+    GECharacter::draw(window, camera);
 }
 
 void GEEnemy::takeDamage(int value) {
     if (value <= 0) return;
-    Character::takeDamage(value);
+    GECharacter::takeDamage(value);
     triggerDamageFlash(GEColor(255, 255, 255), 0.25f);
 }

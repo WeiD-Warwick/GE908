@@ -1,5 +1,5 @@
 #pragma once
-#include "Character.h"
+#include "GECharacter.h"
 
 class GEProjectileManager;
 
@@ -12,7 +12,7 @@ enum class GEEnemyType {
 	StaticShooter
 };
 
-class GEEnemy : public Character {
+class GEEnemy : public GECharacter {
 private:
 	GEEnemyType _type;
 	float _attackCooldown = 0.0f;

@@ -1,7 +1,7 @@
-#include "Character.h"
+#include "GECharacter.h"
 #include <cmath>
 
-void Character::moveUpdate(float deltaTime, float dirX, float dirY) {
+void GECharacter::moveUpdate(float deltaTime, float dirX, float dirY) {
     if (dirX == 0 && dirY == 0) return;
 
     // normalize
@@ -34,17 +34,17 @@ void Character::moveUpdate(float deltaTime, float dirX, float dirY) {
     setCenter(newX, newY);
 }
 
-void Character::takeDamage(int value) { 
+void GECharacter::takeDamage(int value) {
     _hp = max(0, _hp - value); 
 }
 
-void Character::triggerDamageFlash(GEColor color, float duration) {
+void GECharacter::triggerDamageFlash(GEColor color, float duration) {
     _damageColor = color;
     _damageFlashDuration = max(0, duration);
     _damageFlashTimer = _damageFlashDuration;
 }
 
-void Character::updateCharacterState(float deltaTime) {
+void GECharacter::updateCharacterState(float deltaTime) {
     if (_damageFlashTimer > 0.0f) {
         _damageFlashTimer = max(0.0f, _damageFlashTimer - deltaTime);
     }
@@ -54,7 +54,7 @@ void Character::updateCharacterState(float deltaTime) {
     }
 }
 
-void Character::startContactDamageCooldown() {
+void GECharacter::startContactDamageCooldown() {
     if (_contactDamageCooldownDuration <= 0.0f) {
         _contactDamageCooldownTimer = 0.0f;
     } else {
@@ -62,7 +62,7 @@ void Character::startContactDamageCooldown() {
     }
 }
 
-void Character::draw(Window& window, const GECamera& camera) const {
+void GECharacter::draw(Window& window, const GECamera& camera) const {
 
     // draw character Image
     GECollisible::draw(window, camera);
@@ -74,7 +74,7 @@ void Character::draw(Window& window, const GECamera& camera) const {
     drawHurt(window, camera);
 }
 
-void Character::drawHP(Window& window, const GECamera& camera) const {
+void GECharacter::drawHP(Window& window, const GECamera& camera) const {
 
     const int camX = camera.getX();
     const int camY = camera.getY();
@@ -117,7 +117,7 @@ void Character::drawHP(Window& window, const GECamera& camera) const {
     }
 }
 
-void Character::drawHurt(Window& window, const GECamera& camera) const {
+void GECharacter::drawHurt(Window& window, const GECamera& camera) const {
     if (_damageFlashTimer <= 0.0f) return;
 
     int camX = camera.getX();

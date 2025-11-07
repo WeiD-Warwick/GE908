@@ -3,7 +3,7 @@
 
 using namespace GamesEngineeringBase;
 
-class Character : public GECollisible {
+class GECharacter : public GECollisible {
 
 protected:
 	int _width = 0;
@@ -39,13 +39,13 @@ protected:
     void setContactDamageCooldownDuration(float duration) { _contactDamageCooldownDuration = max(0.0f, duration); }
 
 public:
-    Character(const std::string& filename = "", GECollisionType type = GECollisionType::None)
+    GECharacter(const std::string& filename = "", GECollisionType type = GECollisionType::None)
         : GECollisible(filename, type) {
         _width = _image.width;
         _height = _image.height;
     }
 
-    virtual ~Character() = default;
+    virtual ~GECharacter() = default;
     virtual void takeDamage(int value);
 
     bool canReceiveContactDamage() const { return _contactDamageCooldownTimer <= 0.0f; }

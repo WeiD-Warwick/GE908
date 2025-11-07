@@ -1,5 +1,5 @@
 #pragma once
-#include "Character.h"
+#include "GECharacter.h"
 #include "../Foundation/GESaveData.h"
 
 static constexpr auto MAX_PROJECTILES = 100;
@@ -23,7 +23,7 @@ class GECamera;
 
 enum class GEPowerUpType;
 
-class GEPlayer : public Character {
+class GEPlayer : public GECharacter {
 private:
 	const GESaveData* _saveData = nullptr;
 	const GEMapsManager* _mapsManager = nullptr;
