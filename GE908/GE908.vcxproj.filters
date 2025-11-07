@@ -54,12 +54,6 @@
     <ClCompile Include="Src\Foundation\GEUtility.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Foundation\GEGameConfig.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Foundation\GEObservation.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ThirdParty\GamesEngineeringBase.h">
@@ -99,12 +93,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Foundation\GEArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Foundation\GEEventBus.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Foundation\GEGameEvents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

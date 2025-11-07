@@ -135,8 +135,6 @@
     <ClCompile Include="Src\Foundation\GECollisible.h" />
     <ClCompile Include="Src\Foundation\GEDebug.h" />
     <ClCompile Include="Src\Foundation\GEFrameTimer.h" />
-    <ClCompile Include="Src\Foundation\GEGameConfig.h" />
-    <ClCompile Include="Src\Foundation\GEObservation.h" />
     <ClCompile Include="Src\Foundation\GEUtility.h" />
     <ClCompile Include="Src\GameManager.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -150,8 +148,6 @@
     <ClInclude Include="Src\Core\GEPlayer.h" />
     <ClInclude Include="Src\Core\GEMapsManager.h" />
     <ClInclude Include="Src\Foundation\GEArray.h" />
-    <ClInclude Include="Src\Foundation\GEEventBus.h" />
-    <ClInclude Include="Src\Foundation\GEGameEvents.h" />
     <ClInclude Include="Src\Foundation\GESaveData.h" />
     <ClInclude Include="Src\Foundation\GEFont.h" />
     <ClInclude Include="Src\Foundation\GECamera.h" />
