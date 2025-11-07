@@ -6,13 +6,14 @@ using namespace GamesEngineeringBase;
 
 #define SHOW_COLLISION_CIRCLE true
 
-enum GECollisionType {
+enum class GECollisionType {
 	None,
 	Player,
 	Enemy,
 	Water,
 	Fire,
 	Projectile,
+	PowerUp,
 };
 
 static bool circleRectCollision(float circleX, float circleY, float radius,
@@ -45,7 +46,7 @@ public:
 
 	virtual void update(GamesEngineeringBase::Window& canvas, float dt) {}
 
-	void setCenter(float centerX, float centerY) { _centerX = centerX;_centerY = centerY;}
+	void setCenter(float centerX, float centerY) { _centerX = centerX; _centerY = centerY;}
 	float getOriginX() const { return _centerX - _image.width / 2.0f;}
 	float getOriginY() const { return _centerY - _image.height / 2.0f;}
 	float getCenterX() const { return _centerX;}
@@ -53,6 +54,7 @@ public:
 	int getWidth() const { return _image.width;}
 	int getHeight() const { return _image.height;}
 	int getCollisionRadius() const { return _image.width / 2;}
+	GECollisionType getCollisionType() const { return _type; }
 
 	void draw(Window& window, const GECamera& camera);
 	bool collide(const GECollisible& other) const;

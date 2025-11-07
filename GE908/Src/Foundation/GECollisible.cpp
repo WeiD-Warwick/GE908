@@ -19,8 +19,8 @@ void GECollisible::draw(Window& window, const GECamera& camera) {
         }
     }
 
-    if (SHOW_COLLISION_CIRCLE && _type != None) {
-        if (_type == Water) {
+    if (SHOW_COLLISION_CIRCLE && _type != GECollisionType::None) {
+        if (_type == GECollisionType::Water) {
             int left = getOriginX() - camX;
             int top = getOriginY() - camY;
             int right = left + _image.width;
@@ -86,14 +86,14 @@ void GECollisible::draw(Window& window, const GECamera& camera) {
 }
 
 bool GECollisible::collide(const GECollisible& other) const {
-    if (_type == Water && other._type == Water) {
+    if (_type == GECollisionType::Water && other._type == GECollisionType::Water) {
         return false;
     }
 
     // circle <-> reatangle
-    if (_type == Water || other._type == Water) {
-        const GECollisible& rect = (_type == Water) ? *this : other;
-        const GECollisible& circle = (_type == Water) ? other : *this;
+    if (_type == GECollisionType::Water || other._type == GECollisionType::Water) {
+        const GECollisible& rect = (_type == GECollisionType::Water) ? *this : other;
+        const GECollisible& circle = (_type == GECollisionType::Water) ? other : *this;
 
         float rectLeft = rect.getOriginX();
         float rectTop = rect.getOriginY();
@@ -125,11 +125,11 @@ bool GECollisible::collideAt(float cx, float cy, const GECollisible& other) cons
     const float bHalfW = other.getWidth() / 2.0f;
     const float bHalfH = other.getHeight() / 2.0f;
 
-    if (_type == Water && other._type == Water) {
+    if (_type == GECollisionType::Water && other._type == GECollisionType::Water) {
         return false;
     }
 
-    if (_type == Water) {
+    if (_type == GECollisionType::Water) {
         const float left = cx - aHalfW;
         const float right = cx + aHalfW;
         const float top = cy - aHalfH;
@@ -141,7 +141,7 @@ bool GECollisible::collideAt(float cx, float cy, const GECollisible& other) cons
         );
     }
 
-    if (other._type == Water) {
+    if (other._type == GECollisionType::Water) {
         const float left = bCx - bHalfW;
         const float right = bCx + bHalfW;
         const float top = bCy - bHalfH;

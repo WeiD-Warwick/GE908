@@ -30,9 +30,9 @@ void BaseCharacter::moveUpdate(float deltaTime, float dirX, float dirY) {
         if (!isBlockedAt(newX, nextY)) newY = nextY;
     }
 
-    applyMovementBounds(newX, newY);
     setCenter(newX, newY);
+    applyMovementBounds(newX, newY);
+    applyEnvironmentalEffects(deltaTime);
 }
-
 
 void BaseCharacter::takeDamage(int value) { _hp = max(0, _hp - value); }

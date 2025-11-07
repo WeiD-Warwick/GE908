@@ -102,6 +102,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,6 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\Actors\GEPowerUp.cpp" />
     <ClCompile Include="Src\Foundation\GEAnimation.cpp" />
     <ClCompile Include="Src\Core\Actors\BaseCharacter.cpp" />
     <ClCompile Include="Src\Core\Actors\GEProjectileManager.cpp" />
@@ -140,6 +143,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Actors\GEPowerUp.h" />
     <ClInclude Include="Src\Foundation\GEAnimation.h" />
     <ClInclude Include="Src\Core\Actors\GEProjectileManager.h" />
     <ClInclude Include="Src\Core\Actors\GEEnemyManager.h" />
@@ -267,6 +271,7 @@
     <Image Include="Src\Assets\MapTiles\21.png" />
     <Image Include="Src\Assets\MapTiles\22.png" />
     <Image Include="Src\Assets\MapTiles\23.png" />
+    <Image Include="Src\Assets\MapTiles\24.png" />
     <Image Include="Src\Assets\MapTiles\3.png" />
     <Image Include="Src\Assets\MapTiles\4.png" />
     <Image Include="Src\Assets\MapTiles\5.png" />
@@ -274,7 +279,9 @@
     <Image Include="Src\Assets\MapTiles\7.png" />
     <Image Include="Src\Assets\MapTiles\8.png" />
     <Image Include="Src\Assets\MapTiles\9.png" />
+    <Image Include="Src\Assets\Textures\aoe_target.png" />
     <Image Include="Src\Assets\Textures\arrow.png" />
+    <Image Include="Src\Assets\Textures\attack_speed.png" />
     <Image Include="Src\Assets\Textures\enemy_bullet.png" />
     <Image Include="Src\Assets\Textures\enemy_fast.png" />
     <Image Include="Src\Assets\Textures\enemy_heavy.png" />

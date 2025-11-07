@@ -1,5 +1,6 @@
 #include <cmath>
 #include "GEPlayer.h"
+#include "GEPowerUp.h"
 #include "BaseCharacter.h"
 #include "GEEnemyManager.h"
 #include "GEEnemy.h"
@@ -7,9 +8,12 @@
 #include "../Actors/GEProjectileManager.h"
 #include "../../Foundation/GESaveData.h"
 
+static float fireTimer = 0.0f;
+static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
+static constexpr int FIRE_DAMAGE = 15;
 
 GEPlayer::GEPlayer()
-	: BaseCharacter("", Player) {
+	: BaseCharacter("", GECollisionType::Player) {
 	_hp = 200;
 	_speed = 240;
 
@@ -58,11 +62,9 @@ void GEPlayer::update(float deltaTime, Window& window) {
     aoeAttack(deltaTime);
 }
 
-static bool isWaterTile(int tileID) {
-    return tileID >= 14 && tileID <= 22;
-}
+#include <iostream>
 
-bool GEPlayer::collidesWithWater(float newX, float newY, const GEMapsManager& mapsManager) const {
+bool GEPlayer::collidesWithTileType(float newX, float newY, const GEMapsManager& mapsManager, GECollisionType targetType) const {
     if (!_saveData) return false;
 
     int tileW = _saveData->getTileWidth();
@@ -76,21 +78,22 @@ bool GEPlayer::collidesWithWater(float newX, float newY, const GEMapsManager& ma
     float playerHalfW = _image.width / 2.0f;
     float playerHalfH = _image.height / 2.0f;
 
-    // tiles covered by player
     int centerTileX = static_cast<int>(playerCenterX / tileW);
     int centerTileY = static_cast<int>(playerCenterY / tileH);
 
-    for (int dy = -1;dy <= 1;dy++) {
-        for (int dx = -1;dx <= 1;dx++) {
+    for (int dy = -1; dy <= 1; ++dy) {
+        for (int dx = -1; dx <= 1; ++dx) {
             int tileX = centerTileX + dx;
             int tileY = centerTileY + dy;
-            if (tileX < 0 || tileX >= mapCols || tileY < 0 || tileY >= mapRows) continue;
+            if (tileX < 0 || tileX >= mapCols || tileY < 0 || tileY >= mapRows)
+                continue;
 
             int tileID = _saveData->getTileID(0, tileY, tileX);
-            if (!isWaterTile(tileID)) continue;
-
             GETile* tile = mapsManager.getTile(tileID);
             if (!tile) continue;
+
+            if (tile->getCollisionType() != targetType)
+                continue;
 
             float tileCenterX = tileX * tileW + tileW / 2.0f;
             float tileCenterY = tileY * tileH + tileH / 2.0f;
@@ -126,13 +129,30 @@ bool GEPlayer::collidesWithEnemies(float newX, float newY, const GEEnemyManager&
 bool GEPlayer::isBlockedAt(float x, float y) const {
     if (!_saveData) return false;
 
-    if (collidesWithWater(x, y, *_mapsManager)) 
+    if (collidesWithTileType(x, y, *_mapsManager, GECollisionType::Water))
         return true;
 
     if (collidesWithEnemies(x, y, *_enemyManager))
         return true;
 
     return false;
+}
+
+void GEPlayer::applyEnvironmentalEffects(float deltaTime) {
+    static float fireTimer = 0.0f;
+    static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
+    static constexpr int FIRE_DAMAGE = 15;
+
+    if (collidesWithTileType(getCenterX(), getCenterY(), *_mapsManager, GECollisionType::Fire)) {
+        fireTimer += deltaTime;
+        if (fireTimer >= FIRE_DAMAGE_INTERVAL) {
+            takeDamage(FIRE_DAMAGE);
+            fireTimer = 0.0f;
+        }
+    }
+    else {
+        fireTimer = 0.0f;
+    }
 }
 
 void GEPlayer::applyMovementBounds(float& newX, float& newY) {
@@ -199,7 +219,7 @@ void GEPlayer::autoAttack(float deltaTime) {
     dirX /= len;
     dirY /= len;
 
-    _projectileManager->addProjectile(FromPlayer, playerCenterX, playerCenterY, dirX, dirY, PLAYER_PROJECTILE_SPEED, PLAYER_PROJECTILE_DAMAGE);
+    _projectileManager->addProjectile(ProjectileOwner::FromPlayer, playerCenterX, playerCenterY, dirX, dirY, PLAYER_PROJECTILE_SPEED, PLAYER_PROJECTILE_DAMAGE);
 }
 
 void GEPlayer::aoeAttack(float deltaTime) {
@@ -394,4 +414,16 @@ void GEPlayer::draw(Window& window, const GECamera& camera) {
     GECollisible::draw(window, camera);
     drawAoeIndicator(window, camera);
     drawAoeEffects(window, camera);
+}
+
+void GEPlayer::applyPowerUp(GEPowerUpType type) {
+    switch (type) {
+    case GEPowerUpType::AttackSpeedBoost:
+        _autoAttackSpeedMultiplier = min(PLAYER_MAX_AUTO_ATTACK_SPEED_MULTIPLIER,
+            _autoAttackSpeedMultiplier + 0.35f);
+        break;
+    case GEPowerUpType::AdditionalAoeTarget:
+        _aoeTargetCount = min(PLAYER_MAX_AOE_TARGETS, _aoeTargetCount + 1);
+        break;
+    }
 }

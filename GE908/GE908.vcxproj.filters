@@ -57,6 +57,12 @@
     <ClCompile Include="Src\Foundation\GEAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Foundation\GEFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Actors\GEPowerUp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ThirdParty\GamesEngineeringBase.h">
@@ -96,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Foundation\GEAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\Actors\GEPowerUp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -476,6 +485,15 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Src\Assets\Textures\enemy_bullet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Textures\aoe_target.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\Textures\attack_speed.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\Assets\MapTiles\24.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

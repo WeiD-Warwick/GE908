@@ -17,15 +17,17 @@ protected:
 	float _accumX = 0.0f;
 	float _accumY = 0.0f;
 
-    virtual bool isBlockedAt(float x, float y) const { return false;}
+    virtual bool isBlockedAt(float x, float y) const { return false; }
 
     // move character and check collision and boundary
 	void moveUpdate(float deltaTime, float dirX, float dirY);
 
 	virtual void applyMovementBounds(float& newX, float& newY) = 0;
 
+	virtual void applyEnvironmentalEffects(float deltaTime) {}
+
 public:
-	BaseCharacter(const std::string& filename = "", GECollisionType type = None)
+	BaseCharacter(const std::string& filename = "", GECollisionType type = GECollisionType::None)
 		: GECollisible(filename, type) {
 		_width = _image.width;
 		_height = _image.height;

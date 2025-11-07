@@ -30,6 +30,7 @@ void GameManager::loadComponent() {
 		int mapWorldHeight = _saveData->getMapTotalHeight();
 		_camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
 		_enemyManager.load(_saveData);
+		_powerUpManager.load(_saveData);
 	}
 }
 
@@ -45,6 +46,7 @@ void GameManager::update(float deltaTime) {
 
 	_enemyManager.update(deltaTime, &_player, _projectileManager);
 	_projectileManager.update(deltaTime, _enemyManager, _player);
+	_powerUpManager.update(deltaTime, _player, _enemyManager);
 }
 
 void GameManager::render() {
@@ -53,6 +55,7 @@ void GameManager::render() {
 	_player.draw(_window, _camera);
 	_enemyManager.draw(_window, _camera);
 	_projectileManager.draw(_window, _camera);
+	_powerUpManager.draw(_window, _camera);
 
 	_font.draw("FPS:" + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())), 200, 400, fpsColor, 1, _window);
 	_font.draw("HP:" + std::to_string(_player.getHP()), 400, 400, fpsColor, 1, _window);

@@ -18,7 +18,7 @@ void GEProjectileManager::addProjectile(ProjectileOwner from, float startPointX,
         // find a destroy place and replace it
         if (!projectile || !projectile->isActive()) {
             delete projectile;
-            const std::string& filePath = (from == FromPlayer) ? "Src/Assets/Textures/arrow.png" : "Src/Assets/Textures/enemy_bullet.png";
+            const std::string& filePath = (from == ProjectileOwner::FromPlayer) ? "Src/Assets/Textures/arrow.png" : "Src/Assets/Textures/enemy_bullet.png";
             _projectiles[i] = new GEProjectile(filePath, from, startPointX, startPointY, dirX, dirY, speed, damage);
             return;
         }
@@ -33,7 +33,7 @@ void GEProjectileManager::update(float deltaTime, GEEnemyManager& enemyManager, 
 
         projectile->update(deltaTime);
 
-        if (projectile->getOwner() == FromPlayer) {
+        if (projectile->getOwner() == ProjectileOwner::FromPlayer) {
             int n = enemyManager.getEnemyCount();
             for (int j = 0;j < n;j++) {
                 GEEnemy* enemy = enemyManager.getEnemyAt(j);

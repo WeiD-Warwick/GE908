@@ -1,6 +1,6 @@
 #include "GEMapsManager.h"
 
-constexpr auto TILES_COUNT = 24;
+constexpr auto TILES_COUNT = 26;
 
 GEMapsManager::GEMapsManager() {}
 
@@ -21,13 +21,17 @@ void GEMapsManager::load(const std::string& tilesFolderPath, const std::string& 
 void GEMapsManager::loadTileResources(const std::string& folderPath) {
 	_tiles = new GETile * [TILES_COUNT];
 
-	for (int i = 0;i <= 23;i++) {
+	for (int i = 0;i < TILES_COUNT - 1;i++) {
 		std::string filePath = folderPath + std::to_string(i) + ".png";
 
-		if (i <= 13 || i >= 23) { 
-			_tiles[i] = new GETile(filePath, None);
-		} else {
-			_tiles[i] = new GETile(filePath, Water);
+		if (i <= 13 || i == 23) {
+			_tiles[i] = new GETile(filePath, GECollisionType::None);
+		}
+		else if (i == 24) {
+			_tiles[i] = new GETile(filePath, GECollisionType::Fire);
+		}
+		else {
+			_tiles[i] = new GETile(filePath, GECollisionType::Water);
 		}
 	}
 }

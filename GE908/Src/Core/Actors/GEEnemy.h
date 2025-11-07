@@ -5,7 +5,7 @@ class GEProjectileManager;
 
 class GEPlayer;
 
-enum GEEnemyType {
+enum class GEEnemyType {
 	Normal,
 	Fast,
 	Heavy,

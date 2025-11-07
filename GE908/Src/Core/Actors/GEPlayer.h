@@ -8,7 +8,8 @@ static constexpr auto MAX_PROJECTILES = 100;
 static constexpr auto PLAYER_PROJECTILE_SPEED = 150.0f;
 static constexpr auto PLAYER_PROJECTILE_DAMAGE = 20;
 static constexpr auto PLAYER_MAX_AOE_EFFECTS = 10;
-static constexpr auto PLAYER_MAX_AOE_TARGETS = 3;
+static constexpr auto PLAYER_MAX_AOE_TARGETS = 8;
+static constexpr auto PLAYER_MAX_AUTO_ATTACK_SPEED_MULTIPLIER = 3.0f;
 
 class GEMapsManager;
 
@@ -21,6 +22,8 @@ class GEProjectileManager;
 class GEProjectile;
 
 class GECamera;
+
+enum class GEPowerUpType;
 
 class GEPlayer : public BaseCharacter {
 private:
@@ -60,11 +63,13 @@ private:
 
 	PlayerAoeEffect _aoeEffects[PLAYER_MAX_AOE_EFFECTS];
 
-	bool collidesWithWater(float newX, float newY, const GEMapsManager& mapsManager) const;
+	bool collidesWithTileType(float newX, float newY, const GEMapsManager& mapsManager, GECollisionType targetType) const;
 
 	bool collidesWithEnemies(float newX, float newY, const GEEnemyManager& enemyManager) const;
 
 	bool isBlockedAt(float x, float y) const;
+
+	void applyEnvironmentalEffects(float deltaTime);
 
 	void applyMovementBounds(float& newX, float& newY) override;
 
@@ -92,5 +97,7 @@ public:
 	void draw(Window& window, const GECamera& camera);
 
 	float getAOECooldownTime() const { return _aoeCooldownTimer;}
+
+	void applyPowerUp(GEPowerUpType type);
 
 };

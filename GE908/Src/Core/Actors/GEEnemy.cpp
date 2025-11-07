@@ -5,11 +5,11 @@
 
 static const std::string EnemyImagePath(GEEnemyType t) {
 	switch (t) {
-	case Normal:        return "Src/Assets/Textures/enemy_normal.png";
-	case Fast:          return "Src/Assets/Textures/enemy_fast.png";
-	case Heavy:         return "Src/Assets/Textures/enemy_heavy.png";
-	case StaticShooter: return "Src/Assets/Textures/enemy_static.png";
-	default:            return "Src/Assets/Textures/enemy_normal.png";
+    case GEEnemyType::Normal:        return "Src/Assets/Textures/enemy_normal.png";
+    case GEEnemyType::Fast:          return "Src/Assets/Textures/enemy_fast.png";
+    case GEEnemyType::Heavy:         return "Src/Assets/Textures/enemy_heavy.png";
+    case GEEnemyType::StaticShooter: return "Src/Assets/Textures/enemy_static.png";
+	default:                         return "Src/Assets/Textures/enemy_normal.png";
 	}
 }
 
@@ -24,18 +24,18 @@ void GEEnemy::applyMovementBounds(float& newX, float& newY) {
 }
 
 GEEnemy::GEEnemy(GEEnemyType type)
-	: BaseCharacter(EnemyImagePath(type), Enemy), _type(type) {
+	: BaseCharacter(EnemyImagePath(type), GECollisionType::Enemy), _type(type) {
 	_width = _image.width;
 	_height = _image.height;
 
 	switch (_type) {
-    case Normal:
+    case GEEnemyType::Normal:
         _hp = 200;_speed = 150;break;
-    case Fast:
+    case GEEnemyType::Fast:
         _hp = 100;_speed = 270;break;
-    case Heavy:
+    case GEEnemyType::Heavy:
         _hp = 300;_speed = 80;break;
-    case StaticShooter:
+    case GEEnemyType::StaticShooter:
         _hp = 150;_speed = 0;_isStatic = true;_attackRate = 2.8f;break;
     }
 }
@@ -73,6 +73,6 @@ void GEEnemy::update(float deltaTime,
         vx /= len;
         vy /= len;
 
-        projectileManager.addProjectile(FromEnemy, cx, cy, vx, vy, 100.0f, 200);
+        projectileManager.addProjectile(ProjectileOwner::FromEnemy, cx, cy, vx, vy, 100.0f, 200);
     }
 }

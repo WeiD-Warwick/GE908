@@ -7,6 +7,7 @@
 #include "Core/Actors/GEPlayer.h"
 #include "Core/Actors/GEEnemyManager.h"
 #include "Core/Actors/GEProjectileManager.h"
+#include "Core/Actors/GEPowerUp.h"
 
 using namespace GamesEngineeringBase;
 
@@ -20,6 +21,7 @@ private:
 	GEMapsManager _mapsManager;
 	GEEnemyManager _enemyManager;
 	GEProjectileManager _projectileManager;
+	GEPowerUpManager _powerUpManager;
 	GESaveData* _saveData = nullptr;
 
 	bool _isRunning;

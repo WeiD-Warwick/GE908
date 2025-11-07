@@ -4,7 +4,7 @@
 
 #define MAX_PROJECTILES 5000
 
-enum ProjectileOwner {
+enum class ProjectileOwner {
     FromPlayer,
     FromEnemy
 };
@@ -20,7 +20,7 @@ private:
 
 public:
     GEProjectile(const std::string& texturePath, ProjectileOwner owner, float centerX, float centerY, float dirX, float dirY, float speed, int damage)
-        : GECollisible(texturePath, Projectile),
+        : GECollisible(texturePath, GECollisionType::Projectile),
         _owner(owner), _speed(speed), _dirX(dirX), _dirY(dirY),
         _damage(damage), _active(true) {
 
