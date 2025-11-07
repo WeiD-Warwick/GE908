@@ -1,8 +1,7 @@
 #pragma once
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Foundation/GECamera.h"
-
-#define HIDE_COLLISION_CIRCLE false
+#include "GEDebug.h"
 
 using namespace GamesEngineeringBase;
 
@@ -70,7 +69,7 @@ public:
     // draw collider's collider box
     virtual void drawCollisionBoxIfNeeded(Window& window, const GECamera& camera) const {
 
-        if (HIDE_COLLISION_CIRCLE || _type == GECollisionType::None) return;
+        if (!GEDebug::shared().needDrawCollisionBounds() || _type == GECollisionType::None) return;
 
         int camX = camera.getX();
         int camY = camera.getY();

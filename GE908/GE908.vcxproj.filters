@@ -51,7 +51,7 @@
     <ClCompile Include="Src\Core\GEPowerUp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Foundation\GEDebugState.h">
+    <ClCompile Include="Src\Foundation\GEDebug.h">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEUtility.h">

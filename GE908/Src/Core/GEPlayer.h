@@ -2,8 +2,6 @@
 #include "Character.h"
 #include "../Foundation/GESaveData.h"
 
-static constexpr auto HIDE_PLAYER_AOE_INDICATOR = true;
-
 static constexpr auto MAX_PROJECTILES = 100;
 static constexpr auto PLAYER_PROJECTILE_SPEED = 150.0f;
 static constexpr auto PLAYER_PROJECTILE_DAMAGE = 20;

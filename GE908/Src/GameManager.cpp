@@ -1,5 +1,6 @@
 ﻿#include <string>
 #include "GameManager.h"
+#include "Foundation/GEDebug.h"
 #define WINDOW_WIDTH 854
 #define WINDOW_HEIGHT 480
 
@@ -32,6 +33,7 @@ void GameManager::loadComponent() {
 
 void GameManager::update(float deltaTime) {
 	_window.checkInput();
+	GEDebug::shared().updateFromInput(_window);
 	_player.update(deltaTime, _window);
 	_camera.followPlayer(_player.getOriginX(), _player.getOriginY(), _player.getWidth(), _player.getHeight());
 	_saveData->setCameraOffset(_camera.getX(), _camera.getY());
@@ -58,9 +60,9 @@ void GameManager::run() {
 
 	while (_isRunning) {
 		GEFrameTimer::shared().beginFrame();
-		float dt = GEFrameTimer::shared().getDeltaTime();
+		float deltaTime = GEFrameTimer::shared().getDeltaTime();
 
-		update(dt);
+		update(deltaTime);
 		render();
 
 		GEFrameTimer::shared().endFrame();

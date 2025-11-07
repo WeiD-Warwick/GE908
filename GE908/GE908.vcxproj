@@ -133,7 +133,7 @@
     <ClCompile Include="Src\Core\GEPlayer.cpp" />
     <ClCompile Include="Src\Core\GEMapsManager.cpp" />
     <ClCompile Include="Src\Foundation\GECollisible.h" />
-    <ClCompile Include="Src\Foundation\GEDebugState.h" />
+    <ClCompile Include="Src\Foundation\GEDebug.h" />
     <ClCompile Include="Src\Foundation\GEFrameTimer.h" />
     <ClCompile Include="Src\Foundation\GESaveData.cpp" />
     <ClCompile Include="Src\Foundation\GEUtility.h" />

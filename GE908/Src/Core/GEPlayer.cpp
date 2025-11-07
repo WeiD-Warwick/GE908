@@ -7,6 +7,7 @@
 #include "GEMapsManager.h"
 #include "GEProjectileManager.h"
 #include "../Foundation/GESaveData.h"
+#include "../Foundation/GEDebug.h"
 
 static float fireTimer = 0.0f;
 static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
@@ -368,7 +369,7 @@ void GEPlayer::spawnAoeEffect(float centerX, float centerY, float radius, GEColo
 }
 
 void GEPlayer::drawAoeIndicatorIfNeeded(Window& window, const GECamera& camera) const {
-    if (HIDE_PLAYER_AOE_INDICATOR) return;
+    if (!GEDebug::shared().needDrawAOEIndicators()) return;
 
     const bool ready = _aoeCooldownTimer <= 0.0f;
     if (ready) {

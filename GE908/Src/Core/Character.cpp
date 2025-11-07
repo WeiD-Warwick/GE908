@@ -40,7 +40,6 @@ void Character::takeDamage(int value) {
 
 void Character::triggerDamageFlash(GEColor color, float duration) {
     _damageColor = color;
-
     _damageFlashDuration = max(0, duration);
     _damageFlashTimer = _damageFlashDuration;
 }
