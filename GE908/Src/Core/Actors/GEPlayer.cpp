@@ -60,9 +60,9 @@ void GEPlayer::update(float deltaTime, Window& window) {
 
     autoAttack(deltaTime);
     aoeAttack(deltaTime);
-}
 
-#include <iostream>
+    applyEnvironmentalEffects(deltaTime);
+}
 
 bool GEPlayer::collidesWithTileType(float newX, float newY, const GEMapsManager& mapsManager, GECollisionType targetType) const {
     if (!_saveData) return false;
@@ -139,21 +139,36 @@ bool GEPlayer::isBlockedAt(float x, float y) const {
 }
 
 void GEPlayer::applyEnvironmentalEffects(float deltaTime) {
+    static bool wasInFire = false;                // ?????????
     static float fireTimer = 0.0f;
-    static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
-    static constexpr int FIRE_DAMAGE = 15;
 
-    if (collidesWithTileType(getCenterX(), getCenterY(), *_mapsManager, GECollisionType::Fire)) {
-        fireTimer += deltaTime;
-        if (fireTimer >= FIRE_DAMAGE_INTERVAL) {
+    constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;  // ??????
+    constexpr int FIRE_DAMAGE = 15;
+
+    bool inFire = collidesWithTileType(getCenterX(), getCenterY(), *_mapsManager, GECollisionType::Fire);
+
+    if (inFire) {
+        // ??????? ? ????
+        if (!wasInFire) {
             takeDamage(FIRE_DAMAGE);
             fireTimer = 0.0f;
+        }
+        else {
+            // ?????? ? ????
+            fireTimer += deltaTime;
+            if (fireTimer >= FIRE_DAMAGE_INTERVAL) {
+                takeDamage(FIRE_DAMAGE);
+                fireTimer = 0.0f;
+            }
         }
     }
     else {
         fireTimer = 0.0f;
     }
+
+    wasInFire = inFire;
 }
+
 
 void GEPlayer::applyMovementBounds(float& newX, float& newY) {
     float camW = _saveData->getScreenWidth();
