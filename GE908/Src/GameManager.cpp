@@ -57,19 +57,7 @@ void GameManager::render() {
 	_projectileManager.draw(_window, _camera);
 	_powerUpManager.draw(_window, _camera);
 
-	int killTextY = 20;
-	_font.draw("Normal: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Normal)), 20, killTextY, fpsColor, 1, _window);
-	killTextY += 20;
-	_font.draw("Fast: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Fast)), 20, killTextY, fpsColor, 1, _window);
-	killTextY += 20;
-	_font.draw("Heavy: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Heavy)), 20, killTextY, fpsColor, 1, _window);
-	killTextY += 20;
-	_font.draw("Static: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::StaticShooter)), 20, killTextY, fpsColor, 1, _window);
-
-	_font.draw("FPS:" + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())), 20, 400, fpsColor, 1, _window);
-	_font.draw("HP:" + std::to_string(_player.getHP()), 100, 400, fpsColor, 1, _window);
-	_font.draw("Skill: " + std::to_string(_player.getAOECooldownTime()), 400, 400, fpsColor, 1, _window);
-
+	drawText();
 	_window.present();
 }
 
@@ -92,4 +80,19 @@ void GameManager::run() {
 void GameManager::stop() {
 	_isRunning = false;
 
+}
+
+void GameManager::drawText() {
+	int killTextY = 20;
+	_font.draw("Normal: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Normal)), 20, killTextY, fpsColor, 1, _window);
+	killTextY += 20;
+	_font.draw("Fast: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Fast)), 20, killTextY, fpsColor, 1, _window);
+	killTextY += 20;
+	_font.draw("Heavy: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Heavy)), 20, killTextY, fpsColor, 1, _window);
+	killTextY += 20;
+	_font.draw("Static: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::StaticShooter)), 20, killTextY, fpsColor, 1, _window);
+
+	_font.draw("FPS:" + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())), 20, 400, fpsColor, 1, _window);
+	_font.draw("HP:" + std::to_string(_player.getHP()), 100, 400, fpsColor, 1, _window);
+	_font.draw("Skill: " + std::to_string(_player.getAOECooldownTime()), 400, 400, fpsColor, 1, _window);
 }

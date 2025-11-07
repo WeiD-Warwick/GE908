@@ -45,6 +45,8 @@ public:
 	// End Game Loops
 	void stop();
 
+	void drawText();
+
 	GameManager(const GameManager&) = delete;
 	GameManager& operator=(const GameManager&) = delete;
 };
