@@ -25,13 +25,13 @@ void GEMapsManager::loadTileResources(const std::string& folderPath) {
 		std::string filePath = folderPath + std::to_string(i) + ".png";
 
 		if (i <= 13 || i == 23) {
-			_tiles[i] = new GETile(filePath, GECollisionType::None);
+			_tiles[i] = new GETile(filePath, GEColliderType::None);
 		}
 		else if (i == 24) {
-			_tiles[i] = new GETile(filePath, GECollisionType::Fire);
+			_tiles[i] = new GETile(filePath, GEColliderType::Tile_Fire);
 		}
 		else {
-			_tiles[i] = new GETile(filePath, GECollisionType::Water);
+			_tiles[i] = new GETile(filePath, GEColliderType::Tile_Water);
 		}
 	}
 }

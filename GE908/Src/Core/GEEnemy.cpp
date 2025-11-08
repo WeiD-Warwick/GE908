@@ -27,7 +27,7 @@ void GEEnemy::onEvent(const GEEvent& event)
 }
 
 GEEnemy::GEEnemy(GEEnemyType type)
-    : GECharacter(EnemyImagePath(type), GECollisionType::Enemy), _type(type) {
+    : GECharacter(EnemyImagePath(type), GEColliderType::Enemy), _type(type) {
     _width = _image.width;
     _height = _image.height;
     setContactDamageCooldownDuration(0.5f);

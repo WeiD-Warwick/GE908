@@ -1,6 +1,5 @@
 #pragma once
 #include "GEEnemy.h"
-#include "GEPlayer.h"
 #include "../Foundation/GESaveData.h"
 #include "../Foundation/GEServices.h"
 

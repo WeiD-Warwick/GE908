@@ -48,7 +48,7 @@ private:
 
 	PlayerAoeEffect _aoeEffects[PLAYER_MAX_AOE_EFFECTS];
 
-	bool collidesWithTileType(float newX, float newY, const MapService& Manager, GECollisionType targetType) const;
+	bool collidesWithTileType(float newX, float newY, const MapService& Manager, GEColliderType targetType) const;
 
 	bool collidesWithEnemies(float newX, float newY, const EnemyService& enemyManager) const;
 

@@ -1,44 +1,49 @@
 #pragma once
 
+enum class GEEventType {
+	Character_DEATH				= 0,
+	PLAYER_HURT,
+	POWERUP_PICKED,
+	PROJECTILE_HIT,
+
+	COLLISION				= 20,
+	ENEMY_COLLIDE_PROJECTILE,
+	PLAYER_COLLIDE_WATER,
+	PLAYER_COLLIDE_FIRE,
+	PLAYER_COLLIDE_ENEMY,
+	PLAYER_COLLIDE_ENVIRONMENT,
+	
+};
+
 enum class GEPowerUpType {
 	None					= 0,
-	AttackSpeedBoost		= 1,
-	AdditionalAoeTarget		= 2,
+	AttackSpeedBoost,
+	AdditionalAoeTarget,
 };
 
 enum class ProjectileOwner {
 	FromPlayer				= 0,
-	FromEnemy				= 1,
+	FromEnemy,
 };
 
 enum class GEEnemyType {
 	Normal					= 0,
-	Fast					= 1,
-	Heavy					= 2,
-	StaticShooter			= 3,
+	Fast,
+	Heavy,
+	StaticShooter,
 };
 
 enum class GEColliderType {
 	None					= 0,
-	Player					= 1,
-	Enemy					= 2,
-	Water					= 3,
-	Fire					= 4,
-	Projectile				= 5,
-	PowerUp					= 6,
+	Player,
+	Enemy,
+	Projectile,
+	PowerUp,
+	Tile_Water,
+	Tile_Fire,
 };
 
 enum class GEColliderShape {
 	Circle					= 0,
-	AABB					= 1,
-};
-
-class GETile : public GECollisible {
-
-public:
-	GETile(const std::string& filename, GECollisionType collisionType)
-		: GECollisible(filename, collisionType) {
-	}
-
-	~GETile() = default;
+	AABB,
 };

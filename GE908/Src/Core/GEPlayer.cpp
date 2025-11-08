@@ -11,7 +11,7 @@ static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
 static constexpr int FIRE_DAMAGE = 15;
 
 GEPlayer::GEPlayer()
-    : GECharacter("Src/Assets/Textures/player.png", GECollisionType::Player) {
+    : GECharacter("Src/Assets/Textures/player.png", GEColliderType::Player) {
     _hp = 200;
     _speed = 240;
     _maxHp = _hp;
@@ -63,7 +63,7 @@ void GEPlayer::update(float deltaTime, Window& window) {
     applyEnvironmentalEffects(deltaTime);
 }
 
-bool GEPlayer::collidesWithTileType(float newX, float newY, const MapService& maps, GECollisionType targetType) const {
+bool GEPlayer::collidesWithTileType(float newX, float newY, const MapService& maps, GEColliderType targetType) const {
     if (!_saveData) return false;
 
     int tileW = _saveData->getTileWidth();
@@ -128,7 +128,7 @@ bool GEPlayer::collidesWithEnemies(float newX, float newY, const EnemyService& e
 bool GEPlayer::isBlockedAt(float x, float y) const {
     if (!_saveData) return false;
 
-    if (collidesWithTileType(x, y, *_mapsManager, GECollisionType::Water))
+    if (collidesWithTileType(x, y, *_mapsManager, GEColliderType::Tile_Water))
         return true;
 
     if (collidesWithEnemies(x, y, *_enemyManager))
@@ -144,7 +144,7 @@ void GEPlayer::applyEnvironmentalEffects(float deltaTime) {
     constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;  // 连续灼烧间隔
     constexpr int FIRE_DAMAGE = 15;
 
-    bool inFire = collidesWithTileType(getCenterX(), getCenterY(), *_mapsManager, GECollisionType::Fire);
+    bool inFire = collidesWithTileType(getCenterX(), getCenterY(), *_mapsManager, GEColliderType::Tile_Fire);
 
     if (inFire) {
         // 第一次进入火焰 → 立即受伤

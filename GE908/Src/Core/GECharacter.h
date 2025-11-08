@@ -41,8 +41,7 @@ protected:
     void setContactDamageCooldownDuration(float duration) { _contactDamageCooldownDuration = max(0.0f, duration); }
 
 public:
-    GECharacter(const std::string& filename = "", GECollisionType type = GECollisionType::None)
-        : GECollisible(filename, type) {
+    GECharacter(const std::string& filename = "", GEColliderType type = GEColliderType::None) : GECollisible(filename, type) {
         _width = _image.width;
         _height = _image.height;
     }

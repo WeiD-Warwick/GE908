@@ -16,7 +16,7 @@ private:
 
 public:
     GEProjectile(const std::string& texturePath, ProjectileOwner owner, float centerX, float centerY, float dirX, float dirY, float speed, int damage)
-        : GECollisible(texturePath, GECollisionType::Projectile),
+        : GECollisible(texturePath, GEColliderType::Projectile),
         _owner(owner), _speed(speed), _dirX(dirX), _dirY(dirY),
         _damage(damage), _active(true) {
 

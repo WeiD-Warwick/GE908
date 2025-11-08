@@ -109,9 +109,9 @@ void GECharacter::drawHP(Window& window, const GECamera& camera) const {
     const int filledWidth = static_cast<int>((right - left) * hpRatio);
     for (int y = top; y < bottom; ++y) {
         for (int x = left; x < left + filledWidth; ++x) {
-            if (_type == GECollisionType::Player)
+            if (_type == GEColliderType::Player)
                 window.draw(x, y, 30, 255, 30);
-            else if (_type == GECollisionType::Enemy)
+            else if (_type == GEColliderType::Enemy)
                 window.draw(x, y, 255, 30, 30);
         }
     }

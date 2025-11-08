@@ -16,6 +16,7 @@ GameManager::GameManager(Window& window, MapService& mapSvc, PlayerService& play
 	_projectileService(projectileSvc),
 	_powerUpService(powerUpSvc),
 	_font(),
+	_context(&_window, &_collisionSystem),
 	_isRunning(false) {}
 
 GameManager::~GameManager() = default;

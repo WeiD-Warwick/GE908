@@ -1,31 +1,23 @@
 #pragma once
+#include <string>
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Foundation/GECamera.h"
 #include "GEDebug.h"
+#include "GEModel.h"
 
 using namespace GamesEngineeringBase;
 
-enum class GECollisionType {
-	None,
-	Player,
-	Enemy,
-	Water,
-	Fire,
-	Projectile,
-	PowerUp,
-};
-	
 class GECollisible {
 
 protected:
 	float _centerX = 0.0f;
 	float _centerY = 0.0f;
-	GECollisionType _type = GECollisionType::None;
+	GEColliderType _type = GEColliderType::None;
 	Image _image;
 
 public:
 
-	GECollisible(const std::string& filename, GECollisionType collisionType)
+	GECollisible(const std::string& filename, GEColliderType collisionType)
 		: _type(collisionType) {
 		_image.load(filename);
 	}
@@ -39,7 +31,7 @@ public:
 	int getWidth() const { return _image.width;}
 	int getHeight() const { return _image.height;}
 	int getCollisionRadius() const { return _image.width / 2;}
-	GECollisionType getCollisionType() const { return _type; }
+	GEColliderType getCollisionType() const { return _type; }
 
     void setCenter(float centerX, float centerY) { _centerX = centerX; _centerY = centerY; }
 
@@ -69,14 +61,14 @@ public:
     // draw collider's collider box
     virtual void drawCollisionBoxIfNeeded(Window& window, const GECamera& camera) const {
 
-        if (!GEDebug::shared().needDrawCollisionBounds() || _type == GECollisionType::None) return;
+        if (!GEDebug::shared().needDrawCollisionBounds() || _type == GEColliderType::None) return;
 
         int camX = camera.getX();
         int camY = camera.getY();
         int winW = window.getWidth();
         int winH = window.getHeight();
 
-        if (_type == GECollisionType::Water || _type == GECollisionType::Fire) {
+        if (_type == GEColliderType::Tile_Water || _type == GEColliderType::Tile_Fire) {
             int left = getOriginX() - camX;
             int top = getOriginY() - camY;
             int right = left + _image.width;
@@ -141,80 +133,91 @@ public:
     }
    
     // check if this collider collide with another right now
-    bool collide(const GECollisible& other) const {
-        if (_type == GECollisionType::Water && other._type == GECollisionType::Water) {
-            return false;
-        }
+    bool collide(const GECollisible& other) const { return false; }
+        //if (_type == GEColliderType::Tile_Water && other._type == GEColliderType::Tile_Water) {
+        //    return false;
+        //}
 
-        // circle <-> reatangle
-        if (_type == GECollisionType::Water || other._type == GECollisionType::Water) {
-            const GECollisible& rect = (_type == GECollisionType::Water) ? *this : other;
-            const GECollisible& circle = (_type == GECollisionType::Water) ? other : *this;
+        //// circle <-> reatangle
+        //if (_type == GEColliderType::Tile_Water || other._type == GEColliderType::Tile_Water) {
+        //    const GECollisible& rect = (_type == GEColliderType::Tile_Water) ? *this : other;
+        //    const GECollisible& circle = (_type == GEColliderType::Tile_Water) ? other : *this;
 
-            float rectLeft = rect.getOriginX();
-            float rectTop = rect.getOriginY();
-            float rectRight = rectLeft + rect.getWidth();
-            float rectBottom = rectTop + rect.getHeight();
+        //    float rectLeft = rect.getOriginX();
+        //    float rectTop = rect.getOriginY();
+        //    float rectRight = rectLeft + rect.getWidth();
+        //    float rectBottom = rectTop + rect.getHeight();
 
-            return circleRectCollision(
-                circle.getCenterX(),
-                circle.getCenterY(),
-                static_cast<float>(circle.getCollisionRadius()),
-                rectLeft, rectTop, rectRight, rectBottom
-            );
-        }
+        //    return circleRectCollision(
+        //        circle.getCenterX(),
+        //        circle.getCenterY(),
+        //        static_cast<float>(circle.getCollisionRadius()),
+        //        rectLeft, rectTop, rectRight, rectBottom
+        //    );
+        //}
 
-        // circle <-> circle
-        float dx = _centerX - other._centerX;
-        float dy = _centerY - other._centerY;
-        float distSquared = dx * dx + dy * dy;
-        float combinedRadius = getCollisionRadius() + other.getCollisionRadius();
-        return distSquared <= combinedRadius * combinedRadius;
-    }
+        //// circle <-> circle
+        //float dx = _centerX - other._centerX;
+        //float dy = _centerY - other._centerY;
+        //float distSquared = dx * dx + dy * dy;
+        //float combinedRadius = getCollisionRadius() + other.getCollisionRadius();
+        //return distSquared <= combinedRadius * combinedRadius;
+    //}
 
     // check if this collider would collide with another when placed at position (cx, cy), without actually moving it
-    bool collideAt(float cx, float cy, const GECollisible& other) const {
-        const float aHalfW = _image.width / 2.0f;
-        const float aHalfH = _image.height / 2.0f;
+    bool collideAt(float cx, float cy, const GECollisible& other) const { return false; }
+    //    const float aHalfW = _image.width / 2.0f;
+    //    const float aHalfH = _image.height / 2.0f;
 
-        const float bCx = other.getCenterX();
-        const float bCy = other.getCenterY();
-        const float bHalfW = other.getWidth() / 2.0f;
-        const float bHalfH = other.getHeight() / 2.0f;
+    //    const float bCx = other.getCenterX();
+    //    const float bCy = other.getCenterY();
+    //    const float bHalfW = other.getWidth() / 2.0f;
+    //    const float bHalfH = other.getHeight() / 2.0f;
 
-        if (_type == GECollisionType::Water && other._type == GECollisionType::Water) {
-            return false;
-        }
+    //    if (_type == GEColliderType::Tile_Water && other._type == GEColliderType::Tile_Water) {
+    //        return false;
+    //    }
 
-        if (_type == GECollisionType::Water) {
-            const float left = cx - aHalfW;
-            const float right = cx + aHalfW;
-            const float top = cy - aHalfH;
-            const float bottom = cy + aHalfH;
-            return circleRectCollision(
-                bCx, bCy,
-                static_cast<float>(other.getCollisionRadius()),
-                left, top, right, bottom
-            );
-        }
+    //    if (_type == GEColliderType::Tile_Water) {
+    //        const float left = cx - aHalfW;
+    //        const float right = cx + aHalfW;
+    //        const float top = cy - aHalfH;
+    //        const float bottom = cy + aHalfH;
+    //        return circleRectCollision(
+    //            bCx, bCy,
+    //            static_cast<float>(other.getCollisionRadius()),
+    //            left, top, right, bottom
+    //        );
+    //    }
 
-        if (other._type == GECollisionType::Water) {
-            const float left = bCx - bHalfW;
-            const float right = bCx + bHalfW;
-            const float top = bCy - bHalfH;
-            const float bottom = bCy + bHalfH;
-            return circleRectCollision(
-                cx, cy,
-                static_cast<float>(getCollisionRadius()),
-                left, top, right, bottom
-            );
-        }
+    //    if (other._type == GEColliderType::Tile_Water) {
+    //        const float left = bCx - bHalfW;
+    //        const float right = bCx + bHalfW;
+    //        const float top = bCy - bHalfH;
+    //        const float bottom = bCy + bHalfH;
+    //        return circleRectCollision(
+    //            cx, cy,
+    //            static_cast<float>(getCollisionRadius()),
+    //            left, top, right, bottom
+    //        );
+    //    }
 
 
-        const float dx = cx - bCx;
-        const float dy = cy - bCy;
-        const float distSq = dx * dx + dy * dy;
-        const float r = static_cast<float>(getCollisionRadius() + other.getCollisionRadius());
-        return distSq <= r * r;
+    //    const float dx = cx - bCx;
+    //    const float dy = cy - bCy;
+    //    const float distSq = dx * dx + dy * dy;
+    //    const float r = static_cast<float>(getCollisionRadius() + other.getCollisionRadius());
+    //    return distSq <= r * r;
+    //}
+};
+
+
+class GETile : public GECollisible {
+
+public:
+    GETile(const std::string& filename, GEColliderType collisionType)
+        : GECollisible(filename, collisionType) {
     }
+
+    ~GETile() = default;
 };

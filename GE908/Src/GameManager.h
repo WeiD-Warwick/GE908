@@ -6,6 +6,9 @@
 #include "Core//GEMapsManager.h"
 #include "Core/GEPlayer.h"
 #include "Foundation/GEServices.h"
+#include "Foundation/GEContext.h"
+#include "Engine/CollisionSystem.h"
+
 
 using namespace GamesEngineeringBase;
 
@@ -21,6 +24,13 @@ private:
 	ProjectileService& _projectileService;
 	PowerUpService& _powerUpService;
 	GESaveData* _saveData = nullptr;
+
+	//////////////////////////////
+	GEContext _context;
+	CollisionSystem _collisionSystem;
+
+
+	//////////////////////////////
 
 	bool _isRunning = false;
 

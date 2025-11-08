@@ -2,8 +2,6 @@
 #include "GECharacter.h"
 #include "../Foundation/GEServices.h"
 
-class GEPlayer;
-
 class GEEnemy : public GECharacter {
 private:
 	GEEnemyType _type;

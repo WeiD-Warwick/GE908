@@ -8,7 +8,7 @@ namespace {
 }
 
 GEPowerUp::GEPowerUp()
-    : GECollisible(ATTACK_SPEED_TEXTURE, GECollisionType::PowerUp) {
+    : GECollisible(ATTACK_SPEED_TEXTURE, GEColliderType::PowerUp) {
 }
 
 void GEPowerUp::spawn(GEPowerUpType type, float centerX, float centerY, float lifeTimeSeconds) {

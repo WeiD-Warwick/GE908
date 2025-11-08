@@ -140,6 +140,21 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Components\BuffComponent.h" />
+    <ClInclude Include="Src\Core\Components\HealthComponent.h" />
+    <ClInclude Include="Src\Core\Components\RenderableComponent.h" />
+    <ClInclude Include="Src\Core\Entities\Character.h" />
+    <ClInclude Include="Src\Core\Entities\Enemy.h" />
+    <ClInclude Include="Src\Core\Entities\PowerUp.h" />
+    <ClInclude Include="Src\Core\Entities\Projectile.h" />
+    <ClInclude Include="Src\Core\Interfaces\IHealthable.h" />
+    <ClInclude Include="Src\Engine\CombatSystem.h" />
+    <ClInclude Include="Src\Engine\MovementSystem.h" />
+    <ClInclude Include="Src\Engine\CollisionSystem.h" />
+    <ClInclude Include="Src\Core\Components\AttackableComponent.h" />
+    <ClInclude Include="Src\Core\Entities\Player.h" />
+    <ClInclude Include="Src\Core\Components\CollidableComponent.h" />
+    <ClInclude Include="Src\Core\Components\MovableComponent.h" />
     <ClInclude Include="Src\Core\GEPowerUpManager.h" />
     <ClInclude Include="Src\Core\GEProjectileManager.h" />
     <ClInclude Include="Src\Core\GEEnemyManager.h" />
@@ -147,7 +162,13 @@
     <ClInclude Include="Src\Core\GECharacter.h" />
     <ClInclude Include="Src\Core\GEPlayer.h" />
     <ClInclude Include="Src\Core\GEMapsManager.h" />
+    <ClInclude Include="Src\Core\Interfaces\IAttackable.h" />
+    <ClInclude Include="Src\Core\Interfaces\ICollidable.h" />
+    <ClInclude Include="Src\Core\Interfaces\IMovable.h" />
+    <ClInclude Include="Src\Core\Interfaces\IRenderable.h" />
     <ClInclude Include="Src\Foundation\GEArray.h" />
+    <ClInclude Include="Src\Foundation\GEContext.h" />
+    <ClInclude Include="Src\Foundation\GEEvent.h" />
     <ClInclude Include="Src\Foundation\GEServices.h" />
     <ClInclude Include="Src\Foundation\GEEntity.h" />
     <ClInclude Include="Src\Foundation\GEModel.h" />

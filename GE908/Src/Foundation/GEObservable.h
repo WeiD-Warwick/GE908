@@ -1,21 +1,6 @@
 #pragma once
 #include "GEArray.h"
-
-enum class GEEventType {
-    ENEMY_DEATH,
-    PLAYER_HURT,
-    POWERUP_PICKED,
-};
-
-struct GEEvent {
-    GEEventType type;
-    GEEvent(GEEventType t) : type(t) {}
-};
-
-struct GEEnemyDeathEvent : GEEvent {
-    int enemyId;
-    GEEnemyDeathEvent(int id) : GEEvent(GEEventType::ENEMY_DEATH), enemyId(id) {}
-};
+#include "GEEvent.h"
 
 class GEObserver {
 public:
