@@ -24,6 +24,7 @@ class GECamera;
 enum class GEPowerUpType;
 
 class GEPlayer : public GECharacter {
+
 private:
 	const GESaveData* _saveData = nullptr;
 	const GEMapsManager* _mapsManager = nullptr;
@@ -80,6 +81,9 @@ private:
 	void drawAoeIndicatorIfNeeded(Window& window, const GECamera& camera) const;
 	void drawAoeEffects(Window& window, const GECamera& camera) const;
 	void drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, GEColor color) const;
+	
+	void onEvent(const GEEvent& event) override;
+
 public:
 
 	GEPlayer();

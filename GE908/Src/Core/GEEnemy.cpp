@@ -23,6 +23,10 @@ void GEEnemy::applyMovementBounds(float& newX, float& newY) {
     newY = clamp(newY, minCenterY, maxCenterY);
 }
 
+void GEEnemy::onEvent(const GEEvent& event)
+{
+}
+
 GEEnemy::GEEnemy(GEEnemyType type)
     : GECharacter(EnemyImagePath(type), GECollisionType::Enemy), _type(type) {
     _width = _image.width;

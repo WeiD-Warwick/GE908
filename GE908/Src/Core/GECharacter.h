@@ -1,9 +1,10 @@
 #pragma once
 #include "../Foundation/GECollisible.h"
+#include "../Foundation/GEObservable.h"
 
 using namespace GamesEngineeringBase;
 
-class GECharacter : public GECollisible {
+class GECharacter : public GECollisible, public GEObserver {
 
 protected:
 	int _width = 0;

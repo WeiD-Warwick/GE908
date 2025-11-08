@@ -417,6 +417,10 @@ void GEPlayer::drawCircle(Window& window, const GECamera& camera, float centerX,
     }
 }
 
+void GEPlayer::onEvent(const GEEvent& event)
+{
+}
+
 void GEPlayer::draw(Window& window, const GECamera& camera) const {
     GECharacter::draw(window, camera);
     drawAoeIndicatorIfNeeded(window, camera);

@@ -45,11 +45,16 @@ public:
     const T* data() const { return _data; }
 
     void resize(unsigned int new_size) {
-        delete[] _data;
-        _data = nullptr;
-        if (new_size > 0)
-            _data = new T[new_size];
-        _size = new_size;
+        if (new_size == _size) return;
+
+        T* new_data = nullptr;
+        if (new_size > 0) {
+            new_data = new T[new_size];
+            unsigned int copy_count = (new_size < _size) ? new_size : _size;
+            for (unsigned int i = 0; i < copy_count; ++i) {
+                new_data[i] = _data[i];
+            }
+        }
     }
 
     void clear() {

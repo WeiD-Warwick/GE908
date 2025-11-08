@@ -21,6 +21,7 @@ private:
 
 	void applyMovementBounds(float& newX, float& newY) override;
 
+	void onEvent(const GEEvent& event) override;
 public:
 	GEEnemy(GEEnemyType type);
 	~GEEnemy();
