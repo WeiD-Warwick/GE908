@@ -32,8 +32,6 @@ public:
         if (window.keyPressed('D')) dirX += 1.0f;
 
         _move.move(dt, GEDirection{ dirX , dirY });
-
-
     }
 
     void attack() {

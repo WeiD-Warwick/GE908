@@ -16,6 +16,15 @@ struct GEPlayerHurtEvent : GEEvent {
     GEPlayerHurtEvent(int hp, int dmg) : GEEvent(GEEventType::PLAYER_HURT), newHP(hp), damage(dmg) {}
 };
 
+struct GEEnemyAttackEvent : GEEvent {
+    int enemyId;
+    GEPoint position;
+    GEPoint direction;
+    GEEnemyAttackEvent(int id, GEPoint pos, GEPoint dir)
+        : GEEvent(GEEventType::ENEMY_ATTACK), enemyId(id), position(pos), direction(dir) {
+    }
+};
+
 
 struct GEPowerUpPickedEvent : GEEvent {
     int powerUpId;
