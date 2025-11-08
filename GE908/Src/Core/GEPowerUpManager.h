@@ -48,4 +48,5 @@ public:
     void load(GESaveData* saveData);
     void update(float deltaTime, PlayerService& player);
     void draw(Window& window, const GECamera& camera);
+    void onEnemyDefeated(const GEPoint& position) override;
 };

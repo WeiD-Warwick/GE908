@@ -121,3 +121,7 @@ void GEPowerUpManager::draw(Window& window, const GECamera& camera) {
         powerUp->draw(window, camera);
     }
 }
+
+void GEPowerUpManager::onEnemyDefeated(const GEPoint& position) {
+    spawnPowerUpAt(position);
+}

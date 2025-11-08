@@ -53,6 +53,6 @@ public:
     void addProjectile(ProjectileOwner from, float startPointX, float startPointY,
         float dirX, float dirY, float speed, int damage);
 
-    void update(float deltaTime, EnemyService& enemyManager, PlayerService& player);
+    void update(float deltaTime, EnemyService& enemyManager, PlayerService& player, PowerUpService& powerUpManager);
     void draw(Window& window, const GECamera& camera);
 };

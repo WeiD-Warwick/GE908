@@ -22,6 +22,7 @@ private:
 	const MapService* _mapsManager = nullptr;
 	EnemyService* _enemyManager = nullptr;
 	ProjectileService* _projectileManager = nullptr;
+	PowerUpService* _powerUpManager = nullptr;
 
 	// auto attack
 	float _autoAttackTimer = 0.0f;
@@ -78,7 +79,7 @@ public:
 
 	~GEPlayer() = default;
 
-	void bindWorldContext(const MapService* , EnemyService* enemies, ProjectileService* projectiles);
+	void bindWorldContext(const MapService* maps, EnemyService* enemies, ProjectileService* projectiles, PowerUpService* powerUps);
 	
 	void update(float deltaTime, Window& window);
 

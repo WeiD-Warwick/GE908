@@ -25,7 +25,7 @@ void GEProjectileManager::addProjectile(ProjectileOwner from, float startPointX,
     }
 }
 
-void GEProjectileManager::update(float deltaTime, EnemyService& enemyManager, PlayerService& player) {
+void GEProjectileManager::update(float deltaTime, EnemyService& enemyManager, PlayerService& player, PowerUpService& powerUpManager) {
     for (int i = 0;i < MAX_PROJECTILES;i++) {
         GEProjectile* projectile = _projectiles[i];
 
@@ -41,6 +41,7 @@ void GEProjectileManager::update(float deltaTime, EnemyService& enemyManager, Pl
                     enemy->takeDamage(projectile->getDamage());
                     if (!enemy->isAlive()) {
                         enemyManager.registerEnemyKill(enemy->getType());
+                        powerUpManager.onEnemyDefeated(GEPoint(enemy->getCenterX(), enemy->getCenterY()));
                     }
                     projectile->deactivate();
                     break;

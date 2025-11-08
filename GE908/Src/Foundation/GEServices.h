@@ -24,7 +24,7 @@ public:
 
 class ProjectileService {
 public:
-	virtual void update(float deltaTime, EnemyService& enemyManager, PlayerService& player) = 0;
+	virtual void update(float deltaTime, EnemyService& enemyManager, PlayerService& player, PowerUpService& powerUpManager) = 0;
 	virtual void addProjectile(ProjectileOwner from, float startPointX, float startPointY, float dirX, float dirY, float speed, int damage) = 0;
 	virtual void draw(Window& window, const GECamera& camera) = 0;
 };
@@ -34,6 +34,7 @@ public:
 	virtual void load(GESaveData* saveData) = 0;
 	virtual void update(float deltaTime, PlayerService& player) = 0;
 	virtual void draw(Window& window, const GECamera& camera) = 0;
+	virtual void onEnemyDefeated(const GEPoint& position) = 0;
 };
 
 class MapService {
@@ -54,6 +55,6 @@ public:
 	virtual int getHP() const = 0;
 	virtual float getAOECooldownTime() const = 0;
 	virtual void draw(Window& window, const GECamera& camera) const = 0;
-	virtual void bindWorldContext(const MapService* maps, EnemyService* enemies, ProjectileService* projectiles) = 0;
+	virtual void bindWorldContext(const MapService* maps, EnemyService* enemies, ProjectileService* projectiles, PowerUpService* powerUps) = 0;
 };
 

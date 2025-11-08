@@ -28,10 +28,11 @@ GEPlayer::GEPlayer()
     }
 }
 
-void GEPlayer::bindWorldContext(const MapService* maps, EnemyService* enemies, ProjectileService* projectiles) {
+void GEPlayer::bindWorldContext(const MapService* maps, EnemyService* enemies, ProjectileService* projectiles, PowerUpService* powerUps) {
     _mapsManager = maps;
     _enemyManager = enemies;
     _projectileManager = projectiles;
+    _powerUpManager = powerUps;
     _saveData = maps->getSaveData();
 
     int mapWorldWidth = _saveData->getMapTotalWidth();
@@ -277,6 +278,9 @@ void GEPlayer::executeAoeSkill() {
         enemy->takeDamage(_aoeDamage);
         if (!enemy->isAlive() && _enemyManager) {
             _enemyManager->registerEnemyKill(enemy->getType());
+            if (_powerUpManager) {
+                _powerUpManager->onEnemyDefeated(GEPoint(enemy->getCenterX(), enemy->getCenterY()));
+            }
         }
         spawnAoeEffect(enemy->getCenterX(), enemy->getCenterY(), IMPACT_RADIUS, GEColor(255, 0, 0));
     }
