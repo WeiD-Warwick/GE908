@@ -3,19 +3,10 @@
 #include "../Foundation/GECollisible.h"
 #include "../Foundation/GESaveData.h"
 #include "../Foundation/GECamera.h"
-
-class GEPlayer;
-class GEEnemyManager;
-class GEEnemy;
-class GECamera;
+#include "GEPlayer.h"
+#include "GEEnemy.h"
 
 using namespace GamesEngineeringBase;
-
-enum class GEPowerUpType {
-    None,
-    AttackSpeedBoost,
-    AdditionalAoeTarget,
-};
 
 class GEPowerUp : public GECollisible {
 private:
@@ -35,7 +26,7 @@ public:
     void update(float deltaTime);
 };
 
-class GEPowerUpManager {
+class GEPowerUpManager : public PowerUpService {
 private:
     static constexpr int MAX_POWERUPS = 16;
     static constexpr float SPAWN_INTERVAL_SECONDS = 10.0f;
@@ -48,13 +39,13 @@ private:
     float _spawnTimer = 0.0f;
 
     bool isWaterTile(int tileID) const;
-    void spawnPowerUpFromEnemy(const GEEnemy& enemy);
+    void spawnPowerUpAt(const GEPoint point);
 
 public:
     GEPowerUpManager();
     ~GEPowerUpManager();
 
     void load(GESaveData* saveData);
-    void update(float deltaTime, GEPlayer& player, const GEEnemyManager& enemyManager);
+    void update(float deltaTime, PlayerService& player);
     void draw(Window& window, const GECamera& camera);
 };

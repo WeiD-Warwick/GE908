@@ -1,8 +1,5 @@
 #include <iostream>
 #include "GEPowerUpManager.h"
-#include "GEPlayer.h"
-#include "GEEnemyManager.h"
-#include "GEEnemy.h"
 
 namespace {
     constexpr float PI = 3.14159265358979323846f;
@@ -68,20 +65,17 @@ bool GEPowerUpManager::isWaterTile(int tileID) const {
     return tileID >= 14 && tileID <= 22;
 }
 
-void GEPowerUpManager::spawnPowerUpFromEnemy(const GEEnemy& enemy) {
+void GEPowerUpManager::spawnPowerUpAt(const GEPoint point) {
 
     // drop rate
     const float dropChance = 0.3f;
     if (randomFloat(0.0f, 1.0f) > dropChance) return;
 
-    float ex = enemy.getCenterX();
-    float ey = enemy.getCenterY();
-
     float offsetX = randomFloat(-20.0f, 20.0f);
     float offsetY = randomFloat(-20.0f, 20.0f);
 
-    float spawnX = ex + offsetX;
-    float spawnY = ey + offsetY;
+    float spawnX = point.x + offsetX;
+    float spawnY = point.y + offsetY;
 
     GEPowerUpType type = (randomFloat(0.0f, 1.0f) < 0.5f)
         ? GEPowerUpType::AttackSpeedBoost
@@ -98,7 +92,7 @@ void GEPowerUpManager::spawnPowerUpFromEnemy(const GEEnemy& enemy) {
     }
 }
 
-void GEPowerUpManager::update(float deltaTime, GEPlayer& player, const GEEnemyManager& enemyManager) {
+void GEPowerUpManager::update(float deltaTime, PlayerService& player) {
     if (!_saveData) return;
 
     _spawnTimer += deltaTime;
@@ -113,7 +107,7 @@ void GEPowerUpManager::update(float deltaTime, GEPlayer& player, const GEEnemyMa
         powerUp->update(deltaTime);
         if (!powerUp->isActive()) continue;
 
-        if (powerUp->collide(player)) {
+        if (powerUp->collide(player.collisionBody())) {
             player.applyPowerUp(powerUp->getType());
             powerUp->deactivate();
         }

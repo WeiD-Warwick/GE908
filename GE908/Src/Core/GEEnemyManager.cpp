@@ -1,6 +1,4 @@
 #include "GEEnemyManager.h"
-#include "GEProjectileManager.h"
-#include "GEPlayer.h"
 #include <iostream>
 
 namespace {
@@ -32,7 +30,7 @@ void GEEnemyManager::load(GESaveData* saveData) {
     resetKillCounts();
 }
 
-void GEEnemyManager::spawnEnemyOutsideCamera(GEPlayer* player) {
+void GEEnemyManager::spawnEnemyOutsideCamera(PlayerService* player) {
     if (_enemyCount >= MAX_ENEMIES) return;
 
     float camOffsetX = _saveData->getCameraOffsetX();
@@ -93,7 +91,7 @@ void GEEnemyManager::draw(Window& window, const GECamera& camera) {
     }
 }
 
-void GEEnemyManager::update(float deltaTime, GEPlayer* player, GEProjectileManager& projectileManager) {
+void GEEnemyManager::update(float deltaTime, PlayerService* player, ProjectileService& projectileManager) {
     _spawnTimer += deltaTime;
     _difficultyTimer += deltaTime;
     _elapsedTime += deltaTime;
@@ -131,25 +129,25 @@ void GEEnemyManager::update(float deltaTime, GEPlayer* player, GEProjectileManag
         const float previousX = enemy->getCenterX();
         const float previousY = enemy->getCenterY();
 
-        enemy->update(deltaTime, player->getCenterX(), player->getCenterY(), projectileManager);
+        enemy->update(deltaTime, player->collisionBody().getCenterX(), player->collisionBody().getCenterY(), projectileManager);
 
-        if (enemy->collide(*player)) {
+        if (enemy->collide(player->collisionBody())) {
             enemy->setCenter(previousX, previousY);
 
 
-            if (player->canReceiveContactDamage()) {
-                player->takeDamage(PLAYER_COLLISION_DAMAGE);
-                player->startContactDamageCooldown();
-            }
+            //if (player->canReceiveContactDamage()) {
+            //    player->takeDamage(PLAYER_COLLISION_DAMAGE);
+            //    player->startContactDamageCooldown();
+            //}
 
-            if (enemy->canReceiveContactDamage()) {
-                enemy->takeDamage(ENEMY_COLLISION_DAMAGE);
-                enemy->startContactDamageCooldown();
+            //if (enemy->canReceiveContactDamage()) {
+            //    enemy->takeDamage(ENEMY_COLLISION_DAMAGE);
+            //    enemy->startContactDamageCooldown();
 
-                if (!enemy->isAlive()) {
-                    registerEnemyKill(enemy->getType());
-                }
-            }
+            //    if (!enemy->isAlive()) {
+            //        registerEnemyKill(enemy->getType());
+            //    }
+            //}
         }
     }
 }

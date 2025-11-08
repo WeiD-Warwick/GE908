@@ -1,7 +1,6 @@
 #include <string>
 #include <cmath>
 #include "GEEnemy.h"
-#include "GEProjectileManager.h"
 
 static const std::string EnemyImagePath(GEEnemyType t) {
 	switch (t) {
@@ -63,7 +62,7 @@ GEEnemy::~GEEnemy() = default;
 
 void GEEnemy::update(float deltaTime,
     float playerCenterX, float playerCenterY,
-    GEProjectileManager& projectileManager) {
+    ProjectileService& projectileManager) {
     updateCharacterState(deltaTime);
 
     if (!isAlive()) return;

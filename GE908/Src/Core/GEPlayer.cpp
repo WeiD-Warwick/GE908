@@ -1,11 +1,8 @@
 ﻿#include <cmath>
 #include "GEPlayer.h"
-#include "GEPowerUpManager.h"
 #include "GECharacter.h"
-#include "GEEnemyManager.h"
 #include "GEEnemy.h"
 #include "GEMapsManager.h"
-#include "GEProjectileManager.h"
 #include "../Foundation/GESaveData.h"
 #include "../Foundation/GEDebug.h"
 
@@ -14,7 +11,7 @@ static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
 static constexpr int FIRE_DAMAGE = 15;
 
 GEPlayer::GEPlayer()
-    : GECharacter("", GECollisionType::Player) {
+    : GECharacter("Src/Assets/Textures/player.png", GECollisionType::Player) {
     _hp = 200;
     _speed = 240;
     _maxHp = _hp;
@@ -31,7 +28,7 @@ GEPlayer::GEPlayer()
     }
 }
 
-void GEPlayer::bindWorldContext(const GEMapsManager* maps, GEEnemyManager* enemies, GEProjectileManager* projectiles) {
+void GEPlayer::bindWorldContext(const MapService* maps, EnemyService* enemies, ProjectileService* projectiles) {
     _mapsManager = maps;
     _enemyManager = enemies;
     _projectileManager = projectiles;
@@ -66,7 +63,7 @@ void GEPlayer::update(float deltaTime, Window& window) {
     applyEnvironmentalEffects(deltaTime);
 }
 
-bool GEPlayer::collidesWithTileType(float newX, float newY, const GEMapsManager& Manager, GECollisionType targetType) const {
+bool GEPlayer::collidesWithTileType(float newX, float newY, const MapService& maps, GECollisionType targetType) const {
     if (!_saveData) return false;
 
     int tileW = _saveData->getTileWidth();
@@ -91,7 +88,7 @@ bool GEPlayer::collidesWithTileType(float newX, float newY, const GEMapsManager&
                 continue;
 
             int tileID = _saveData->getTileID(0, tileY, tileX);
-            GETile* tile = Manager.getTile(tileID);
+            GETile* tile = maps.getTile(tileID);
             if (!tile) continue;
 
             if (tile->getCollisionType() != targetType)
@@ -115,10 +112,10 @@ bool GEPlayer::collidesWithTileType(float newX, float newY, const GEMapsManager&
     return false;
 }
 
-bool GEPlayer::collidesWithEnemies(float newX, float newY, const GEEnemyManager& enemyManager) const {
+bool GEPlayer::collidesWithEnemies(float newX, float newY, const EnemyService& enemyManager) const {
     int enemyCount = enemyManager.getEnemyCount();
     for (int i = 0;i < enemyCount;i++) {
-        GEEnemy* enemy = enemyManager.getEnemyAt(i);
+        GEEnemy* enemy = static_cast<GEEnemy*>(enemyManager.getEnemyAt(i));
 
         if (!enemy || !enemy->isAlive()) continue;
 
@@ -207,7 +204,7 @@ void GEPlayer::autoAttack(float deltaTime) {
 
     int enemyCount = _enemyManager->getEnemyCount();
     for (int i = 0;i < enemyCount;i++) {
-        GEEnemy* enemy = _enemyManager->getEnemyAt(i);
+        GEEnemy* enemy = static_cast<GEEnemy*>(_enemyManager->getEnemyAt(i));
         if (!enemy || !enemy->isAlive()) continue;
         float dx = enemy->getCenterX() - getCenterX();
         float dy = enemy->getCenterY() - getCenterY();
@@ -296,7 +293,7 @@ int GEPlayer::findEnemiesWithinRadius(float cx, float cy, float radius, GEEnemy*
     const int enemyCount = _enemyManager->getEnemyCount();
 
     for (int i = 0;i < enemyCount;++i) {
-        GEEnemy* e = _enemyManager->getEnemyAt(i);
+        GEEnemy* e = static_cast<GEEnemy*>(_enemyManager->getEnemyAt(i));
         if (!e || !e->isAlive()) continue;
 
         float dx = e->getCenterX() - cx;

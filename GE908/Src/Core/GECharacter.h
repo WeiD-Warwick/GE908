@@ -1,6 +1,7 @@
 #pragma once
 #include "../Foundation/GECollisible.h"
 #include "../Foundation/GEObservable.h"
+#include "../Foundation/GEModel.h"
 
 using namespace GamesEngineeringBase;
 

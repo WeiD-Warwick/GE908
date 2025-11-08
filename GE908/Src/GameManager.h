@@ -5,29 +5,27 @@
 #include "Foundation/GESaveData.h"
 #include "Core//GEMapsManager.h"
 #include "Core/GEPlayer.h"
-#include "Core/GEEnemyManager.h"
-#include "Core/GEProjectileManager.h"
-#include "Core/GEPowerUpManager.h"
+#include "Foundation/GEServices.h"
 
 using namespace GamesEngineeringBase;
 
 class GameManager {
 
 private:
-	Window _window;
+	Window& _window;
 	GEFont _font;
-	GEPlayer _player;
 	GECamera _camera;
-	GEMapsManager _mapsManager;
-	GEEnemyManager _enemyManager;
-	GEProjectileManager _projectileManager;
-	GEPowerUpManager _powerUpManager;
+	MapService& _mapService;
+	PlayerService& _player;
+	EnemyService& _enemyService;
+	ProjectileService& _projectileService;
+	PowerUpService& _powerUpService;
 	GESaveData* _saveData = nullptr;
 
-	bool _isRunning;
+	bool _isRunning = false;
 
 public:
-	GameManager();
+	GameManager(Window& window, MapService& mapSvc, PlayerService& player, EnemyService& enemySvc, ProjectileService& projectileSvc, PowerUpService& powerUpSvc);
 	~GameManager();
 
 	// Start Game Loops

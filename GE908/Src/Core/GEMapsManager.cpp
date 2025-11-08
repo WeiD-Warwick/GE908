@@ -54,7 +54,7 @@ GETile* GEMapsManager::getTile(int tileID) const {
 	return _tiles[tileID];
 }
 
-void GEMapsManager::draw(Window& window, GECamera& camera) {
+void GEMapsManager::draw(Window& window, const GECamera& camera) const {
     if (!_saveData) return;
 
     int layers = _saveData->getLayerCount();

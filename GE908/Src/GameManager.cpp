@@ -8,47 +8,52 @@ const GEColor fpsColor = GEColor(255, 0, 0);
 
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager() : _font(), _isRunning(false) {
-	_window.create(WINDOW_WIDTH, WINDOW_HEIGHT, "WM908", false);
-}
+GameManager::GameManager(Window& window, MapService& mapSvc, PlayerService& player, EnemyService& enemySvc, ProjectileService& projectileSvc, PowerUpService& powerUpSvc) 
+	: _window(window),
+	_mapService(mapSvc),
+	_player(player),
+	_enemyService(enemySvc),
+	_projectileService(projectileSvc),
+	_powerUpService(powerUpSvc),
+	_font(),
+	_isRunning(false) {}
 
 GameManager::~GameManager() = default;
 
 void GameManager::loadComponent() {
 	_font.load();
-	_mapsManager.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
-	_saveData = _mapsManager.getSaveData();
+	_mapService.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
+	_saveData = _mapService.getSaveData();
 
 	if (_saveData) {
-		_player.bindWorldContext(&_mapsManager, &_enemyManager, &_projectileManager);
+		_player.bindWorldContext(&_mapService, &_enemyService, &_projectileService);
 
 		int mapWorldWidth = _saveData->getMapTotalWidth();
 		int mapWorldHeight = _saveData->getMapTotalHeight();
 		_camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
-		_enemyManager.load(_saveData);
-		_powerUpManager.load(_saveData);
+		_enemyService.load(_saveData);
+		_powerUpService.load(_saveData);
 	}
 }
-
 
 void GameManager::update(float deltaTime) {
 	_window.checkInput();
 	GEDebug::shared().updateFromInput(_window);
 	_player.update(deltaTime, _window);
-	_camera.followPlayer(_player.getOriginX(), _player.getOriginY(), _player.getWidth(), _player.getHeight());
+	_camera.followPlayer(_player.collisionBody().getOriginX(), _player.collisionBody().getOriginY(), _player.collisionBody().getWidth(), _player.collisionBody().getHeight());
 	_saveData->setCameraOffset(_camera.getX(), _camera.getY());
-	_enemyManager.update(deltaTime, &_player, _projectileManager);
-	_projectileManager.update(deltaTime, _enemyManager, _player);
-	_powerUpManager.update(deltaTime, _player, _enemyManager);
+	_enemyService.update(deltaTime, &_player, _projectileService);
+	_projectileService.update(deltaTime, _enemyService, _player);
+	_powerUpService.update(deltaTime, _player);
 }
 
 void GameManager::render() {
 	_window.clear();
-	_mapsManager.draw(_window, _camera);
+	_mapService.draw(_window, _camera);
 	_player.draw(_window, _camera);
-	_enemyManager.draw(_window, _camera);
-	_projectileManager.draw(_window, _camera);
-	_powerUpManager.draw(_window, _camera);
+	_enemyService.draw(_window, _camera);
+	_projectileService.draw(_window, _camera);
+	_powerUpService.draw(_window, _camera);
 
 	drawText();
 	_window.present();
@@ -77,13 +82,13 @@ void GameManager::stop() {
 
 void GameManager::drawText() {
 	int killTextY = 20;
-	_font.draw("Normal: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Normal)), GEPoint(20, killTextY), fpsColor, _window);
+	_font.draw("Normal: " + std::to_string(_enemyService.getKillCount(GEEnemyType::Normal)), GEPoint(20, killTextY), fpsColor, _window);
 	killTextY += 20;
-	_font.draw("Fast: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Fast)), GEPoint(20, killTextY), fpsColor, _window);
+	_font.draw("Fast: " + std::to_string(_enemyService.getKillCount(GEEnemyType::Fast)), GEPoint(20, killTextY), fpsColor, _window);
 	killTextY += 20;
-	_font.draw("Heavy: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::Heavy)), GEPoint(20, killTextY), fpsColor, _window);
+	_font.draw("Heavy: " + std::to_string(_enemyService.getKillCount(GEEnemyType::Heavy)), GEPoint(20, killTextY), fpsColor, _window);
 	killTextY += 20;
-	_font.draw("Static: " + std::to_string(_enemyManager.getKillCount(GEEnemyType::StaticShooter)), GEPoint(20, killTextY), fpsColor, _window);
+	_font.draw("Static: " + std::to_string(_enemyService.getKillCount(GEEnemyType::StaticShooter)), GEPoint(20, killTextY), fpsColor, _window);
 	
 	_font.draw("FPS:" + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())), GEPoint(20, 400), fpsColor, _window);
 	_font.draw("HP:" + std::to_string(_player.getHP()), GEPoint(200, 400), fpsColor, _window);

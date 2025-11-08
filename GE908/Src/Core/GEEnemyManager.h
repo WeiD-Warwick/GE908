@@ -1,6 +1,8 @@
 #pragma once
 #include "GEEnemy.h"
+#include "GEPlayer.h"
 #include "../Foundation/GESaveData.h"
+#include "../Foundation/GEServices.h"
 
 static constexpr auto MAX_ENEMIES = 1000;
 static constexpr float DEFAULT_SPAWN_INTERVAL = 6.0f;
@@ -14,11 +16,7 @@ static constexpr float ACTIVE_ENEMY_CAP_STEP_TIME = 45.0f;
 
 static constexpr int ENEMY_TYPE_COUNT = 4;
 
-class GEPlayer;
-
-class GEProjectileManager;
-
-class GEEnemyManager {
+class GEEnemyManager : public EnemyService {
 
 private:
     GEEnemy* _enemies[MAX_ENEMIES];
@@ -32,7 +30,7 @@ private:
 
     GESaveData* _saveData = nullptr;
 
-    void spawnEnemyOutsideCamera(GEPlayer* player);
+    void spawnEnemyOutsideCamera(PlayerService* player);
 
 public:
 
@@ -40,10 +38,10 @@ public:
     ~GEEnemyManager();
 
     int getEnemyCount() const { return _enemyCount;}
-    GEEnemy* getEnemyAt(int index) const { return _enemies[index];}
+    GECollisible *getEnemyAt(int index) const { return _enemies[index]; }
 
     void load(GESaveData* saveData);
-    void update(float deltaTime, GEPlayer* player, GEProjectileManager& projectileManager);
+    void update(float deltaTime, PlayerService* player, ProjectileService& projectileManager);
     void draw(Window& window, const GECamera& camera);
 
     void registerEnemyKill(GEEnemyType type);

@@ -2,20 +2,11 @@
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Foundation/GECollisible.h"
 #include "../Foundation/GESaveData.h"
+#include "../Foundation/GEServices.h"
 
 using namespace GamesEngineeringBase;
 
-class GETile : public GECollisible {
-
-public:
-    GETile(const std::string& filename, GECollisionType collisionType)
-        : GECollisible(filename, collisionType) {
-    }
-
-    ~GETile() = default;
-};
-
-class GEMapsManager {
+class GEMapsManager : public MapService {
 private:
     GETile** _tiles = nullptr;// image cache
     int _tileCount = 0;
@@ -40,6 +31,6 @@ public:
     // get current save data
     GESaveData* getSaveData() const { return _saveData;}
 
-    void draw(Window& window, GECamera& camera);
+    void draw(Window& window, const GECamera& camera) const;
 };
 
