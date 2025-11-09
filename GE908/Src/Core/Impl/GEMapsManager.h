@@ -2,6 +2,7 @@
 #include <string>
 #include "../../../ThirdParty/GamesEngineeringBase.h"
 #include "../../Foundation/GECollisible.h"
+#include "../../Foundation/GEConst.h"
 #include "../SaveLoad/GESaveData.h"
 #include "../Interface/GEProvider.h"
 #include "../Entity/GETile.h"

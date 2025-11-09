@@ -7,7 +7,6 @@ static float clamp(float value, float minVal, float maxVal) {
 	return value;
 }
 
-
 static bool circleRectCollision(float circleX, float circleY, float radius,
     float rectLeft, float rectTop, float rectRight, float rectBottom) {
     float closestX = clamp(circleX, rectLeft, rectRight);

@@ -7,8 +7,6 @@
 #include "../../Foundation/GECollisible.h"
 #include "../../Foundation/GEModel.h"
 
-#define MAX_PROJECTILES 5000
-
 class GEProjectileManager : public ProjectileProvider {
 
 private:

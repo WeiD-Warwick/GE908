@@ -3,13 +3,9 @@
 #include <cstdlib>
 #include <ctime>
 
-constexpr const char* ATTACK_SPEED_TEXTURE = "Src/Assets/Textures/attack_speed.png";
-constexpr const char* AOE_TARGET_TEXTURE = "Src/Assets/Textures/aoe_target.png";
-constexpr const char* HEAL_TEXTURE = "Src/Assets/Textures/heal.png";
-
 // ------------------ GEPowerUp ------------------
 GEPowerUp::GEPowerUp()
-    : GECollisible(ATTACK_SPEED_TEXTURE, GECollisionType::PowerUp) {
+    : GECollisible(PowerUp::ATTACK_SPEED_TEXTURE, GECollisionType::PowerUp) {
 }
 
 void GEPowerUp::spawn(GEPowerUpType type, float centerX, float centerY, float lifeTimeSeconds) {
@@ -20,13 +16,13 @@ void GEPowerUp::spawn(GEPowerUpType type, float centerX, float centerY, float li
 
     switch (_type) {
     case GEPowerUpType::AttackSpeedBoost:
-        _image.load(ATTACK_SPEED_TEXTURE);
+        _image.load(PowerUp::ATTACK_SPEED_TEXTURE);
         break;
     case GEPowerUpType::AdditionalAoeTarget:
-        _image.load(AOE_TARGET_TEXTURE);
+        _image.load(PowerUp::AOE_TARGET_TEXTURE);
         break;
     case GEPowerUpType::HealPlayer:
-        _image.load(HEAL_TEXTURE);
+        _image.load(PowerUp::HEAL_TEXTURE);
     default:
         break;
     }
@@ -69,7 +65,7 @@ void GEPowerUpManager::load(GESaveData* saveData) {
 
 void GEPowerUpManager::spawnPowerUpAt(const GEPoint& point) {
     // Random drop chance
-    if (randomFloat(0.0f, 1.0f) > DROP_CHANCE) return;
+    if (randomFloat(0.0f, 1.0f) > PowerUp::DROP_CHANCE) return;
 
     float offsetX = randomFloat(-20.0f, 20.0f);
     float offsetY = randomFloat(-20.0f, 20.0f);
@@ -89,7 +85,7 @@ void GEPowerUpManager::spawnPowerUpAt(const GEPoint& point) {
             _powerUps[i] = new GEPowerUp();
         }
         if (!_powerUps[i]->isAlive()) {
-            _powerUps[i]->spawn(type, spawnX, spawnY, POWERUP_LIFETIME_SECONDS);
+            _powerUps[i]->spawn(type, spawnX, spawnY, PowerUp::POWERUP_LIFETIME_SECONDS);
             return;
         }
     }
@@ -99,7 +95,7 @@ void GEPowerUpManager::update(float deltaTime, GEContext& ctx) {
     if (!_saveData) return;
 
     _spawnTimer += deltaTime;
-    if (_spawnTimer >= SPAWN_INTERVAL_SECONDS) {
+    if (_spawnTimer >= PowerUp::SPAWN_INTERVAL_SECONDS) {
         _spawnTimer = 0.0f;
         // could spawn periodic global pickups here if desired
     }

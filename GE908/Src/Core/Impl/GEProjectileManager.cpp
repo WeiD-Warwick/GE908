@@ -1,8 +1,8 @@
 #include "GEProjectileManager.h"
 
 GEProjectileManager::GEProjectileManager() {
-    _projectiles.resize(MAX_PROJECTILES);
-    _projectiles.fillNull(MAX_PROJECTILES);
+    _projectiles.resize(Projectile::MAX_PROJECTILES);
+    _projectiles.fillNull(Projectile::MAX_PROJECTILES);
 }
 
 GEProjectileManager::~GEProjectileManager() {
@@ -16,8 +16,8 @@ void GEProjectileManager::addProjectile(ProjectileOwner from,
 {
     const std::string texturePath =
         (from == ProjectileOwner::FromPlayer)
-        ? "Src/Assets/Textures/arrow.png"
-        : "Src/Assets/Textures/enemy_bullet.png";
+        ? Projectile::PLAYER_PROJECTILE_TEXTURE
+        : Projectile::ENEMY_PROJECTILE_TEXTURE;
 
     // reuse inactive projectile slot if available
     for (unsigned int i = 0; i < _projectiles.size(); ++i) {

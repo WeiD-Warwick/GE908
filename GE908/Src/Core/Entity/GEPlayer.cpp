@@ -5,18 +5,16 @@
 #include <cmath>
 
 static float fireTimer = 0.0f;
-static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
-static constexpr int FIRE_DAMAGE = 15;
 
 GEPlayer::GEPlayer()
-    : GECharacter("Src/Assets/Textures/player.png", GECollisionType::Player) {
+    : GECharacter(Player::playerSpriteFilePath, GECollisionType::Player) {
     _hp = 200;
     _speed = 240;
     _maxHp = _hp;
 
     setContactDamageCooldownDuration(0.5f);
 
-    for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
+    for (int i = 0;i < Player::PLAYER_MAX_AOE_EFFECTS;i++) {
         _aoeEffects[i].active = false;
         _aoeEffects[i].centerX = 0.0f;
         _aoeEffects[i].centerY = 0.0f;
@@ -145,23 +143,21 @@ bool GEPlayer::isBlockedAt(float x, float y) const {
 }
 
 void GEPlayer::applyEnvironmentalEffects(float deltaTime) {
+
     static bool wasInFire = false;
     static float fireTimer = 0.0f;
-
-    constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
-    constexpr int FIRE_DAMAGE = 15;
 
     bool inFire = collidesWithTileType(getCenterX(), getCenterY(), *_mapsManager, GECollisionType::Tile_Fire);
 
     if (inFire) {
         if (!wasInFire) {
-            takeDamage(FIRE_DAMAGE);
+            takeDamage(Player::FIRE_DAMAGE);
             fireTimer = 0.0f;
         }
         else {
             fireTimer += deltaTime;
-            if (fireTimer >= FIRE_DAMAGE_INTERVAL) {
-                takeDamage(FIRE_DAMAGE);
+            if (fireTimer >= Player::FIRE_DAMAGE_INTERVAL) {
+                takeDamage(Player::FIRE_DAMAGE);
                 fireTimer = 0.0f;
             }
         }
@@ -241,7 +237,9 @@ void GEPlayer::autoAttack(float deltaTime) {
 
     _projectileManager->addProjectile(ProjectileOwner::FromPlayer, 
                                       playerCenterX, playerCenterY, 
-                                      dirX, dirY, PLAYER_PROJECTILE_SPEED, PLAYER_PROJECTILE_DAMAGE);
+                                      dirX, dirY, 
+                                      Player::PLAYER_PROJECTILE_SPEED,
+                                      Player::PLAYER_PROJECTILE_DAMAGE);
 }
 
 void GEPlayer::aoeAttack(float deltaTime) {
@@ -266,12 +264,12 @@ void GEPlayer::executeAoeSkill() {
     const float originY = getCenterY();
 
     // get enemies near the player
-    GEEnemy* nearby[PLAYER_MAX_AOE_TARGETS];
-    int nearbyCount = findEnemiesWithinRadius(originX, originY, _aoeRadius, nearby, PLAYER_MAX_AOE_TARGETS);
+    GEEnemy* nearby[Player::PLAYER_MAX_AOE_TARGETS];
+    int nearbyCount = findEnemiesWithinRadius(originX, originY, _aoeRadius, nearby, Player::PLAYER_MAX_AOE_TARGETS);
     if (nearbyCount <= 0) return;
 
     // select top n HP enemies
-    GEEnemy* topTargets[PLAYER_MAX_AOE_TARGETS];
+    GEEnemy* topTargets[Player::PLAYER_MAX_AOE_TARGETS];
     int topCount = selectTopEnemiesByHP(nearby, nearbyCount, _aoeTargetCount, topTargets);
     if (topCount <= 0) return;
 
@@ -342,7 +340,7 @@ int GEPlayer::selectTopEnemiesByHP(GEEnemy** input, int count, int topN, GEEnemy
 }
 
 void GEPlayer::updateAoeEffects(float deltaTime) {
-    for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
+    for (int i = 0;i < Player::PLAYER_MAX_AOE_EFFECTS;i++) {
         if (!_aoeEffects[i].active) continue;
         _aoeEffects[i].remainingTime -= deltaTime;
         if (_aoeEffects[i].remainingTime <= 0.0f) {
@@ -354,7 +352,7 @@ void GEPlayer::updateAoeEffects(float deltaTime) {
 
 void GEPlayer::spawnAoeEffect(float centerX, float centerY, float radius, GEColor color) {
     int slot = -1;
-    for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
+    for (int i = 0;i < Player::PLAYER_MAX_AOE_EFFECTS;i++) {
         if (!_aoeEffects[i].active) {
             slot = i;
             break;
@@ -364,7 +362,7 @@ void GEPlayer::spawnAoeEffect(float centerX, float centerY, float radius, GEColo
     if (slot == -1) {
         float minTime = _aoeEffects[0].remainingTime;
         slot = 0;
-        for (int i = 1;i < PLAYER_MAX_AOE_EFFECTS;i++) {
+        for (int i = 1;i < Player::PLAYER_MAX_AOE_EFFECTS;i++) {
             if (_aoeEffects[i].remainingTime < minTime) {
                 minTime = _aoeEffects[i].remainingTime;
                 slot = i;
@@ -393,7 +391,7 @@ void GEPlayer::drawAoeIndicatorIfNeeded(Window& window, const GECamera& camera) 
 }
 
 void GEPlayer::drawAoeEffects(Window& window, const GECamera& camera) const {
-    for (int i = 0;i < PLAYER_MAX_AOE_EFFECTS;i++) {
+    for (int i = 0;i < Player::PLAYER_MAX_AOE_EFFECTS;i++) {
         if (!_aoeEffects[i].active) continue;
         drawCircle(window, camera, _aoeEffects[i].centerX, _aoeEffects[i].centerY, _aoeEffects[i].radius, _aoeEffects[i].color);
     }
@@ -438,14 +436,14 @@ void GEPlayer::draw(Window& window, const GECamera& camera) const {
 void GEPlayer::applyPowerUp(GEPowerUpType type) {
     switch (type) {
     case GEPowerUpType::AttackSpeedBoost:
-        _autoAttackSpeedMultiplier = min(PLAYER_MAX_AUTO_ATTACK_SPEED_MULTIPLIER,
+        _autoAttackSpeedMultiplier = min(Player::PLAYER_MAX_AUTO_ATTACK_SPEED_MULTIPLIER,
             _autoAttackSpeedMultiplier + 0.35f);
         break;
     case GEPowerUpType::AdditionalAoeTarget:
-        _aoeTargetCount = min(PLAYER_MAX_AOE_TARGETS, _aoeTargetCount + 1);
+        _aoeTargetCount = min(Player::PLAYER_MAX_AOE_TARGETS, _aoeTargetCount + 1);
         break;
     case GEPowerUpType::HealPlayer:
-        heal(PLAYER_HEAL_VALUE);
+        heal(Player::PLAYER_HEAL_VALUE);
         break;
     }
 }

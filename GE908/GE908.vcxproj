@@ -136,6 +136,7 @@
     <ClCompile Include="Src\Core\Entity\GEPlayer.cpp" />
     <ClCompile Include="Src\Core\Impl\GEMapsManager.cpp" />
     <ClCompile Include="Src\Foundation\GECollisible.h" />
+    <ClCompile Include="Src\Foundation\GEConst.h" />
     <ClCompile Include="Src\Foundation\GEDebug.h" />
     <ClCompile Include="Src\Foundation\GEFrameTimer.h" />
     <ClCompile Include="Src\Foundation\GEObjectPool.h" />

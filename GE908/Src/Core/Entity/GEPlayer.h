@@ -1,18 +1,11 @@
 #pragma once
 #include "GECharacter.h"
 #include "GETile.h"
+#include "../../Foundation/GEConst.h"
 #include "../Interface/GEProvider.h"
 #include "../../Foundation/GECamera.h"
 #include "../../Foundation/GEModel.h"
 #include "../SaveLoad/GESaveData.h"
-
-static constexpr auto MAX_PROJECTILES = 100;
-static constexpr auto PLAYER_PROJECTILE_SPEED = 300.0f;
-static constexpr auto PLAYER_PROJECTILE_DAMAGE = 50;
-static constexpr auto PLAYER_MAX_AOE_EFFECTS = 10;
-static constexpr auto PLAYER_MAX_AOE_TARGETS = 8;
-static constexpr auto PLAYER_MAX_AUTO_ATTACK_SPEED_MULTIPLIER = 3.0f;
-static constexpr auto PLAYER_HEAL_VALUE = 50;
 
 class GEEnemy;
 
@@ -48,7 +41,7 @@ private:
 		float remainingTime = 1.0f;
 	};
 
-	PlayerAoeEffect _aoeEffects[PLAYER_MAX_AOE_EFFECTS];
+	PlayerAoeEffect _aoeEffects[Player::PLAYER_MAX_AOE_EFFECTS];
 
 	bool collidesWithTileType(float newX, float newY, const MapProvider& Manager, GECollisionType targetType) const;
 

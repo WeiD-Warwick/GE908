@@ -2,13 +2,8 @@
 #include <cstdlib>
 #include <ctime>
 
-namespace {
-    constexpr int PLAYER_COLLISION_DAMAGE = 30;
-    constexpr int ENEMY_COLLISION_DAMAGE = 30;
-}
-
 GEEnemyManager::GEEnemyManager() {
-    _enemies.fillNull(MAX_ENEMIES);
+    _enemies.fillNull(Enemy::MAX_ENEMIES);
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     resetKillCounts();
 }
@@ -22,7 +17,7 @@ GEEnemyManager::~GEEnemyManager() {
 
 void GEEnemyManager::load(GESaveData* saveData) {
     _saveData = saveData;
-    _spawnInterval = DEFAULT_SPAWN_INTERVAL;
+    _spawnInterval = Enemy::DEFAULT_SPAWN_INTERVAL;
     _spawnTimer = 0.0f;
     _difficultyTimer = 0.0f;
     _elapsedTime = 0.0f;
@@ -34,7 +29,7 @@ void GEEnemyManager::load(GESaveData* saveData) {
 }
 
 bool GEEnemyManager::spawnEnemyOutsideCamera(PlayerProvider& player) {
-    if (_enemies.countActive() >= MAX_ENEMIES) return false;
+    if (_enemies.countActive() >= Enemy::MAX_ENEMIES) return false;
 
     float camOffsetX = _saveData->getCameraOffsetX();
     float camOffsetY = _saveData->getCameraOffsetY();
@@ -105,10 +100,10 @@ void GEEnemyManager::update(float deltaTime, GEContext& ctx) {
     _difficultyTimer += deltaTime;
     _elapsedTime += deltaTime;
 
-    const int capSteps = static_cast<int>(_elapsedTime / ACTIVE_ENEMY_CAP_STEP_TIME);
+    const int capSteps = static_cast<int>(_elapsedTime / Enemy::ACTIVE_ENEMY_CAP_STEP_TIME);
     const int activeEnemyCap = min(
-        MAX_ENEMIES,
-        BASE_ACTIVE_ENEMY_CAP + capSteps * ACTIVE_ENEMY_CAP_INCREMENT
+        Enemy::MAX_ENEMIES,
+        Enemy::BASE_ACTIVE_ENEMY_CAP + capSteps * Enemy::ACTIVE_ENEMY_CAP_INCREMENT
     );
 
     if (_enemies.countActive() < activeEnemyCap) {
@@ -118,9 +113,9 @@ void GEEnemyManager::update(float deltaTime, GEContext& ctx) {
         }
     }
 
-    if (_difficultyTimer >= SPAWN_DIFFICULTY_STEP_TIME) {
-        _difficultyTimer -= SPAWN_DIFFICULTY_STEP_TIME;
-        _spawnInterval = max(_spawnInterval - SPAWN_INTERVAL_STEP, MIN_SPAWN_INTERVAL);
+    if (_difficultyTimer >= Enemy::SPAWN_DIFFICULTY_STEP_TIME) {
+        _difficultyTimer -= Enemy::SPAWN_DIFFICULTY_STEP_TIME;
+        _spawnInterval = max(_spawnInterval - Enemy::SPAWN_INTERVAL_STEP, Enemy::MIN_SPAWN_INTERVAL);
     }
 
     GEPlayer& player = static_cast<GEPlayer&>(ctx.playerProvider());
@@ -133,11 +128,11 @@ void GEEnemyManager::update(float deltaTime, GEContext& ctx) {
         // detect collision
         if (enemy->collide(player)) {
             if (player.canReceiveContactDamage()) {
-                player.takeDamage(PLAYER_COLLISION_DAMAGE);
+                player.takeDamage(Enemy::PLAYER_COLLISION_DAMAGE);
                 player.startContactDamageCooldown();
             }
             if (enemy->canReceiveContactDamage()) {
-                enemy->takeDamage(ENEMY_COLLISION_DAMAGE);
+                enemy->takeDamage(Enemy::ENEMY_COLLISION_DAMAGE);
                 enemy->startContactDamageCooldown();
             }
         }
@@ -153,7 +148,7 @@ void GEEnemyManager::update(float deltaTime, GEContext& ctx) {
 
 void GEEnemyManager::registerEnemyKill(GEEnemyType type) {
     int index = static_cast<int>(type);
-    if (index >= 0 && index < ENEMY_TYPE_COUNT)
+    if (index >= 0 && index < Enemy::ENEMY_TYPE_COUNT)
         ++_killCounts[index];
 }
 
@@ -163,7 +158,7 @@ void GEEnemyManager::resetKillCounts() {
 
 int GEEnemyManager::getKillCount(GEEnemyType type) const {
     int index = static_cast<int>(type);
-    return (index >= 0 && index < ENEMY_TYPE_COUNT) ? _killCounts[index] : 0;
+    return (index >= 0 && index < Enemy::ENEMY_TYPE_COUNT) ? _killCounts[index] : 0;
 }
 
 void GEEnemyManager::removeEnemy(GEEnemy* e) {

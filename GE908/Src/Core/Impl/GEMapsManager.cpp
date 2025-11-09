@@ -1,13 +1,11 @@
 #include "GEMapsManager.h"
 #include <cmath>
 
-constexpr auto TILES_COUNT = 26;
-
 GEMapsManager::GEMapsManager() = default;
 
 GEMapsManager::~GEMapsManager() {
 	if (_tiles) {
-		for (int i = 0;i < TILES_COUNT;i++) {
+		for (int i = 0;i < Map::TILES_COUNT;i++) {
 			delete _tiles[i];
 		}
 		delete[] _tiles;
@@ -20,9 +18,9 @@ void GEMapsManager::load(const std::string& tilesFolderPath, const std::string& 
 }
 
 void GEMapsManager::loadTileResources(const std::string& folderPath) {
-	_tiles = new GETile * [TILES_COUNT];
+	_tiles = new GETile * [Map::TILES_COUNT];
 
-	for (int i = 0;i < TILES_COUNT - 1;i++) {
+	for (int i = 0;i < Map::TILES_COUNT - 1;i++) {
 		std::string filePath = folderPath + std::to_string(i) + ".png";
 
 		if (i <= 13 || i == 23) {
@@ -51,7 +49,7 @@ void GEMapsManager::loadSaveData(const std::string& filePath) {
 }
 
 GETile* GEMapsManager::getTile(int tileID) const {
-	if (tileID < 0 || tileID >= TILES_COUNT) return nullptr;
+	if (tileID < 0 || tileID >= Map::TILES_COUNT) return nullptr;
 	return _tiles[tileID];
 }
 
