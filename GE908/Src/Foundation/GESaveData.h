@@ -235,11 +235,12 @@ private:
     }
 
     uint32_t hashCoordinates(int worldRow, int worldCol) const {
-        uint64_t hash = static_cast<uint64_t>(_randomSeed);
-        hash ^= 0x9e3779b97f4a7c15ULL + static_cast<uint64_t>(worldRow) + (hash << 6) + (hash >> 2);
-        hash ^= 0x9e3779b97f4a7c15ULL + static_cast<uint64_t>(worldCol) + (hash << 6) + (hash >> 2);
-        hash ^= hash >> 32;
-        return static_cast<uint32_t>(hash);
+        const uint32_t prime = 101;
+        uint32_t hash = _randomSeed;
+        hash = hash * prime + worldRow;
+        hash = hash * prime + worldCol;
+
+        return hash;
     }
 
     int sampleTileForWorld(int worldRow, int worldCol) const {
