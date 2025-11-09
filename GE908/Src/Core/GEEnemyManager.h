@@ -3,6 +3,7 @@
 #include "GEPlayer.h"
 #include "../Foundation/GESaveData.h"
 #include "../Foundation/GEProvider.h"
+#include "../Foundation/GEObjectPool.h"
 
 static constexpr auto MAX_ENEMIES = 1000;
 static constexpr float DEFAULT_SPAWN_INTERVAL = 6.0f;
@@ -17,28 +18,27 @@ static constexpr float ACTIVE_ENEMY_CAP_STEP_TIME = 45.0f;
 static constexpr int ENEMY_TYPE_COUNT = 4;
 
 class GEEnemyManager : public EnemyProvider {
-
 private:
-    GEEnemy* _enemies[MAX_ENEMIES];
-    int _enemyCount = 0;
+    GEObjectPool<GEEnemy*> _enemies;
+
+    int _activeEnemyCount = 0;
     float _spawnTimer = 0.0f;
     float _spawnInterval = DEFAULT_SPAWN_INTERVAL;
     float _difficultyTimer = 0.0f;
     float _elapsedTime = 0.0f;
 
     int _killCounts[ENEMY_TYPE_COUNT] = { 0 };
-
     GESaveData* _saveData = nullptr;
 
-    void spawnEnemyOutsideCamera(PlayerProvider& player);
+    bool spawnEnemyOutsideCamera(PlayerProvider& player);
+    void removeEnemy(GEEnemy* enemy);
 
 public:
-
     GEEnemyManager();
     ~GEEnemyManager();
 
-    int getEnemyCount() const { return _enemyCount;}
-    GECollisible *getEnemyAt(int index) const { return _enemies[index]; }
+    int getEnemyCount() const { return _enemies.countActive(); }
+    GECollisible* getEnemyAt(int index) const { return _enemies[index]; }
 
     void load(GESaveData* saveData);
     void update(float deltaTime, GEContext& ctx);
@@ -48,5 +48,5 @@ public:
     void resetKillCounts();
     int getKillCount(GEEnemyType type) const;
 
-    bool isWaterTile(int tileID) { return tileID >= 14 && tileID <= 22;}
+    static bool isWaterTile(int tileID) { return tileID >= 14 && tileID <= 22; }
 };

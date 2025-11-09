@@ -81,4 +81,9 @@ public:
         _size = 0;
         _capacity = 0;
     }
+
+    void fill(const T& value) {
+        for (unsigned int i = 0; i < _size; ++i)
+            _data[i] = value;
+    }
 };

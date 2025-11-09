@@ -1,5 +1,7 @@
 #include "GEEnemyManager.h"
-#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <algorithm>
 
 namespace {
     constexpr int PLAYER_COLLISION_DAMAGE = 30;
@@ -7,18 +9,16 @@ namespace {
 }
 
 GEEnemyManager::GEEnemyManager() {
-    for (int i = 0;i < MAX_ENEMIES;i++) _enemies[i] = nullptr;
+    _enemies.fillNull(MAX_ENEMIES);
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     resetKillCounts();
 }
 
 GEEnemyManager::~GEEnemyManager() {
-    for (int i = 0;i < MAX_ENEMIES;i++) {
-        if (_enemies[i]) {
-            delete _enemies[i];
-            _enemies[i] = nullptr;
-        }
-    }
+
+    // release all enemies
+    _enemies.destroyAll();
+    _enemies.clear();
 }
 
 void GEEnemyManager::load(GESaveData* saveData) {
@@ -26,12 +26,16 @@ void GEEnemyManager::load(GESaveData* saveData) {
     _spawnInterval = DEFAULT_SPAWN_INTERVAL;
     _spawnTimer = 0.0f;
     _difficultyTimer = 0.0f;
+    _elapsedTime = 0.0f;
+    _activeEnemyCount = 0;
 
+    _enemies.destroyAll();
+    _enemies.fillNull(1000);
     resetKillCounts();
 }
 
-void GEEnemyManager::spawnEnemyOutsideCamera(PlayerProvider& player) {
-    if (_enemyCount >= MAX_ENEMIES) return;
+bool GEEnemyManager::spawnEnemyOutsideCamera(PlayerProvider& player) {
+    if (_enemies.countActive() >= MAX_ENEMIES) return false;
 
     float camOffsetX = _saveData->getCameraOffsetX();
     float camOffsetY = _saveData->getCameraOffsetY();
@@ -40,55 +44,51 @@ void GEEnemyManager::spawnEnemyOutsideCamera(PlayerProvider& player) {
     int mapW = _saveData->getMapTotalWidth();
     int mapH = _saveData->getMapTotalHeight();
 
-    // make the enemy appearance more natural
     const int safeDistance = _saveData->getTileWidth() * 2;
     int side = rand() % 4;
-    float x = 0;
-    float y = 0;
+    float x = 0, y = 0;
 
     switch (side) {
     case 0:
-        // top
+        // generat enemy at top
         x = camOffsetX + rand() % screenW;
-        y = camOffsetY - safeDistance;
-        break;
+        y = camOffsetY - safeDistance; 
+        break;            
     case 1: 
-        // bottom
-        x = camOffsetX + rand() % screenW;
-        y = camOffsetY + screenH + safeDistance;
-        break;
+        // generat enemy at bottom
+        x = camOffsetX + rand() % screenW; 
+        y = camOffsetY + screenH + safeDistance; 
+        break;  
     case 2: 
-        // left
+        // generat enemy at left
         x = camOffsetX - safeDistance;
         y = camOffsetY + rand() % screenH;
-        break;
-    case 3: 
-        // right
+        break;            
+    case 3:
+        // generat enemy at right
         x = camOffsetX + screenW + safeDistance;
         y = camOffsetY + rand() % screenH;
-        break;
+        break;  
     }
 
-    if (x < 0) x = 0;
-    if (y < 0) y = 0;
-    if (x > mapW - 1) x = mapW - 1;
-    if (y > mapH - 1) y = mapH - 1;
+    x = clamp(x, 0.0f, static_cast<float>(mapW - 1));
+    y = clamp(y, 0.0f, static_cast<float>(mapH - 1));
 
     GEEnemyType type = static_cast<GEEnemyType>(rand() % 4);
     GEEnemy* enemy = new GEEnemy(type);
-
     enemy->setMapBounds(mapW, mapH);
     enemy->setCenter(x, y);
 
-    _enemies[_enemyCount++] = enemy;
+    _enemies.add(enemy);
+    ++_activeEnemyCount;
+    return true;
 }
 
 void GEEnemyManager::draw(Window& window, const GECamera& camera) {
-    for (unsigned int i = 0;i < _enemyCount;i++) {
-        GEEnemy* enemy = _enemies[i];
-        if (!enemy || !enemy->isAlive()) continue;
-        enemy->draw(window, camera);
-    }
+    _enemies.forEachActive([&](GEEnemy* enemy, unsigned int) {
+        if (enemy && enemy->isAlive())
+            enemy->draw(window, camera);
+        });
 }
 
 void GEEnemyManager::update(float deltaTime, GEContext& ctx) {
@@ -97,23 +97,15 @@ void GEEnemyManager::update(float deltaTime, GEContext& ctx) {
     _elapsedTime += deltaTime;
 
     const int capSteps = static_cast<int>(_elapsedTime / ACTIVE_ENEMY_CAP_STEP_TIME);
-    const int activeEnemyCap = min(MAX_ENEMIES, BASE_ACTIVE_ENEMY_CAP + capSteps * ACTIVE_ENEMY_CAP_INCREMENT);
+    const int activeEnemyCap = min(
+        MAX_ENEMIES,
+        BASE_ACTIVE_ENEMY_CAP + capSteps * ACTIVE_ENEMY_CAP_INCREMENT
+    );
 
-    if (_enemyCount >= activeEnemyCap) {
-        _spawnTimer = min(_spawnTimer, _spawnInterval);
-    }
-    else {
+    if (_enemies.countActive() < activeEnemyCap) {
         while (_spawnTimer >= _spawnInterval) {
-            const int previousCount = _enemyCount;
-            spawnEnemyOutsideCamera(ctx.playerProvider());
+            if (!spawnEnemyOutsideCamera(ctx.playerProvider())) break;
             _spawnTimer -= _spawnInterval;
-
-            if (_enemyCount == previousCount || _enemyCount >= activeEnemyCap) {
-                if (_enemyCount == previousCount) {
-                    _spawnTimer = 0.0f;
-                }
-                break;
-            }
         }
     }
 
@@ -123,57 +115,51 @@ void GEEnemyManager::update(float deltaTime, GEContext& ctx) {
     }
 
     GEPlayer& player = static_cast<GEPlayer&>(ctx.playerProvider());
-    for (int i = 0; i < _enemyCount; i++) {
 
-        GEEnemy* e = _enemies[i];
-        if (!e || !e->isAlive()) continue;
+    _enemies.forEachActive([&](GEEnemy* enemy, unsigned int) {
+        if (!enemy) return;
 
-        GEEnemy& enemy = *e;
+        enemy->update(deltaTime, player.getCenterX(), player.getCenterY(), ctx);
 
-        const float previousX = enemy.getCenterX();
-        const float previousY = enemy.getCenterY();
-
-        enemy.update(deltaTime, player.getCenterX(), player.getCenterY(), ctx);
-
-        if (enemy.collide(player)) {
-            enemy.setCenter(previousX, previousY);
-
-
+        // detect collision
+        if (enemy->collide(player)) {
             if (player.canReceiveContactDamage()) {
                 player.takeDamage(PLAYER_COLLISION_DAMAGE);
                 player.startContactDamageCooldown();
             }
-
-            if (enemy.canReceiveContactDamage()) {
-                enemy.takeDamage(ENEMY_COLLISION_DAMAGE);
-                enemy.startContactDamageCooldown();
-
-                if (!enemy.isAlive()) {
-                    registerEnemyKill(enemy.getType());
-                }
+            if (enemy->canReceiveContactDamage()) {
+                enemy->takeDamage(ENEMY_COLLISION_DAMAGE);
+                enemy->startContactDamageCooldown();
             }
         }
-    }
+
+        // record kill
+        if (!enemy->isAlive())
+            registerEnemyKill(enemy->getType());
+        });
+
+    // deleate all died enemies
+    _enemies.destroyInactive();
 }
 
 void GEEnemyManager::registerEnemyKill(GEEnemyType type) {
-    const int index = static_cast<int>(type);
-    if (index < 0 || index >= ENEMY_TYPE_COUNT) {
-        return;
-    }
-    _killCounts[index]++;
+    int index = static_cast<int>(type);
+    if (index >= 0 && index < ENEMY_TYPE_COUNT)
+        ++_killCounts[index];
 }
 
 void GEEnemyManager::resetKillCounts() {
-    for (int i = 0; i < ENEMY_TYPE_COUNT; ++i) {
-        _killCounts[i] = 0;
-    }
+    for (int& k : _killCounts) k = 0;
 }
 
 int GEEnemyManager::getKillCount(GEEnemyType type) const {
-    const int index = static_cast<int>(type);
-    if (index < 0 || index >= ENEMY_TYPE_COUNT) {
-        return 0;
-    }
-    return _killCounts[index];
+    int index = static_cast<int>(type);
+    return (index >= 0 && index < ENEMY_TYPE_COUNT) ? _killCounts[index] : 0;
+}
+
+void GEEnemyManager::removeEnemy(GEEnemy* e) {
+    if (!e) return;
+    delete e;
+    _enemies.remove(e);
+    if (_activeEnemyCount > 0) --_activeEnemyCount;
 }

@@ -135,6 +135,7 @@
     <ClCompile Include="Src\Foundation\GECollisible.h" />
     <ClCompile Include="Src\Foundation\GEDebug.h" />
     <ClCompile Include="Src\Foundation\GEFrameTimer.h" />
+    <ClCompile Include="Src\Foundation\GEObjectPool.h" />
     <ClCompile Include="Src\Foundation\GEUtility.h" />
     <ClCompile Include="Src\GameManager.cpp" />
     <ClCompile Include="Main.cpp" />
