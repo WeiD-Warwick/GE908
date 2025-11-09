@@ -78,7 +78,7 @@ public:
     float getCameraOffsetY() { return _cameraOffsetY; }
 
     void setWindowSize(int width, int height) { _windowWidth = width; _windowHeight = height; }
-    int getScreenWidth() const { return _windowWidth; }
+        int getScreenWidth() const { return _windowWidth; }
     int getScreenHeight() const { return _windowHeight; }
 
     // Since there's only one layer, return fixed value 1 or remove this interface

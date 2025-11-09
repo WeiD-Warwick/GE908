@@ -234,7 +234,9 @@ void GEPlayer::autoAttack(float deltaTime) {
     dirX /= len;
     dirY /= len;
 
-    _projectileManager->addProjectile(ProjectileOwner::FromPlayer, playerCenterX, playerCenterY, dirX, dirY, PLAYER_PROJECTILE_SPEED, PLAYER_PROJECTILE_DAMAGE);
+    _projectileManager->addProjectile(ProjectileOwner::FromPlayer, 
+                                      playerCenterX, playerCenterY, 
+                                      dirX, dirY, PLAYER_PROJECTILE_SPEED, PLAYER_PROJECTILE_DAMAGE);
 }
 
 void GEPlayer::aoeAttack(float deltaTime) {
@@ -436,6 +438,9 @@ void GEPlayer::applyPowerUp(GEPowerUpType type) {
         break;
     case GEPowerUpType::AdditionalAoeTarget:
         _aoeTargetCount = min(PLAYER_MAX_AOE_TARGETS, _aoeTargetCount + 1);
+        break;
+    case GEPowerUpType::HealPlayer:
+        heal(PLAYER_HEAL_VALUE);
         break;
     }
 }

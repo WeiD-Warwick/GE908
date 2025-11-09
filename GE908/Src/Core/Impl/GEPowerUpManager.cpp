@@ -5,6 +5,7 @@
 
 constexpr const char* ATTACK_SPEED_TEXTURE = "Src/Assets/Textures/attack_speed.png";
 constexpr const char* AOE_TARGET_TEXTURE = "Src/Assets/Textures/aoe_target.png";
+constexpr const char* HEAL_TEXTURE = "Src/Assets/Textures/heal.png";
 
 // ------------------ GEPowerUp ------------------
 GEPowerUp::GEPowerUp()
@@ -24,6 +25,8 @@ void GEPowerUp::spawn(GEPowerUpType type, float centerX, float centerY, float li
     case GEPowerUpType::AdditionalAoeTarget:
         _image.load(AOE_TARGET_TEXTURE);
         break;
+    case GEPowerUpType::HealPlayer:
+        _image.load(HEAL_TEXTURE);
     default:
         break;
     }
@@ -73,9 +76,12 @@ void GEPowerUpManager::spawnPowerUpAt(const GEPoint& point) {
     float spawnX = point.x + offsetX;
     float spawnY = point.y + offsetY;
 
-    GEPowerUpType type = (randomFloat(0.0f, 1.0f) < 0.5f)
-        ? GEPowerUpType::AttackSpeedBoost
-        : GEPowerUpType::AdditionalAoeTarget;
+    float randomN = randomFloat(0.0f, 1.0f);
+
+    GEPowerUpType type = GEPowerUpType::AttackSpeedBoost;
+    if (randomN < 0.33) type = GEPowerUpType::AttackSpeedBoost;
+    if (randomN >= 0.33 && randomN <= 0.66) type = GEPowerUpType::AdditionalAoeTarget;
+    if (randomN > 0.66) type = GEPowerUpType::HealPlayer;
 
     // Try to reuse inactive slot
     for (unsigned int i = 0; i < _powerUps.size(); ++i) {

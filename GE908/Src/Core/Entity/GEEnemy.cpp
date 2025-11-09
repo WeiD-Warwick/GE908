@@ -39,7 +39,7 @@ GEEnemy::GEEnemy(GEEnemyType type)
         break;
     case GEEnemyType::Fast:
         _hp = 100;
-        _speed = 270;
+        _speed = 230;
         _maxHp = _hp;
         break;
     case GEEnemyType::Heavy:

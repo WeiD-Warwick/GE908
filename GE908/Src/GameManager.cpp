@@ -30,10 +30,10 @@ void GameManager::loadComponent() {
 
     if (!saveData) return;
 
-    GEPlayer* playerImpl = dynamic_cast<GEPlayer*>(&_player);
-    if (playerImpl)
-        playerImpl->bind(_ctx);
-
+    //GEPlayer* playerImpl = dynamic_cast<GEPlayer*>(&_player);
+ /*   if (playerImpl)
+        playerImpl->bind(_ctx);*/
+    _player.bind(_ctx);
     int mapWorldWidth = saveData->getMapTotalWidth();
     int mapWorldHeight = saveData->getMapTotalHeight();
     _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);

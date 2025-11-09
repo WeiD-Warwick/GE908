@@ -51,6 +51,8 @@ public:
     virtual ~GECharacter() = default;
     virtual void takeDamage(int value);
 
+    virtual void heal(int value);
+
     virtual void bind(GEContext& ctx) = 0;
 
     bool canReceiveContactDamage() const { return _contactDamageCooldownTimer <= 0.0f; }

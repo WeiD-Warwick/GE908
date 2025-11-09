@@ -1,19 +1,10 @@
 #pragma once
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Foundation/GECamera.h"
+#include "../Foundation/GEModel.h"
 #include "GEDebug.h"
 
 using namespace GamesEngineeringBase;
-
-enum class GECollisionType {
-	None,
-	Player,
-	Enemy,
-	Water,
-	Fire,
-	Projectile,
-	PowerUp,
-};
 	
 class GECollisible {
 

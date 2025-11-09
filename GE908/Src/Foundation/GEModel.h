@@ -4,6 +4,7 @@ enum class GEPowerUpType {
 	None					= 0,
 	AttackSpeedBoost		= 1,
 	AdditionalAoeTarget		= 2,
+	HealPlayer				= 3,
 };
 
 enum class ProjectileOwner {
@@ -18,14 +19,14 @@ enum class GEEnemyType {
 	StaticShooter			= 3,
 };
 
-enum class GEColliderType {
-	None					= 0,
-	Player					= 1,
-	Enemy					= 2,
-	Water					= 3,
-	Fire					= 4,
-	Projectile				= 5,
-	PowerUp					= 6,
+enum class GECollisionType {
+	None,
+	Player,
+	Enemy,
+	Water,
+	Fire,
+	Projectile,
+	PowerUp,
 };
 
 enum class GEColliderShape {

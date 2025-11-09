@@ -38,6 +38,10 @@ void GECharacter::takeDamage(int value) {
     _hp = max(0, _hp - value); 
 }
 
+void GECharacter::heal(int value) {
+    _hp = min(_hp + value, _maxHp);
+}
+
 void GECharacter::triggerDamageFlash(GEColor color, float duration) {
     _damageColor = color;
     _damageFlashDuration = max(0, duration);

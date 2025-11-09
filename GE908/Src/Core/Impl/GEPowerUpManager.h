@@ -13,7 +13,7 @@ class GEPowerUpManager : public PowerUpProvider {
 private:
     static constexpr float SPAWN_INTERVAL_SECONDS = 10.0f;
     static constexpr float POWERUP_LIFETIME_SECONDS = 18.0f;
-    static constexpr float DROP_CHANCE = 0.3f;
+    static constexpr float DROP_CHANCE = 0.5f;
 
     GEObjectPool<GEPowerUp*> _powerUps;
     GESaveData* _saveData = nullptr;
