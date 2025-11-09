@@ -29,10 +29,10 @@ void GEMapsManager::loadTileResources(const std::string& folderPath) {
 			_tiles[i] = new GETile(filePath, GECollisionType::None);
 		}
 		else if (i == 24) {
-			_tiles[i] = new GETile(filePath, GECollisionType::Fire);
+			_tiles[i] = new GETile(filePath, GECollisionType::Tile_Fire);
 		}
 		else {
-			_tiles[i] = new GETile(filePath, GECollisionType::Water);
+			_tiles[i] = new GETile(filePath, GECollisionType::Tile_Water);
 		}
 	}
 }

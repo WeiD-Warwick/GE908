@@ -23,8 +23,9 @@ enum class GECollisionType {
 	None,
 	Player,
 	Enemy,
-	Water,
-	Fire,
+	Tile_Water,
+	Tile_Fire,
+	Tile_Road,
 	Projectile,
 	PowerUp,
 };

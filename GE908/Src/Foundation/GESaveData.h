@@ -139,6 +139,9 @@ private:
     ChunkNode* _chunksHead = nullptr;
     ChunkCoord _activeChunk{ 0, 0 };
 
+    uint32_t _randomSeed = 0u;
+    bool _hasRandomSeed = false;
+
 
     bool _parseKeywordLine(const std::string& line, MapChunk& chunk) {
         if (line.empty()) return false;
@@ -154,10 +157,11 @@ private:
             return true;
         }
 
-        if (key == "infinite") {
-            int flag = 0;
-            if (!(iss >> flag)) return false;
-            _infiniteMap = flag != 0;
+        if (key == "seed") {
+            uint32_t value = 0u;
+            if (!(iss >> value)) return false;
+            _randomSeed = value;
+            _hasRandomSeed = true;
             return true;
         }
 
@@ -178,11 +182,14 @@ private:
             delete node;
             node = next;
         }
+        _chunksHead = nullptr;
         _baseChunk.clear();
         _chunkColumns = 0;
         _chunkRows = 0;
         _infiniteMap = false;
         _activeChunk = { 0, 0 };
+        _randomSeed = 0u;
+        _hasRandomSeed = false;
     }
 
     ChunkNode* findChunkNode(const ChunkCoord& coord) {
@@ -227,9 +234,48 @@ private:
         return true;
     }
 
-    void generateChunk(MapChunk& chunk, const ChunkCoord&) {
+    uint32_t hashCoordinates(int worldRow, int worldCol) const {
+        uint64_t hash = static_cast<uint64_t>(_randomSeed);
+        hash ^= 0x9e3779b97f4a7c15ULL + static_cast<uint64_t>(worldRow) + (hash << 6) + (hash >> 2);
+        hash ^= 0x9e3779b97f4a7c15ULL + static_cast<uint64_t>(worldCol) + (hash << 6) + (hash >> 2);
+        hash ^= hash >> 32;
+        return static_cast<uint32_t>(hash);
+    }
+
+    int sampleTileForWorld(int worldRow, int worldCol) const {
+        if (!_baseChunk.isValid()) return 0;
+        if (!_hasRandomSeed) {
+            // Default to repeating base chunk when no seed is provided.
+            const int srcRow = positiveMod(worldRow, _chunkRows);
+            const int srcCol = positiveMod(worldCol, _chunkColumns);
+            return _baseChunk.getTileID(srcRow, srcCol);
+        }
+
+        const uint32_t hashed = hashCoordinates(worldRow, worldCol);
+        const int srcRow = static_cast<int>(hashed % static_cast<uint32_t>(_chunkRows));
+        const int srcCol = static_cast<int>((hashed / static_cast<uint32_t>(_chunkRows)) % static_cast<uint32_t>(_chunkColumns));
+        return _baseChunk.getTileID(srcRow, srcCol);
+    }
+
+    void generateChunk(MapChunk& chunk, const ChunkCoord& coord) {
         if (!_baseChunk.isValid()) return;
-        chunk = _baseChunk;
+
+        if (coord.x == 0 && coord.y == 0) {
+            chunk = _baseChunk;
+            return;
+        }
+
+        if (!chunk.allocate(_chunkColumns, _chunkRows)) return;
+
+        for (int row = 0; row < _chunkRows; ++row) {
+            for (int col = 0; col < _chunkColumns; ++col) {
+                const int worldRow = coord.y * _chunkRows + row;
+                const int worldCol = coord.x * _chunkColumns + col;
+                const int tile = sampleTileForWorld(worldRow, worldCol);
+                const int index = row * _chunkColumns + col;
+                chunk.tiles[index] = tile;
+            }
+        }
     }
 
     ChunkNode* ensureChunkNode(const ChunkCoord& coord) {

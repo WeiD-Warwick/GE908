@@ -135,7 +135,7 @@ bool GEPlayer::collidesWithEnemies(float newX, float newY, const EnemyProvider& 
 bool GEPlayer::isBlockedAt(float x, float y) const {
     if (!_saveData) return false;
 
-    if (collidesWithTileType(x, y, *_mapsManager, GECollisionType::Water))
+    if (collidesWithTileType(x, y, *_mapsManager, GECollisionType::Tile_Water))
         return true;
 
     if (collidesWithEnemies(x, y, *_enemyManager))
@@ -151,7 +151,7 @@ void GEPlayer::applyEnvironmentalEffects(float deltaTime) {
     constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
     constexpr int FIRE_DAMAGE = 15;
 
-    bool inFire = collidesWithTileType(getCenterX(), getCenterY(), *_mapsManager, GECollisionType::Fire);
+    bool inFire = collidesWithTileType(getCenterX(), getCenterY(), *_mapsManager, GECollisionType::Tile_Fire);
 
     if (inFire) {
         if (!wasInFire) {

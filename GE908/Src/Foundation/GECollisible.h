@@ -67,7 +67,7 @@ public:
         int winW = window.getWidth();
         int winH = window.getHeight();
 
-        if (_type == GECollisionType::Water || _type == GECollisionType::Fire) {
+        if (_type == GECollisionType::Tile_Water || _type == GECollisionType::Tile_Fire) {
             int left = getOriginX() - camX;
             int top = getOriginY() - camY;
             int right = left + _image.width;
@@ -133,14 +133,14 @@ public:
    
     // check if this collider collide with another right now
     bool collide(const GECollisible& other) const {
-        if (_type == GECollisionType::Water && other._type == GECollisionType::Water) {
+        if (_type == GECollisionType::Tile_Water && other._type == GECollisionType::Tile_Water) {
             return false;
         }
 
         // circle <-> reatangle
-        if (_type == GECollisionType::Water || other._type == GECollisionType::Water) {
-            const GECollisible& rect = (_type == GECollisionType::Water) ? *this : other;
-            const GECollisible& circle = (_type == GECollisionType::Water) ? other : *this;
+        if (_type == GECollisionType::Tile_Water || other._type == GECollisionType::Tile_Water) {
+            const GECollisible& rect = (_type == GECollisionType::Tile_Water) ? *this : other;
+            const GECollisible& circle = (_type == GECollisionType::Tile_Water) ? other : *this;
 
             float rectLeft = rect.getOriginX();
             float rectTop = rect.getOriginY();
@@ -173,11 +173,11 @@ public:
         const float bHalfW = other.getWidth() / 2.0f;
         const float bHalfH = other.getHeight() / 2.0f;
 
-        if (_type == GECollisionType::Water && other._type == GECollisionType::Water) {
+        if (_type == GECollisionType::Tile_Water && other._type == GECollisionType::Tile_Water) {
             return false;
         }
 
-        if (_type == GECollisionType::Water) {
+        if (_type == GECollisionType::Tile_Water) {
             const float left = cx - aHalfW;
             const float right = cx + aHalfW;
             const float top = cy - aHalfH;
@@ -189,7 +189,7 @@ public:
             );
         }
 
-        if (other._type == GECollisionType::Water) {
+        if (other._type == GECollisionType::Tile_Water) {
             const float left = bCx - bHalfW;
             const float right = bCx + bHalfW;
             const float top = bCy - bHalfH;
