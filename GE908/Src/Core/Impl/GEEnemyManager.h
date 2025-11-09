@@ -1,7 +1,7 @@
 #pragma once
 #include "../Entity/GEEnemy.h"
 #include "../Entity/GEPlayer.h"
-#include "../../Foundation/GESaveData.h"
+#include "../SaveLoad/GESaveData.h"
 #include "../../Foundation/GEObjectPool.h"
 #include "../Interface/GEProvider.h"
 

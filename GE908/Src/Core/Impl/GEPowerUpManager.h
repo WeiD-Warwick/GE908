@@ -1,6 +1,6 @@
 #pragma once
 #include "../../../ThirdParty/GamesEngineeringBase.h"
-#include "../../Foundation/GESaveData.h"
+#include "../SaveLoad/GESaveData.h"
 #include "../../Foundation/GECamera.h"
 #include "../../Foundation/GEObjectPool.h"
 #include "../Entity/GEPowerUp.h"

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "../../Foundation/GESaveData.h"
+#include "../SaveLoad/GESaveData.h"
 #include "../../Foundation/GECollisible.h"
 #include "../../Foundation/GEModel.h"
 

@@ -29,8 +29,3 @@ enum class GECollisionType {
 	Projectile,
 	PowerUp,
 };
-
-enum class GEColliderShape {
-	Circle					= 0,
-	AABB					= 1,
-};
