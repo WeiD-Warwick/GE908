@@ -1,10 +1,11 @@
 #pragma once
 #include "GECharacter.h"
 #include "../Foundation/GEProvider.h"
+#include "../Foundation/GEObjectPool.h"
 
 class GEPlayer;
 
-class GEEnemy : public GECharacter {
+class GEEnemy : public GECharacter, public GEPoolable {
 private:
 	GEEnemyType _type;
 	float _attackCooldown = 0.0f;
@@ -23,4 +24,6 @@ public:
 	bool getIsStatic() const { return _isStatic; }
 	void draw(Window& window, const GECamera& camera) const override;
 	void takeDamage(int value) override;
+
+	bool isActiveElement() const override { return isAlive(); }
 };

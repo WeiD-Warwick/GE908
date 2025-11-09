@@ -2,49 +2,63 @@
 #include "GEPlayer.h"
 #include "GEEnemy.h"
 #include "../Foundation/GEProvider.h"
+#include "../Foundation/GEObjectPool.h"
 
 #define MAX_PROJECTILES 5000
 
-class GEProjectile : public GECollisible {
+// ================== Projectile ==================
+class GEProjectile : public GECollisible, public GEPoolable {
 private:
-    float _speed;
-    float _dirX;
-    float _dirY;
-    int _damage;
-    bool _active;
+    float _speed = 0.0f;
+    float _dirX = 0.0f;
+    float _dirY = 0.0f;
+    int _damage = 0;
+    bool _active = false;
     ProjectileOwner _owner;
 
 public:
-    GEProjectile(const std::string& texturePath, ProjectileOwner owner, float centerX, float centerY, float dirX, float dirY, float speed, int damage)
+    GEProjectile() = default;
+
+    GEProjectile(const std::string& texturePath, ProjectileOwner owner,
+        float centerX, float centerY, float dirX, float dirY,
+        float speed, int damage)
         : GECollisible(texturePath, GECollisionType::Projectile),
         _owner(owner), _speed(speed), _dirX(dirX), _dirY(dirY),
         _damage(damage), _active(true) {
-
         setCenter(centerX, centerY);
     }
 
+    bool isActiveElement() const override { return _active; }
     void deactivate() { _active = false; }
-    bool isActive() const { return _active; }
-    int getDamage() const { return _damage; }
+
     ProjectileOwner getOwner() const { return _owner; }
+    int getDamage() const { return _damage; }
+
+    void spawn(const std::string& texturePath, ProjectileOwner owner,
+        float centerX, float centerY, float dirX, float dirY,
+        float speed, int damage) {
+        _image.load(texturePath);
+        _owner = owner;
+        _speed = speed;
+        _dirX = dirX;
+        _dirY = dirY;
+        _damage = damage;
+        _active = true;
+        setCenter(centerX, centerY);
+    }
 
     void update(float deltaTime) {
         if (!_active) return;
-        float newCenterX = getCenterX();
-        float newCenterY = getCenterY();
-        newCenterX += _dirX * _speed * deltaTime;
-        newCenterY += _dirY * _speed * deltaTime;
-
+        float newCenterX = getCenterX() + _dirX * _speed * deltaTime;
+        float newCenterY = getCenterY() + _dirY * _speed * deltaTime;
         setCenter(newCenterX, newCenterY);
     }
 };
 
+// ================== Projectile Manager ==================
 class GEProjectileManager : public ProjectileProvider {
-
 private:
-
-    GEProjectile* _projectiles[MAX_PROJECTILES];
-   
+    GEObjectPool<GEProjectile*> _projectiles;
 
 public:
     GEProjectileManager();

@@ -1,5 +1,12 @@
 #pragma once
 
+class GEPoolable {
+public:
+    virtual ~GEPoolable() = default;
+    virtual bool isActiveElement() const = 0;
+};
+
+
 template <typename T>
 class GEObjectPool {
 private:
@@ -26,9 +33,10 @@ public:
 
     unsigned int countActive() const {
         unsigned int count = 0;
-        for (unsigned int i = 0; i < _size; ++i)
-            if (_data[i] != nullptr)
+        for (unsigned int i = 0; i < _size; ++i) {
+            if (_data[i] && _data[i]->isActiveElement())
                 ++count;
+        }
         return count;
     }
 
@@ -111,13 +119,12 @@ public:
 
     void destroyInactive() {
         for (unsigned int i = 0; i < _size; ++i) {
-            if (_data[i] && !_data[i]->isAlive()) {
+            if (_data[i] && !_data[i]->isActiveElement()) {
                 delete _data[i];
                 _data[i] = nullptr;
             }
         }
     }
-
 
     template <typename Func>
     void forEachActive(Func&& func) {

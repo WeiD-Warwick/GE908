@@ -1,12 +1,13 @@
-#include <iostream>
 #include "GEPowerUpManager.h"
+#include <cstdlib>
+#include <ctime>
 
 namespace {
-    constexpr float PI = 3.14159265358979323846f;
     constexpr const char* ATTACK_SPEED_TEXTURE = "Src/Assets/Textures/attack_speed.png";
     constexpr const char* AOE_TARGET_TEXTURE = "Src/Assets/Textures/aoe_target.png";
 }
 
+// ------------------ GEPowerUp ------------------
 GEPowerUp::GEPowerUp()
     : GECollisible(ATTACK_SPEED_TEXTURE, GECollisionType::PowerUp) {
 }
@@ -16,6 +17,7 @@ void GEPowerUp::spawn(GEPowerUpType type, float centerX, float centerY, float li
     _timeToLive = lifeTimeSeconds;
     _remainingTime = lifeTimeSeconds;
     _active = true;
+
     switch (_type) {
     case GEPowerUpType::AttackSpeedBoost:
         _image.load(ATTACK_SPEED_TEXTURE);
@@ -23,7 +25,10 @@ void GEPowerUp::spawn(GEPowerUpType type, float centerX, float centerY, float li
     case GEPowerUpType::AdditionalAoeTarget:
         _image.load(AOE_TARGET_TEXTURE);
         break;
+    default:
+        break;
     }
+
     setCenter(centerX, centerY);
 }
 
@@ -36,44 +41,36 @@ void GEPowerUp::update(float deltaTime) {
     if (!_active) return;
 
     if (_timeToLive > 0.0f) {
-        _remainingTime = max(0.0f, _remainingTime - deltaTime);
-        if (_remainingTime <= 0.0f) {
+        _remainingTime -= deltaTime;
+        if (_remainingTime <= 0.0f)
             deactivate();
-        }
     }
 }
 
+// ------------------ GEPowerUpManager ------------------
 GEPowerUpManager::GEPowerUpManager() {
-    for (int i = 0; i < MAX_POWERUPS; ++i) {
-        _powerUps[i] = nullptr;
-    }
+    _powerUps.resize(16);     // max 16 power-ups
+    _powerUps.fillNull(16);   // initialize with nullptr
 }
 
 GEPowerUpManager::~GEPowerUpManager() {
-    for (int i = 0; i < MAX_POWERUPS; ++i) {
-        delete _powerUps[i];
-        _powerUps[i] = nullptr;
-    }
+    _powerUps.destroyAll();
+    _powerUps.clear();
 }
 
 void GEPowerUpManager::load(GESaveData* saveData) {
     _saveData = saveData;
     _spawnTimer = 0.0f;
+    _powerUps.destroyAll();
+    _powerUps.fillNull(16);
 }
 
-bool GEPowerUpManager::isWaterTile(int tileID) const {
-    return tileID >= 14 && tileID <= 22;
-}
-
-void GEPowerUpManager::spawnPowerUpAt(const GEPoint point) {
-
-    // drop rate
-    const float dropChance = 0.3f;
-    if (randomFloat(0.0f, 1.0f) > dropChance) return;
+void GEPowerUpManager::spawnPowerUpAt(const GEPoint& point) {
+    // Random drop chance
+    if (randomFloat(0.0f, 1.0f) > DROP_CHANCE) return;
 
     float offsetX = randomFloat(-20.0f, 20.0f);
     float offsetY = randomFloat(-20.0f, 20.0f);
-
     float spawnX = point.x + offsetX;
     float spawnY = point.y + offsetY;
 
@@ -81,12 +78,13 @@ void GEPowerUpManager::spawnPowerUpAt(const GEPoint point) {
         ? GEPowerUpType::AttackSpeedBoost
         : GEPowerUpType::AdditionalAoeTarget;
 
-    for (int i = 0; i < MAX_POWERUPS; ++i) {
+    // Try to reuse inactive slot
+    for (unsigned int i = 0; i < _powerUps.size(); ++i) {
         if (_powerUps[i] == nullptr) {
             _powerUps[i] = new GEPowerUp();
         }
-        if (!_powerUps[i]->isActive()) {
-            _powerUps[i]->spawn(type, spawnX, spawnY, 10.0f);
+        if (!_powerUps[i]->isAlive()) {
+            _powerUps[i]->spawn(type, spawnX, spawnY, POWERUP_LIFETIME_SECONDS);
             return;
         }
     }
@@ -98,28 +96,29 @@ void GEPowerUpManager::update(float deltaTime, GEContext& ctx) {
     _spawnTimer += deltaTime;
     if (_spawnTimer >= SPAWN_INTERVAL_SECONDS) {
         _spawnTimer = 0.0f;
+        // could spawn periodic global pickups here if desired
     }
 
-    for (int i = 0; i < MAX_POWERUPS; ++i) {
-        GEPowerUp* powerUp = _powerUps[i];
-        if (!powerUp || !powerUp->isActive()) continue;
+    GEPlayer& player = static_cast<GEPlayer&>(ctx.playerProvider());
 
-        powerUp->update(deltaTime);
-        if (!powerUp->isActive()) continue;
+    _powerUps.forEachActive([&](GEPowerUp* p, unsigned int) {
+        if (!p) return;
+        p->update(deltaTime);
 
-        if (powerUp->collide(ctx.playerProvider().collisionBody())) {
-            ctx.playerProvider().applyPowerUp(powerUp->getType());
-            powerUp->deactivate();
+        if (p->isAlive() && p->collide(player.collisionBody())) {
+            player.applyPowerUp(p->getType());
+            p->deactivate();
         }
-    }
+        });
+
+    _powerUps.destroyInactive();
 }
 
 void GEPowerUpManager::draw(Window& window, const GECamera& camera) {
-    for (int i = 0; i < MAX_POWERUPS; ++i) {
-        GEPowerUp* powerUp = _powerUps[i];
-        if (!powerUp || !powerUp->isActive()) continue;
-        powerUp->draw(window, camera);
-    }
+    _powerUps.forEachActive([&](GEPowerUp* p, unsigned int) {
+        if (p && p->isAlive())
+            p->draw(window, camera);
+        });
 }
 
 void GEPowerUpManager::onEnemyDefeated(const GEPoint& position) {
