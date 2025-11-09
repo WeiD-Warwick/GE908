@@ -33,22 +33,28 @@ public:
 	}
 
     void followPlayer(float playerX, float playerY, int playerWidth, int playerHeight) {
-		float targetX = playerX + (playerWidth / 2.0f) - (_width / 2.0f);
-		float targetY = playerY + (playerHeight / 2.0f) - (_height / 2.0f);
+        float targetX = playerX + (playerWidth / 2.0f) - (_width / 2.0f);
+        float targetY = playerY + (playerHeight / 2.0f) - (_height / 2.0f);
 
-		if (_mapWidth > _width)
-			_x = clamp(targetX, 0, _mapWidth - _width);
-		else
-			_x = (_mapWidth - _width) / 2;
+        if (_mapWidth > _width)
+            _x = clamp(targetX, 0, _mapWidth - _width);
+        else if (_mapWidth > 0)
+            _x = (_mapWidth - _width) / 2;
+        else
+            _x = targetX;
 
-		if (_mapHeight > _height)
-			_y = clamp(targetY, 0, _mapHeight - _height);
-		else
-			_y = (_mapHeight - _height) / 2;
-	}
+        if (_mapHeight > _height)
+            _y = clamp(targetY, 0, _mapHeight - _height);
+        else if (_mapHeight > 0)
+            _y = (_mapHeight - _height) / 2;
+        else
+            _y = targetY;
+    }
 
-	void setMapBounds(int mapWidth, int mapHeight) {
-		_mapWidth = mapWidth;
-		_mapHeight = mapHeight;
-	}
+    void setMapBounds(int mapWidth, int mapHeight) {
+        _mapWidth = mapWidth;
+        _mapHeight = mapHeight;
+        if (_mapWidth <= 0) _mapWidth = -1;
+        if (_mapHeight <= 0) _mapHeight = -1;
+    }
 };

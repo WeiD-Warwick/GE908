@@ -16,6 +16,8 @@ void GEEnemy::bind(GEContext& ctx) {
 }
 
 void GEEnemy::applyMovementBounds(float& newX, float& newY) {
+    if (_mapWidth <= 0 || _mapHeight <= 0) return;
+
     float minCenterX = _width / 2.0f;
     float maxCenterX = _mapWidth - _width / 2.0f;
     float minCenterY = _height / 2.0f;

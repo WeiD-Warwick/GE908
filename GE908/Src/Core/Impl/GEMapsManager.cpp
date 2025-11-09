@@ -1,4 +1,5 @@
 #include "GEMapsManager.h"
+#include <cmath>
 
 constexpr auto TILES_COUNT = 26;
 
@@ -57,21 +58,10 @@ GETile* GEMapsManager::getTile(int tileID) const {
 void GEMapsManager::draw(Window& window, const GECamera& camera) const {
     if (!_saveData) return;
 
-	const auto* chunk = _saveData->getActiveChunk();
-	if (!chunk || !chunk->isValid()) return;
-
-	const int mapWidth = chunk->getColumnCount();
-	const int mapHeight = chunk->getRowCount();
 	const int tileWidth = _saveData->getTileWidth();
 	const int tileHeight = _saveData->getTileHeight();
 
-	if (mapWidth <= 0 || mapHeight <= 0 || tileWidth <= 0 || tileHeight <= 0) return;
-
-    int cameraOffsetX = _saveData->getCameraOffsetX();
-    int cameraOffsetY = _saveData->getCameraOffsetY();
-
-    int winWidth = _saveData->getScreenWidth();
-    int winHeight = _saveData->getScreenHeight();
+	if (tileWidth <= 0 || tileHeight <= 0) return;
 
 	const float cameraX = camera.getX();
 	const float cameraY = camera.getY();
@@ -83,13 +73,11 @@ void GEMapsManager::draw(Window& window, const GECamera& camera) const {
 	int minRow = static_cast<int>(std::floor(cameraY / tileHeight));
 	int maxRow = static_cast<int>(std::floor((cameraBottom - 1.0f) / tileHeight));
 
-	if (maxCol < 0 || maxRow < 0 || minCol >= mapWidth || minRow >= mapHeight)
-		return;
-
-	if (minCol < 0) minCol = 0;
-	if (minRow < 0) minRow = 0;
-	if (maxCol >= mapWidth) maxCol = mapWidth - 1;
-	if (maxRow >= mapHeight) maxRow = mapHeight - 1;
+	// Expand the range slightly to avoid visible gaps at the edges.
+	minCol -= 1;
+	minRow -= 1;
+	maxCol += 1;
+	maxRow += 1;
 
 	for (int rowNumber = minRow; rowNumber <= maxRow; rowNumber++) {
 		for (int colNumber = minCol; colNumber <= maxCol; colNumber++) {

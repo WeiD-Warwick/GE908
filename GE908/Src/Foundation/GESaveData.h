@@ -131,6 +131,11 @@ private:
     int _windowWidth = 854;
     int _windowHeight = 480;
 
+    MapChunk _baseChunk;
+    int _chunkColumns = 0;
+    int _chunkRows = 0;
+    bool _infiniteMap = false;
+
     ChunkNode* _chunksHead = nullptr;
     ChunkCoord _activeChunk{ 0, 0 };
 
@@ -140,9 +145,24 @@ private:
 
         std::istringstream iss(line);
         std::string key;
-        int value = 0;
+        if (!(iss >> key)) return false;
 
-        if (!(iss >> key >> value)) return false;
+        if (key == "mapmode") {
+            std::string mode;
+            if (!(iss >> mode)) return false;
+            _infiniteMap = (mode == "infinite");
+            return true;
+        }
+
+        if (key == "infinite") {
+            int flag = 0;
+            if (!(iss >> flag)) return false;
+            _infiniteMap = flag != 0;
+            return true;
+        }
+
+        int value = 0;
+        if (!(iss >> value)) return false;
 
         if (key == "tileswide") chunk.columns = value;
         else if (key == "tileshigh") chunk.rows = value;
@@ -150,6 +170,7 @@ private:
         else if (key == "tileheight") _tileHeight = value;
         return true;
     }
+
     void clearChunks() {
         ChunkNode* node = _chunksHead;
         while (node) {
@@ -157,7 +178,11 @@ private:
             delete node;
             node = next;
         }
-        _chunksHead = nullptr;
+        _baseChunk.clear();
+        _chunkColumns = 0;
+        _chunkRows = 0;
+        _infiniteMap = false;
+        _activeChunk = { 0, 0 };
     }
 
     ChunkNode* findChunkNode(const ChunkCoord& coord) {
@@ -178,13 +203,49 @@ private:
         return nullptr;
     }
 
+    static int floorDiv(int value, int divisor) {
+        int quotient = value / divisor;
+        int remainder = value % divisor;
+        if ((remainder != 0) && ((remainder < 0) != (divisor < 0))) {
+            --quotient;
+        }
+        return quotient;
+    }
+
+    static int positiveMod(int value, int divisor) {
+        int mod = value % divisor;
+        if (mod < 0) mod += std::abs(divisor);
+        return mod;
+    }
+
+    bool worldToChunkIndices(int tileRow, int tileCol, ChunkCoord& coord, int& localRow, int& localCol) const {
+        if (_chunkColumns <= 0 || _chunkRows <= 0) return false;
+        coord.x = floorDiv(tileCol, _chunkColumns);
+        coord.y = floorDiv(tileRow, _chunkRows);
+        localCol = positiveMod(tileCol, _chunkColumns);
+        localRow = positiveMod(tileRow, _chunkRows);
+        return true;
+    }
+
+    void generateChunk(MapChunk& chunk, const ChunkCoord&) {
+        if (!_baseChunk.isValid()) return;
+        chunk = _baseChunk;
+    }
+
     ChunkNode* ensureChunkNode(const ChunkCoord& coord) {
         ChunkNode* node = findChunkNode(coord);
         if (node) return node;
+        if (!_infiniteMap && (coord.x != 0 || coord.y != 0)) return nullptr;
         node = new ChunkNode();
         node->coord = coord;
         node->next = _chunksHead;
         _chunksHead = node;
+        if (_infiniteMap) {
+            generateChunk(node->chunk, coord);
+        }
+        else if (_baseChunk.isValid()) {
+            node->chunk = _baseChunk;
+        }
         return node;
     }
 
@@ -209,8 +270,28 @@ public:
     int getScreenHeight() const { return _windowHeight; }
 
     void setActiveChunk(int chunkX, int chunkY) {
+        if (!_infiniteMap) {
+            _activeChunk = { 0, 0 };
+            ensureChunkNode(_activeChunk);
+            return;
+        }
+
         _activeChunk.x = chunkX;
         _activeChunk.y = chunkY;
+
+        ensureChunkNode(_activeChunk);
+    }
+
+    void updateActiveChunkFromWorldPosition(float worldX, float worldY) {
+        if (!_infiniteMap) return;
+        if (_tileWidth <= 0 || _tileHeight <= 0) return;
+        const int tileCol = static_cast<int>(std::floor(worldX / _tileWidth));
+        const int tileRow = static_cast<int>(std::floor(worldY / _tileHeight));
+        ChunkCoord coord;
+        int localRow = 0;
+        int localCol = 0;
+        if (!worldToChunkIndices(tileRow, tileCol, coord, localRow, localCol)) return;
+        setActiveChunk(coord.x, coord.y);
     }
 
     const MapChunk* getActiveChunk() const {
@@ -221,7 +302,12 @@ public:
 
     MapChunk* getActiveChunk() {
         ChunkNode* node = findChunkNode(_activeChunk);
-        if (!node) return nullptr;
+        if (!node) {
+            if (!_infiniteMap && _chunksHead) {
+                return &_chunksHead->chunk;
+            }
+            return nullptr;
+        }
         return &node->chunk;
     }
 
@@ -244,6 +330,11 @@ public:
         const MapChunk* chunk = getActiveChunk();
         return chunk ? chunk->getPixelHeight(_tileHeight) : 0;
     }
+
+    int getChunkPixelWidth() const { return _chunkColumns * _tileWidth; }
+    int getChunkPixelHeight() const { return _chunkRows * _tileHeight; }
+
+    bool isInfiniteMap() const { return _infiniteMap; }
 
     bool loadGame(const std::string& filename) {
         std::ifstream file(filename);
@@ -313,12 +404,34 @@ public:
 
         if (!chunk.isValid()) return false;
 
+        _baseChunk = chunk;
+        _chunkColumns = chunk.getColumnCount();
+        _chunkRows = chunk.getRowCount();
+        if (_infiniteMap && (_chunkColumns <= 0 || _chunkRows <= 0)) {
+            _infiniteMap = false;
+        }
+
         ChunkNode* node = ensureChunkNode(_activeChunk);
         node->chunk = chunk;
+
+        if (node) {
+            node->chunk = chunk;
+        }
+
         return true;
     }
 
-    int getTileID(int row, int col) const {
+    int getTileID(int row, int col) {
+        if (_infiniteMap && _chunkColumns > 0 && _chunkRows > 0) {
+            ChunkCoord coord;
+            int localRow = 0;
+            int localCol = 0;
+            if (!worldToChunkIndices(row, col, coord, localRow, localCol)) return 0;
+            ChunkNode* node = ensureChunkNode(coord);
+            if (!node) return 0;
+            return node->chunk.getTileID(localRow, localCol);
+        }
+
         const MapChunk* chunk = getActiveChunk();
         if (!chunk) return 0;
         return chunk->getTileID(row, col);

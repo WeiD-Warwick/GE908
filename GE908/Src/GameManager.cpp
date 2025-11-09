@@ -33,10 +33,15 @@ void GameManager::loadComponent() {
     _player.bind(_ctx);
     int mapWorldWidth = saveData->getActiveChunkPixelWidth();
     int mapWorldHeight = saveData->getActiveChunkPixelHeight();
-    if (mapWorldWidth <= 0) mapWorldWidth = WINDOW_WIDTH;
-    if (mapWorldHeight <= 0) mapWorldHeight = WINDOW_HEIGHT;
 
-    _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
+    if (saveData->isInfiniteMap()) {
+        _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, -1, -1);
+    }
+    else {
+        if (mapWorldWidth <= 0) mapWorldWidth = WINDOW_WIDTH;
+        if (mapWorldHeight <= 0) mapWorldHeight = WINDOW_HEIGHT;
+        _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
+    }
     _enemyProvider.load(saveData);
     _powerUpProvider.load(saveData);
 }
@@ -55,8 +60,10 @@ void GameManager::update(float deltaTime) {
 
     // 同步相机偏移到存档
     GESaveData* saveData = _mapProvider.getSaveData();
-    if (saveData)
+    if (saveData) {
         saveData->setCameraOffset(_camera.getX(), _camera.getY());
+        saveData->updateActiveChunkFromWorldPosition(body.getCenterX(), body.getCenterY());
+    }
 
     // 敌人、投射物、道具逻辑
     _enemyProvider.update(deltaTime, _ctx);

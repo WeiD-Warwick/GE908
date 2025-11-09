@@ -35,15 +35,19 @@ void GEPlayer::bind(GEContext& ctx) {
     if (_mapsManager) {
         _saveData = _mapsManager->getSaveData();
         if (_saveData) {
-            const auto* chunk = _saveData->getActiveChunk();
-            if (chunk && chunk->isValid()) {
-                int mapWorldWidth = chunk->getPixelWidth(_saveData->getTileWidth());
-                int mapWorldHeight = chunk->getPixelHeight(_saveData->getTileHeight());
+            _image.load("Src/Assets/Textures/player.png");
+            int chunkPixelW = _saveData->getChunkPixelWidth();
+            int chunkPixelH = _saveData->getChunkPixelHeight();
+            if (chunkPixelW <= 0) chunkPixelW = _image.width * 4;
+            if (chunkPixelH <= 0) chunkPixelH = _image.height * 4;
 
-                _image.load("Src/Assets/Textures/player.png");
-                setCenter(mapWorldWidth / 2.0f, mapWorldHeight / 2.0f);
-                setMapBounds(mapWorldWidth, mapWorldHeight);
-            }
+            setCenter(chunkPixelW / 2.0f, chunkPixelH / 2.0f);
+            if (_saveData->isInfiniteMap())
+                setMapBounds(-1, -1);
+            else
+                setMapBounds(chunkPixelW, chunkPixelH);
+
+            _saveData->updateActiveChunkFromWorldPosition(getCenterX(), getCenterY());
         }
     }
 }
@@ -73,13 +77,8 @@ void GEPlayer::update(float deltaTime, Window& window) {
 bool GEPlayer::collidesWithTileType(float newX, float newY, const MapProvider& maps, GECollisionType targetType) const {
     if (!_saveData) return false;
 
-    const auto* chunk = _saveData->getActiveChunk();
-    if (!chunk || !chunk->isValid()) return false;
-
     int tileW = _saveData->getTileWidth();
     int tileH = _saveData->getTileHeight();
-    int mapCols = chunk->getColumnCount();
-    int mapRows = chunk->getRowCount();
 
     float playerCenterX = newX;
     float playerCenterY = newY;
@@ -94,8 +93,6 @@ bool GEPlayer::collidesWithTileType(float newX, float newY, const MapProvider& m
         for (int dx = -1; dx <= 1; ++dx) {
             int tileX = centerTileX + dx;
             int tileY = centerTileY + dy;
-            if (tileX < 0 || tileX >= mapCols || tileY < 0 || tileY >= mapRows)
-                continue;
 
             int tileID = _saveData->getTileID(tileY, tileX);
             GETile* tile = maps.getTile(tileID);
@@ -177,18 +174,18 @@ void GEPlayer::applyEnvironmentalEffects(float deltaTime) {
 }
 
 void GEPlayer::applyMovementBounds(float& newX, float& newY) {
-    float camW = _saveData->getScreenWidth();
-    float camH = _saveData->getScreenHeight();
-    float mapW = static_cast<float>(_saveData->getActiveChunkPixelWidth());
-    float mapH = static_cast<float>(_saveData->getActiveChunkPixelHeight());
+    if (!_saveData || _saveData->isInfiniteMap() || _mapWidth <= 0 || _mapHeight <= 0) return;
 
-    if (mapW <= 0 || mapH <= 0) return;
+    float camW = static_cast<float>(_saveData->getScreenWidth());
+    float camH = static_cast<float>(_saveData->getScreenHeight());
+
+    float mapW = static_cast<float>(_mapWidth);
+    float mapH = static_cast<float>(_mapHeight);
 
     float minCenterX = camW / 2.0f;
     float maxCenterX = mapW - camW / 2.0f;
     float minCenterY = camH / 2.0f;
     float maxCenterY = mapH - camH / 2.0f;
-
 
     newX = clamp(newX, minCenterX, maxCenterX);
     newY = clamp(newY, minCenterY, maxCenterY);

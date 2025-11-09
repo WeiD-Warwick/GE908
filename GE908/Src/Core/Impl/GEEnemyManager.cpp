@@ -42,8 +42,9 @@ bool GEEnemyManager::spawnEnemyOutsideCamera(PlayerProvider& player) {
     int screenH = _saveData->getScreenHeight();
     int mapW = _saveData->getActiveChunkPixelWidth();
     int mapH = _saveData->getActiveChunkPixelHeight();
+    const bool infinite = _saveData->isInfiniteMap();
 
-    if (mapW <= 0 || mapH <= 0) return false;
+    if (!infinite && (mapW <= 0 || mapH <= 0)) return false;
 
     const int safeDistance = _saveData->getTileWidth() * 2;
     int side = rand() % 4;
@@ -72,12 +73,19 @@ bool GEEnemyManager::spawnEnemyOutsideCamera(PlayerProvider& player) {
         break;  
     }
 
-    x = clamp(x, 0.0f, static_cast<float>(mapW - 1));
-    y = clamp(y, 0.0f, static_cast<float>(mapH - 1));
+    if (!infinite) {
+        x = clamp(x, 0.0f, static_cast<float>(mapW - 1));
+        y = clamp(y, 0.0f, static_cast<float>(mapH - 1));
+    }
 
     GEEnemyType type = static_cast<GEEnemyType>(rand() % 4);
     GEEnemy* enemy = new GEEnemy(type);
-    enemy->setMapBounds(mapW, mapH);
+
+    if (infinite)
+        enemy->setMapBounds(-1, -1);
+    else
+        enemy->setMapBounds(mapW, mapH);
+
     enemy->setCenter(x, y);
 
     _enemies.add(enemy);
