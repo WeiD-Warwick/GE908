@@ -19,9 +19,10 @@ namespace Player {
     static constexpr auto PLAYER_PROJECTILE_SPEED = 300.0f;
 
     // 
-    static constexpr auto PLAYER_PROJECTILE_DAMAGE = 50;
+    static constexpr auto PLAYER_PROJECTILE_DAMAGE = 30;
     static constexpr auto PLAYER_MAX_AOE_EFFECTS = 10;
-    static constexpr auto PLAYER_MAX_AOE_TARGETS = 8;
+    static constexpr auto PLAYER_MAX_AOE_TARGETS = 4;
+    static constexpr auto PLAYER_AOE_DAMAGE = 100;
     static constexpr auto PLAYER_MAX_AUTO_ATTACK_SPEED_MULTIPLIER = 3.0f;
     static constexpr auto PLAYER_HEAL_VALUE = 50;
 }

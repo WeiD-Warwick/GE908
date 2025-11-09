@@ -29,7 +29,7 @@ public:
 	float getCenterY() const { return _centerY;}
 	int getWidth() const { return _image.width;}
 	int getHeight() const { return _image.height;}
-	int getCollisionRadius() const { return _image.width / 2;}
+    int getCollisionRadius() const { return max(_image.width, _image.height) / 2; }
 	GECollisionType getCollisionType() const { return _type; }
 
     void setCenter(float centerX, float centerY) { _centerX = centerX; _centerY = centerY; }

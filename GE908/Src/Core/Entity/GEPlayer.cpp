@@ -284,7 +284,7 @@ void GEPlayer::executeAoeSkill() {
         if (!e || !e->isAlive()) continue;
         GEEnemy& enemy = *e;
 
-        enemy.takeDamage(_aoeDamage);
+        enemy.takeDamage(Player::PLAYER_AOE_DAMAGE);
         if (!enemy.isAlive() && _enemyManager) {
             _enemyManager->registerEnemyKill(enemy.getType());
             if (_powerUpManager) {

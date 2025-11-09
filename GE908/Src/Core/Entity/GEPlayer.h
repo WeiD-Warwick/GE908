@@ -28,7 +28,6 @@ private:
 	float _aoeCooldown = 5.0f;
 	float _aoeRadius = 300.0f;
 	float _aoeEffectDuration = 0.35f;
-	int _aoeDamage = 220;
 	int _aoeTargetCount = 4;
 	bool _aoeKeyHeld = false;
 
