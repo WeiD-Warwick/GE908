@@ -1,7 +1,6 @@
+#include "GEEnemy.h"
 #include <string>
 #include <cmath>
-#include "GEEnemy.h"
-#include "../Foundation/GECollisible.h"
 
 static const std::string EnemyImagePath(GEEnemyType t) {
 	switch (t) {

@@ -125,13 +125,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Core\GEPowerUpManager.cpp" />
-    <ClCompile Include="Src\Core\GECharacter.cpp" />
-    <ClCompile Include="Src\Core\GEProjectileManager.cpp" />
-    <ClCompile Include="Src\Core\GEEnemyManager.cpp" />
-    <ClCompile Include="Src\Core\GEEnemy.cpp" />
-    <ClCompile Include="Src\Core\GEPlayer.cpp" />
-    <ClCompile Include="Src\Core\GEMapsManager.cpp" />
+    <ClCompile Include="Src\Core\Entity\GETile.h" />
+    <ClCompile Include="Src\Core\Impl\GEPowerUpManager.cpp" />
+    <ClCompile Include="Src\Core\Entity\GECharacter.cpp" />
+    <ClCompile Include="Src\Core\Impl\GEProjectileManager.cpp" />
+    <ClCompile Include="Src\Core\Impl\GEEnemyManager.cpp" />
+    <ClCompile Include="Src\Core\Entity\GEEnemy.cpp" />
+    <ClCompile Include="Src\Core\Entity\GEPlayer.cpp" />
+    <ClCompile Include="Src\Core\Impl\GEMapsManager.cpp" />
     <ClCompile Include="Src\Foundation\GECollisible.h" />
     <ClCompile Include="Src\Foundation\GEDebug.h" />
     <ClCompile Include="Src\Foundation\GEFrameTimer.h" />
@@ -141,16 +142,17 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Core\GEPowerUpManager.h" />
-    <ClInclude Include="Src\Core\GEProjectileManager.h" />
-    <ClInclude Include="Src\Core\GEEnemyManager.h" />
-    <ClInclude Include="Src\Core\GEEnemy.h" />
-    <ClInclude Include="Src\Core\GECharacter.h" />
-    <ClInclude Include="Src\Core\GEPlayer.h" />
-    <ClInclude Include="Src\Core\GEMapsManager.h" />
-    <ClInclude Include="Src\Foundation\GEArray.h" />
+    <ClInclude Include="Src\Core\Entity\GEPowerUp.h" />
+    <ClInclude Include="Src\Core\Entity\GEProjectile.h" />
+    <ClInclude Include="Src\Core\Impl\GEPowerUpManager.h" />
+    <ClInclude Include="Src\Core\Impl\GEProjectileManager.h" />
+    <ClInclude Include="Src\Core\Impl\GEEnemyManager.h" />
+    <ClInclude Include="Src\Core\Entity\GEEnemy.h" />
+    <ClInclude Include="Src\Core\Entity\GECharacter.h" />
+    <ClInclude Include="Src\Core\Entity\GEPlayer.h" />
+    <ClInclude Include="Src\Core\Impl\GEMapsManager.h" />
     <ClInclude Include="Src\Foundation\GEContext.h" />
-    <ClInclude Include="Src\Foundation\GEProvider.h" />
+    <ClInclude Include="Src\Core\Interface\GEProvider.h" />
     <ClInclude Include="Src\Foundation\GEModel.h" />
     <ClInclude Include="Src\Foundation\GESaveData.h" />
     <ClInclude Include="Src\Foundation\GEFont.h" />

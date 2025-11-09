@@ -1,7 +1,8 @@
 #pragma once
-#include "../Foundation/GECollisible.h"
-#include "../Foundation/GEModel.h"
-#include "../Foundation/GEContext.h"
+#include "../../../ThirdParty/GamesEngineeringBase.h"
+#include "../../Foundation/GECollisible.h"
+#include "../../Foundation/GEModel.h"
+#include "../../Foundation/GEContext.h"
 
 using namespace GamesEngineeringBase;
 

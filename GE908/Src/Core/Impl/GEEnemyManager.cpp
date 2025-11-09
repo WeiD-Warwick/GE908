@@ -1,7 +1,6 @@
 #include "GEEnemyManager.h"
 #include <cstdlib>
 #include <ctime>
-#include <algorithm>
 
 namespace {
     constexpr int PLAYER_COLLISION_DAMAGE = 30;

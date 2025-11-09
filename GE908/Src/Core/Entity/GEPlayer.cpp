@@ -1,10 +1,8 @@
-﻿#include <cmath>
-#include "GEPlayer.h"
-#include "GECharacter.h"
+﻿#include "GEPlayer.h"
+#include "../../Foundation/GESaveData.h"
+#include "../../Foundation/GEDebug.h"
 #include "GEEnemy.h"
-#include "GEMapsManager.h"
-#include "../Foundation/GESaveData.h"
-#include "../Foundation/GEDebug.h"
+#include <cmath>
 
 static float fireTimer = 0.0f;
 static constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
@@ -144,22 +142,20 @@ bool GEPlayer::isBlockedAt(float x, float y) const {
 }
 
 void GEPlayer::applyEnvironmentalEffects(float deltaTime) {
-    static bool wasInFire = false;                // 上一帧是否在火焰中
+    static bool wasInFire = false;
     static float fireTimer = 0.0f;
 
-    constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;  // 连续灼烧间隔
+    constexpr float FIRE_DAMAGE_INTERVAL = 1.0f;
     constexpr int FIRE_DAMAGE = 15;
 
     bool inFire = collidesWithTileType(getCenterX(), getCenterY(), *_mapsManager, GECollisionType::Fire);
 
     if (inFire) {
-        // 第一次进入火焰 → 立即受伤
         if (!wasInFire) {
             takeDamage(FIRE_DAMAGE);
             fireTimer = 0.0f;
         }
         else {
-            // 持续在火焰中 → 累积计时
             fireTimer += deltaTime;
             if (fireTimer >= FIRE_DAMAGE_INTERVAL) {
                 takeDamage(FIRE_DAMAGE);

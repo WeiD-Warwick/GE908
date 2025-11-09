@@ -1,7 +1,7 @@
 #pragma once
 #include "GECharacter.h"
-#include "../Foundation/GEProvider.h"
-#include "../Foundation/GEObjectPool.h"
+#include "../Interface/GEProvider.h"
+#include "../../Foundation/GEObjectPool.h"
 
 class GEPlayer;
 

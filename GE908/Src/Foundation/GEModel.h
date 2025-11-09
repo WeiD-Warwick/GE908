@@ -32,13 +32,3 @@ enum class GEColliderShape {
 	Circle					= 0,
 	AABB					= 1,
 };
-
-class GETile : public GECollisible {
-
-public:
-	GETile(const std::string& filename, GECollisionType collisionType)
-		: GECollisible(filename, collisionType) {
-	}
-
-	~GETile() = default;
-};

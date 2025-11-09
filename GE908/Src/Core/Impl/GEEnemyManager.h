@@ -1,9 +1,9 @@
 #pragma once
-#include "GEEnemy.h"
-#include "GEPlayer.h"
-#include "../Foundation/GESaveData.h"
-#include "../Foundation/GEProvider.h"
-#include "../Foundation/GEObjectPool.h"
+#include "../Entity/GEEnemy.h"
+#include "../Entity/GEPlayer.h"
+#include "../../Foundation/GESaveData.h"
+#include "../../Foundation/GEObjectPool.h"
+#include "../Interface/GEProvider.h"
 
 static constexpr auto MAX_ENEMIES = 1000;
 static constexpr float DEFAULT_SPAWN_INTERVAL = 6.0f;

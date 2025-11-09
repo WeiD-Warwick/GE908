@@ -1,12 +1,8 @@
 #pragma once
-#include "GEPlayer.h"
-#include "GEEnemy.h"
-#include "../Foundation/GEProvider.h"
-#include "../Foundation/GEObjectPool.h"
+#include "../../Foundation/GEObjectPool.h"
+#include "../../Foundation/GECollisible.h"
+#include "../../Foundation/GEModel.h"
 
-#define MAX_PROJECTILES 5000
-
-// ================== Projectile ==================
 class GEProjectile : public GECollisible, public GEPoolable {
 private:
     float _speed = 0.0f;
@@ -53,20 +49,4 @@ public:
         float newCenterY = getCenterY() + _dirY * _speed * deltaTime;
         setCenter(newCenterX, newCenterY);
     }
-};
-
-// ================== Projectile Manager ==================
-class GEProjectileManager : public ProjectileProvider {
-private:
-    GEObjectPool<GEProjectile*> _projectiles;
-
-public:
-    GEProjectileManager();
-    ~GEProjectileManager();
-
-    void addProjectile(ProjectileOwner from, float startPointX, float startPointY,
-        float dirX, float dirY, float speed, int damage);
-
-    void update(float deltaTime, GEContext& ctx);
-    void draw(Window& window, const GECamera& camera);
 };

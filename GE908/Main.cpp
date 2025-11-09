@@ -1,7 +1,9 @@
 #include "Src/GameManager.h"
-#include "Src/Core/GEPowerUpManager.h"
-#include "Src/Core/GEProjectileManager.h"
-#include "Src/Core/GEEnemyManager.h"
+#include "Src/Core/Impl/GEPowerUpManager.h"
+#include "Src/Core/Impl/GEProjectileManager.h"
+#include "Src/Core/Impl/GEEnemyManager.h"
+#include "Src/Core/Impl/GEMapsManager.h"
+#include "Src/Core/Entity/GEPlayer.h"
 
 int main() {
     Window window;
@@ -11,7 +13,6 @@ int main() {
     GEProjectileManager projectileManager;
     GEPowerUpManager powerUpManager;
     GEMapsManager maps;
-
 
     GameManager game(window, maps, player, enemyManager, projectileManager, powerUpManager);
     game.run();

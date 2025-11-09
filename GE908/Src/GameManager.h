@@ -3,9 +3,8 @@
 #include "Foundation/GEFrameTimer.h"
 #include "Foundation/GECamera.h"
 #include "Foundation/GESaveData.h"
-#include "Core//GEMapsManager.h"
-#include "Core/GEPlayer.h"
-#include "Foundation/GEProvider.h"
+#include "Core/Entity/GEPlayer.h"
+#include "Core/Interface/GEProvider.h"
 #include "Foundation/GEContext.h"
 
 using namespace GamesEngineeringBase;

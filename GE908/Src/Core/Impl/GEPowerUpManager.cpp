@@ -1,11 +1,10 @@
 #include "GEPowerUpManager.h"
+#include "../Entity/GEPlayer.h"
 #include <cstdlib>
 #include <ctime>
 
-namespace {
-    constexpr const char* ATTACK_SPEED_TEXTURE = "Src/Assets/Textures/attack_speed.png";
-    constexpr const char* AOE_TARGET_TEXTURE = "Src/Assets/Textures/aoe_target.png";
-}
+constexpr const char* ATTACK_SPEED_TEXTURE = "Src/Assets/Textures/attack_speed.png";
+constexpr const char* AOE_TARGET_TEXTURE = "Src/Assets/Textures/aoe_target.png";
 
 // ------------------ GEPowerUp ------------------
 GEPowerUp::GEPowerUp()

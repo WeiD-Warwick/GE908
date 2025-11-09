@@ -1,10 +1,12 @@
 #pragma once
 #include <string>
-#include "GECollisible.h"
-#include "GEModel.h"
-#include "GESaveData.h"
+#include "../../Foundation/GESaveData.h"
+#include "../../Foundation/GECollisible.h"
+#include "../../Foundation/GEModel.h"
 
 class GEContext;
+
+class GETile;
 
 class EnemyProvider {
 public:

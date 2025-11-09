@@ -1,10 +1,9 @@
 #pragma once
 #include "GECharacter.h"
-#include "GEEnemy.h"
-#include "../Foundation/GECamera.h"
-#include "../Foundation/GEModel.h"
-#include "../Foundation/GESaveData.h"
-#include "../Foundation/GEProvider.h"
+#include "../Interface/GEProvider.h"
+#include "../../Foundation/GECamera.h"
+#include "../../Foundation/GEModel.h"
+#include "../../Foundation/GESaveData.h"
 
 static constexpr auto MAX_PROJECTILES = 100;
 static constexpr auto PLAYER_PROJECTILE_SPEED = 150.0f;
@@ -13,7 +12,7 @@ static constexpr auto PLAYER_MAX_AOE_EFFECTS = 10;
 static constexpr auto PLAYER_MAX_AOE_TARGETS = 8;
 static constexpr auto PLAYER_MAX_AUTO_ATTACK_SPEED_MULTIPLIER = 3.0f;
 
-class GEMapsManager;
+class GEEnemy;
 
 class GEPlayer : public GECharacter, public PlayerProvider {
 
