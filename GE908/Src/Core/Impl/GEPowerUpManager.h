@@ -25,4 +25,7 @@ public:
     void update(float deltaTime, GEContext& ctx);
     void draw(Window& window, const GECamera& camera);
     void onEnemyDefeated(const GEPoint& position) override;
+
+    GEPowerUpManagerState snapshotState() const override;
+    void applyState(const GEPowerUpManagerState& state) override;
 };

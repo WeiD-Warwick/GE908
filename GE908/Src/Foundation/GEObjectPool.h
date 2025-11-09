@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 
 class GEPoolable {
 public:
@@ -24,6 +25,26 @@ public:
 
     GEObjectPool(const GEObjectPool&) = delete;
     GEObjectPool& operator=(const GEObjectPool&) = delete;
+
+    GEObjectPool(GEObjectPool&& other) noexcept
+        : _data(other._data), _size(other._size), _capacity(other._capacity) {
+        other._data = nullptr;
+        other._size = 0;
+        other._capacity = 0;
+    }
+
+    GEObjectPool& operator=(GEObjectPool&& other) noexcept {
+        if (this != &other) {
+            delete[] _data;
+            _data = other._data;
+            _size = other._size;
+            _capacity = other._capacity;
+            other._data = nullptr;
+            other._size = 0;
+            other._capacity = 0;
+        }
+        return *this;
+    }
 
     // ======== Basic Function ========
 
@@ -127,7 +148,7 @@ public:
     }
 
     template <typename Func>
-    void forEachActive(Func&& func) {
+    void forEachActive(Func&& func) const {
         for (unsigned int i = 0; i < _size; ++i)
             if (_data[i])
                 func(_data[i], i);

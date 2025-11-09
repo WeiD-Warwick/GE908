@@ -2,8 +2,10 @@
 #include "../../Foundation/GEModel.h"
 #include "../../Foundation/GECollisible.h"
 #include "../../Foundation/GEObjectPool.h"
+#include "../SaveLoad/GECodable.h"
+#include "../SaveLoad/GEGameState.h"
 
-class GEPowerUp : public GECollisible, public GEPoolable {
+class GEPowerUp : public GECollisible, public GEPoolable, public GECodable<GEPowerUpState> {
 private:
     bool _active = false;
     float _timeToLive = 0.0f;
@@ -18,4 +20,7 @@ public:
     bool isActiveElement() const override { return _active; }
     GEPowerUpType getType() const { return _type; }
     void update(float deltaTime);
+
+    GEPowerUpState snapshotState() const override;
+    void applyState(const GEPowerUpState& state) override;
 };

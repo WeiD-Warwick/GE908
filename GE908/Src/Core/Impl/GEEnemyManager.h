@@ -38,4 +38,7 @@ public:
     int getKillCount(GEEnemyType type) const;
 
     static bool isWaterTile(int tileID) { return tileID >= 14 && tileID <= 22; }
+
+    GEEnemyManagerState snapshotState() const override;
+    void applyState(const GEEnemyManagerState& state) override;
 };

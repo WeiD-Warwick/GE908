@@ -39,11 +39,23 @@ void GEPlayer::bind(GEContext& ctx) {
             if (chunkPixelW <= 0) chunkPixelW = _image.width * 4;
             if (chunkPixelH <= 0) chunkPixelH = _image.height * 4;
 
-            setCenter(chunkPixelW / 2.0f, chunkPixelH / 2.0f);
+            //setCenter(chunkPixelW / 2.0f, chunkPixelH / 2.0f);
             if (_saveData->isInfiniteMap())
                 setMapBounds(-1, -1);
             else
                 setMapBounds(chunkPixelW, chunkPixelH);
+
+            const GEPlayerState* state = _saveData->getPlayerState();
+            if (state) {
+                applyState(*state);
+            }
+            else {
+                setCenter(chunkPixelW / 2.0f, chunkPixelH / 2.0f);
+                float boundedX = getCenterX();
+                float boundedY = getCenterY();
+                applyMovementBounds(boundedX, boundedY);
+                setCenter(boundedX, boundedY);
+            }
 
             _saveData->updateActiveChunkFromWorldPosition(getCenterX(), getCenterY());
         }
@@ -124,7 +136,22 @@ bool GEPlayer::collidesWithEnemies(float newX, float newY, const EnemyProvider& 
 
         if (!enemy || !enemy->isAlive()) continue;
 
-        if (this->collideAt(newX, newY, *enemy))
+        const bool currentlyColliding = this->collide(*enemy);
+        if (!this->collideAt(newX, newY, *enemy))
+            continue;
+
+        if (!currentlyColliding)
+            return true;
+
+        const float currentDx = getCenterX() - enemy->getCenterX();
+        const float currentDy = getCenterY() - enemy->getCenterY();
+        const float newDx = newX - enemy->getCenterX();
+        const float newDy = newY - enemy->getCenterY();
+
+        const float currentDistSq = currentDx * currentDx + currentDy * currentDy;
+        const float newDistSq = newDx * newDx + newDy * newDy;
+
+        if (newDistSq <= currentDistSq)
             return true;
     }
     return false;
@@ -452,4 +479,40 @@ void GEPlayer::takeDamage(int value) {
     if (value <= 0) return;
     GECharacter::takeDamage(value);
     triggerDamageFlash(GEColor(255, 0, 0), 0.25f);
+}
+
+GEPlayerState GEPlayer::snapshotState() const {
+    GEPlayerState state;
+    state.centerX = getCenterX();
+    state.centerY = getCenterY();
+    state.hp = _hp;
+    state.maxHp = _maxHp;
+    state.speed = _speed;
+    state.autoAttackTimer = _autoAttackTimer;
+    state.autoAttackSpeedMultiplier = _autoAttackSpeedMultiplier;
+    state.aoeCooldownTimer = _aoeCooldownTimer;
+    state.aoeCooldown = _aoeCooldown;
+    state.contactDamageCooldownTimer = _contactDamageCooldownTimer;
+    state.aoeTargetCount = _aoeTargetCount;
+    state.aoeKeyHeld = _aoeKeyHeld;
+    return state;
+}
+
+void GEPlayer::applyState(const GEPlayerState& state) {
+    _speed = state.speed > 0 ? state.speed : _speed;
+    if (state.maxHp > 0) setMaxHP(state.maxHp);
+    setCurrentHP(state.hp);
+    _autoAttackTimer = state.autoAttackTimer;
+    _autoAttackSpeedMultiplier = max(0.1f, state.autoAttackSpeedMultiplier);
+    _aoeCooldownTimer = state.aoeCooldownTimer;
+    if (state.aoeCooldown > 0.0f) _aoeCooldown = state.aoeCooldown;
+    _contactDamageCooldownTimer = max(0.0f, state.contactDamageCooldownTimer);
+    if (state.aoeTargetCount > 0)
+        _aoeTargetCount = min(state.aoeTargetCount, Player::PLAYER_MAX_AOE_TARGETS);
+    _aoeKeyHeld = state.aoeKeyHeld;
+
+    float newX = state.centerX;
+    float newY = state.centerY;
+    applyMovementBounds(newX, newY);
+    setCenter(newX, newY);
 }

@@ -103,3 +103,22 @@ void GEEnemy::takeDamage(int value) {
     GECharacter::takeDamage(value);
     triggerDamageFlash(GEColor(255, 255, 255), 0.25f);
 }
+
+GEEnemyState GEEnemy::snapshotState() const {
+    GEEnemyState state;
+    state.type = _type;
+    state.centerX = getCenterX();
+    state.centerY = getCenterY();
+    state.hp = _hp;
+    state.maxHp = _maxHp;
+    state.attackCooldown = _attackCooldown;
+    state.activate();
+    return state;
+}
+
+void GEEnemy::applyState(const GEEnemyState& state) {
+    if (state.maxHp > 0) setMaxHP(state.maxHp);
+    setCurrentHP(state.hp);
+    _attackCooldown = state.attackCooldown;
+    setCenter(state.centerX, state.centerY);
+}

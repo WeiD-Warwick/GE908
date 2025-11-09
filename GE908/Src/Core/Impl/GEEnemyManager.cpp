@@ -24,8 +24,14 @@ void GEEnemyManager::load(GESaveData* saveData) {
     _activeEnemyCount = 0;
 
     _enemies.destroyAll();
-    _enemies.fillNull(1000);
+    _enemies.fillNull(Enemy::MAX_ENEMIES);
     resetKillCounts();
+
+    if (_saveData) {
+        if (const GEEnemyManagerState* savedState = _saveData->getEnemyManagerState()) {
+            applyState(*savedState);
+        }
+    }
 }
 
 bool GEEnemyManager::spawnEnemyOutsideCamera(PlayerProvider& player) {
@@ -144,6 +150,15 @@ void GEEnemyManager::update(float deltaTime, GEContext& ctx) {
 
     // deleate all died enemies
     _enemies.destroyInactive();
+
+    _activeEnemyCount = _enemies.countActive();
+
+    if (_saveData) {
+        // keep active chunk information current for manual saves
+        const float playerX = player.getCenterX();
+        const float playerY = player.getCenterY();
+        _saveData->updateActiveChunkFromWorldPosition(playerX, playerY);
+    }
 }
 
 void GEEnemyManager::registerEnemyKill(GEEnemyType type) {
@@ -166,4 +181,52 @@ void GEEnemyManager::removeEnemy(GEEnemy* e) {
     delete e;
     _enemies.remove(e);
     if (_activeEnemyCount > 0) --_activeEnemyCount;
+}
+
+GEEnemyManagerState GEEnemyManager::snapshotState() const {
+    GEEnemyManagerState state;
+    state.spawnTimer = _spawnTimer;
+    state.spawnInterval = _spawnInterval;
+    state.difficultyTimer = _difficultyTimer;
+    state.elapsedTime = _elapsedTime;
+    for (int i = 0; i < Enemy::ENEMY_TYPE_COUNT; ++i)
+        state.killCounts[static_cast<size_t>(i)] = _killCounts[i];
+
+    _enemies.forEachActive([&](GEEnemy* enemy, unsigned int) {
+        if (!enemy || !enemy->isAlive()) return;
+        GEEnemyState enemyState = enemy->snapshotState();
+        state.addEnemyState(enemyState);
+        });
+    return state;
+}
+
+void GEEnemyManager::applyState(const GEEnemyManagerState& state) {
+    _spawnTimer = state.spawnTimer;
+    _spawnInterval = state.spawnInterval > 0.0f ? state.spawnInterval : Enemy::DEFAULT_SPAWN_INTERVAL;
+    _difficultyTimer = state.difficultyTimer;
+    _elapsedTime = state.elapsedTime;
+
+    resetKillCounts();
+    for (int i = 0; i < Enemy::ENEMY_TYPE_COUNT; ++i)
+        _killCounts[i] = state.killCounts[static_cast<size_t>(i)];
+
+    _enemies.destroyAll();
+    _enemies.fillNull(Enemy::MAX_ENEMIES);
+
+    const bool infinite = _saveData && _saveData->isInfiniteMap();
+    const int mapW = _saveData ? _saveData->getActiveChunkPixelWidth() : 0;
+    const int mapH = _saveData ? _saveData->getActiveChunkPixelHeight() : 0;
+
+    state.forEachEnemyState([&](const GEEnemyState& enemyState) {
+        if (enemyState.hp <= 0) return;
+        GEEnemy* enemy = new GEEnemy(enemyState.type);
+        if (infinite)
+            enemy->setMapBounds(-1, -1);
+        else
+            enemy->setMapBounds(mapW, mapH);
+        enemy->applyState(enemyState);
+        _enemies.add(enemy);
+        });
+
+    _activeEnemyCount = _enemies.countActive();
 }

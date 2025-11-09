@@ -62,5 +62,8 @@ public:
     int getHP() const { return _hp; }
     bool isAlive() const { return _hp > 0; }
     void setSpeed(int speed) { _speed = speed; }
-	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth;_mapHeight = mapHeight;}
+	void setMapBounds(int mapWidth, int mapHeight) { _mapWidth = mapWidth;_mapHeight = mapHeight; }
+    int getMaxHP() const { return _maxHp; }
+    void setMaxHP(int value) { _maxHp = max(0, value); if (_hp > _maxHp) _hp = _maxHp; }
+    void setCurrentHP(int value) { _hp = std::clamp(value, 0, _maxHp); }
 };

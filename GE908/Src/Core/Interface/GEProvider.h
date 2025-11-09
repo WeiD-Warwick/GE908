@@ -3,12 +3,14 @@
 #include "../SaveLoad/GESaveData.h"
 #include "../../Foundation/GECollisible.h"
 #include "../../Foundation/GEModel.h"
+#include "../SaveLoad/GECodable.h"
+#include "../SaveLoad/GEGameState.h"
 
 class GEContext;
 
 class GETile;
 
-class EnemyProvider {
+class EnemyProvider : public GECodable<GEEnemyManagerState> {
 public:
 	virtual void load(GESaveData* saveData) = 0;
 	virtual void update(float deltaTime, GEContext& ctx) = 0;
@@ -19,14 +21,14 @@ public:
 	virtual void draw(Window& window, const GECamera& camera) = 0;
 };
 
-class ProjectileProvider {
+class ProjectileProvider : public GECodable<GEProjectileManagerState> {
 public:
 	virtual void update(float deltaTime, GEContext& ctx) = 0;
 	virtual void addProjectile(ProjectileOwner from, float startPointX, float startPointY, float dirX, float dirY, float speed, int damage) = 0;
 	virtual void draw(Window& window, const GECamera& camera) = 0;
 };
 
-class PowerUpProvider {
+class PowerUpProvider : public GECodable<GEPowerUpManagerState> {
 public:
 	virtual void load(GESaveData* saveData) = 0;
 	virtual void update(float deltaTime, GEContext& ctx) = 0;
@@ -43,7 +45,7 @@ public:
 };
 
 
-class PlayerProvider {
+class PlayerProvider : public GECodable<GEPlayerState> {
 public:
 	virtual void takeDamage(int value) = 0;
 	virtual void update(float deltaTime, Window& window) = 0;

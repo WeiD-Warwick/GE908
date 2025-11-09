@@ -30,6 +30,8 @@ void GameManager::loadComponent() {
 
     if (!saveData) return;
 
+    saveData->setWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
     _player.bind(_ctx);
     int mapWorldWidth = saveData->getActiveChunkPixelWidth();
     int mapWorldHeight = saveData->getActiveChunkPixelHeight();
@@ -42,8 +44,13 @@ void GameManager::loadComponent() {
         if (mapWorldHeight <= 0) mapWorldHeight = WINDOW_HEIGHT;
         _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
     }
+    _camera.setPosition(saveData->getCameraOffsetX(), saveData->getCameraOffsetY());
     _enemyProvider.load(saveData);
     _powerUpProvider.load(saveData);
+
+    if (const GEProjectileManagerState* projectileState = saveData->getProjectileManagerState()) {
+        _projectileProvider.applyState(*projectileState);
+    }
 }
 
 void GameManager::update(float deltaTime) {
@@ -69,6 +76,14 @@ void GameManager::update(float deltaTime) {
     _enemyProvider.update(deltaTime, _ctx);
     _projectileProvider.update(deltaTime, _ctx);
     _powerUpProvider.update(deltaTime, _ctx);
+
+    if (saveData && _window.keyPressed('P')) {
+        GEPlayerState playerState = _player.snapshotState();
+        GEEnemyManagerState enemyManagerState = _enemyProvider.snapshotState();
+        GEProjectileManagerState projectileState = _projectileProvider.snapshotState();
+        GEPowerUpManagerState powerUpState = _powerUpProvider.snapshotState();
+        saveData->saveState("text.txt", & playerState, &enemyManagerState, &projectileState, &powerUpState);
+    }
 }
 
 void GameManager::render() {

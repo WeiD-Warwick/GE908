@@ -2,18 +2,21 @@
 #include "../../Foundation/GEObjectPool.h"
 #include "../../Foundation/GECollisible.h"
 #include "../../Foundation/GEModel.h"
+#include "../../Foundation/GEConst.h"
+#include "../SaveLoad/GECodable.h"
+#include "../SaveLoad/GEGameState.h"
 
-class GEProjectile : public GECollisible, public GEPoolable {
+class GEProjectile : public GECollisible, public GEPoolable, public GECodable<GEProjectileState> {
 private:
     float _speed = 0.0f;
     float _dirX = 0.0f;
     float _dirY = 0.0f;
     int _damage = 0;
     bool _active = false;
-    ProjectileOwner _owner;
+    ProjectileOwner _owner = ProjectileOwner::FromPlayer;
 
 public:
-    GEProjectile() = default;
+    GEProjectile() : GECollisible(Projectile::PLAYER_PROJECTILE_TEXTURE, GECollisionType::Projectile) {}
 
     GEProjectile(const std::string& texturePath, ProjectileOwner owner,
         float centerX, float centerY, float dirX, float dirY,
@@ -49,4 +52,6 @@ public:
         float newCenterY = getCenterY() + _dirY * _speed * deltaTime;
         setCenter(newCenterX, newCenterY);
     }
+    GEProjectileState snapshotState() const override;
+    void applyState(const GEProjectileState& state) override;
 };

@@ -57,4 +57,9 @@ public:
         if (_mapWidth <= 0) _mapWidth = -1;
         if (_mapHeight <= 0) _mapHeight = -1;
     }
+
+    void setPosition(float x, float y) {
+        _x = x;
+        _y = y;
+    }
 };

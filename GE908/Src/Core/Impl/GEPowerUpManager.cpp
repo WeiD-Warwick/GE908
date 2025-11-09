@@ -61,6 +61,12 @@ void GEPowerUpManager::load(GESaveData* saveData) {
     _spawnTimer = 0.0f;
     _powerUps.destroyAll();
     _powerUps.fillNull(16);
+
+    if (_saveData) {
+        if (const GEPowerUpManagerState* state = _saveData->getPowerUpManagerState()) {
+            applyState(*state);
+        }
+    }
 }
 
 void GEPowerUpManager::spawnPowerUpAt(const GEPoint& point) {
@@ -124,4 +130,28 @@ void GEPowerUpManager::draw(Window& window, const GECamera& camera) {
 
 void GEPowerUpManager::onEnemyDefeated(const GEPoint& position) {
     spawnPowerUpAt(position);
+}
+
+GEPowerUpManagerState GEPowerUpManager::snapshotState() const {
+    GEPowerUpManagerState state;
+    state.spawnTimer = _spawnTimer;
+    _powerUps.forEachActive([&](GEPowerUp* powerUp, unsigned int) {
+        if (!powerUp || !powerUp->isAlive()) return;
+        GEPowerUpState powerUpState = powerUp->snapshotState();
+        state.addPowerUpState(powerUpState);
+        });
+    return state;
+}
+
+void GEPowerUpManager::applyState(const GEPowerUpManagerState& state) {
+    _spawnTimer = state.spawnTimer;
+    _powerUps.destroyAll();
+    _powerUps.fillNull(16);
+
+    state.forEachPowerUp([&](const GEPowerUpState& powerUpState) {
+        if (!powerUpState.isActiveElement()) return;
+        GEPowerUp* powerUp = new GEPowerUp();
+        powerUp->applyState(powerUpState);
+        _powerUps.add(powerUp);
+        });
 }

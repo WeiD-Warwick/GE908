@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
+#include <memory>
 #include "MapChunk.h"
+#include "GEGameState.h"
 
 class GESaveData {
 
@@ -24,6 +26,12 @@ private:
 
     uint32_t _randomSeed = 0u;
     bool _hasRandomSeed = false;
+
+    std::string _stateFilePath;
+    std::unique_ptr<GEPlayerState> _loadedPlayerState;
+    std::unique_ptr<GEEnemyManagerState> _loadedEnemyManagerState;
+    std::unique_ptr<GEProjectileManagerState> _loadedProjectileManagerState;
+    std::unique_ptr<GEPowerUpManagerState> _loadedPowerUpManagerState;
 
 private:
     bool _parseKeywordLine(const std::string& line, MapChunk& chunk);
@@ -74,4 +82,24 @@ public:
 
     bool loadGame(const std::string& filename);
     int getTileID(int row, int col);
+
+    const GEPlayerState* getPlayerState() const;
+    const GEEnemyManagerState* getEnemyManagerState() const;
+    const GEProjectileManagerState* getProjectileManagerState() const;
+    const GEPowerUpManagerState* getPowerUpManagerState() const;
+
+    bool saveState(const GEPlayerState* playerState,
+                   const GEEnemyManagerState* enemyManagerState,
+                   const GEProjectileManagerState* projectileManagerState,
+                   const GEPowerUpManagerState* powerUpManagerState) const;
+
+    bool saveState(const std::string& filename, 
+                   const GEPlayerState* playerState, 
+                   const GEEnemyManagerState* enemyManagerState,
+                   const GEProjectileManagerState* projectileManagerState,
+                   const GEPowerUpManagerState* powerUpManagerState) const;
+
+    bool loadState();
+    bool loadState(const std::string& filename);
+    const std::string& getStateFilePath() const { return _stateFilePath; }
 };

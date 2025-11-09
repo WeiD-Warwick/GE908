@@ -125,6 +125,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\Entity\GEPowerUp.cpp" />
+    <ClCompile Include="Src\Core\Entity\GEProjectile.cpp" />
     <ClCompile Include="Src\Core\Entity\GETile.h" />
     <ClCompile Include="Src\Core\SaveLoad\GESaveData.cpp" />
     <ClCompile Include="Src\Core\SaveLoad\MapChunk.h" />
@@ -154,6 +156,8 @@
     <ClInclude Include="Src\Core\Entity\GECharacter.h" />
     <ClInclude Include="Src\Core\Entity\GEPlayer.h" />
     <ClInclude Include="Src\Core\Impl\GEMapsManager.h" />
+    <ClInclude Include="Src\Core\SaveLoad\GECodable.h" />
+    <ClInclude Include="Src\Core\SaveLoad\GEGameState.h" />
     <ClInclude Include="Src\Foundation\GEContext.h" />
     <ClInclude Include="Src\Core\Interface\GEProvider.h" />
     <ClInclude Include="Src\Foundation\GEModel.h" />

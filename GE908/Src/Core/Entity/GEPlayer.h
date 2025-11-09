@@ -9,7 +9,7 @@
 
 class GEEnemy;
 
-class GEPlayer : public GECharacter, public PlayerProvider {
+class GEPlayer : public GECharacter, public PlayerProvider, public GECodable<GEPlayerState> {
 
 private:
 	GESaveData* _saveData = nullptr;
@@ -86,5 +86,8 @@ public:
 	GECollisible& collisionBody() { return *this; }
 
 	int getHP() const override { return _hp; }
+
+	GEPlayerState snapshotState() const override;
+	void applyState(const GEPlayerState& state) override;
 
 };

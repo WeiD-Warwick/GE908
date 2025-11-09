@@ -21,4 +21,7 @@ public:
 
     void update(float deltaTime, GEContext& ctx);
     void draw(Window& window, const GECamera& camera);
+
+    GEProjectileManagerState snapshotState() const override;
+    void applyState(const GEProjectileManagerState& state) override;
 };

@@ -3,6 +3,8 @@
 #include <sstream>
 #include <cmath>
 #include <cstdlib>
+#include "../../Foundation/GEModel.h"
+#include "../../Foundation/GEConst.h"
 
 GESaveData::GESaveData() = default;
 GESaveData::~GESaveData() { clearChunks(); }
@@ -53,6 +55,11 @@ void GESaveData::clearChunks() {
     _activeChunk = { 0,0 };
     _randomSeed = 0u;
     _hasRandomSeed = false;
+    _loadedPlayerState.reset();
+    _loadedEnemyManagerState.reset();
+    _loadedProjectileManagerState.reset();
+    _loadedPowerUpManagerState.reset();
+    _stateFilePath.clear();
 }
 
 ChunkNode* GESaveData::findChunkNode(const ChunkCoord& coord) {
@@ -211,6 +218,8 @@ bool GESaveData::loadGame(const std::string& filename) {
     if (!file.is_open()) return false;
 
     clearChunks();
+    _stateFilePath = filename + ".state";
+
     std::string line;
     int currentRow = 0;
     bool startReadingLayer = false;
@@ -254,6 +263,7 @@ bool GESaveData::loadGame(const std::string& filename) {
     ChunkNode* node = ensureChunkNode(_activeChunk);
     if (node) node->chunk = chunk;
 
+    loadState(_stateFilePath);
     return true;
 }
 
@@ -268,4 +278,247 @@ int GESaveData::getTileID(int row, int col) {
     }
     const MapChunk* chunk = getActiveChunk();
     return chunk ? chunk->getTileID(row, col) : 0;
+}
+
+const GEPlayerState* GESaveData::getPlayerState() const {
+    return _loadedPlayerState.get();
+}
+
+const GEEnemyManagerState* GESaveData::getEnemyManagerState() const {
+    return _loadedEnemyManagerState.get();
+}
+
+const GEProjectileManagerState* GESaveData::getProjectileManagerState() const {
+    return _loadedProjectileManagerState.get();
+}
+
+const GEPowerUpManagerState* GESaveData::getPowerUpManagerState() const {
+    return _loadedPowerUpManagerState.get();
+}
+
+bool GESaveData::saveState(const GEPlayerState* playerState,
+                           const GEEnemyManagerState* enemyManagerState,
+                           const GEProjectileManagerState* projectileManagerState,
+                           const GEPowerUpManagerState* powerUpManagerState) const {
+    if (_stateFilePath.empty()) return false;
+    return saveState(_stateFilePath, playerState, enemyManagerState, projectileManagerState, powerUpManagerState);
+}
+
+bool GESaveData::saveState(const std::string& filename,
+                           const GEPlayerState* playerState,
+                           const GEEnemyManagerState* enemyManagerState,
+                           const GEProjectileManagerState* projectileManagerState,
+                           const GEPowerUpManagerState* powerUpManagerState) const {
+
+    if (filename.empty()) return false;
+    std::ofstream file(filename);
+    if (!file.is_open()) return false;
+
+    file << "# GE runtime state\n";
+    file << "window " << _windowWidth << ' ' << _windowHeight << "\n";
+    file << "camera " << _cameraOffsetX << ' ' << _cameraOffsetY << "\n";
+    file << "chunk " << _activeChunk.x << ' ' << _activeChunk.y << "\n";
+
+    if (playerState) {
+        const auto& p = *playerState;
+        file << "player "
+            << p.centerX << ' ' << p.centerY << ' '
+            << p.hp << ' ' << p.maxHp << ' ' << p.speed << ' '
+            << p.autoAttackTimer << ' ' << p.autoAttackSpeedMultiplier << ' '
+            << p.aoeCooldownTimer << ' ' << p.aoeCooldown << ' '
+            << p.contactDamageCooldownTimer << ' '
+            << p.aoeTargetCount << ' ' << (p.aoeKeyHeld ? 1 : 0) << "\n";
+    }
+
+    if (enemyManagerState) {
+        file << "enemytimers "
+            << enemyManagerState->spawnTimer << ' '
+            << enemyManagerState->spawnInterval << ' '
+            << enemyManagerState->difficultyTimer << ' '
+            << enemyManagerState->elapsedTime << "\n";
+
+        file << "killcounts";
+        for (int value : enemyManagerState->killCounts) file << ' ' << value;
+        file << "\n";
+    }
+    else {
+        file << "enemytimers 0 0 0 0\n";
+        file << "killcounts 0 0 0 0\n";
+    }
+
+    const std::size_t enemyCount = enemyManagerState ? enemyManagerState->enemyCount() : 0;
+    file << "enemies " << enemyCount << "\n";
+    if (enemyManagerState) {
+        enemyManagerState->forEachEnemyState([&](const GEEnemyState& enemy) {
+            file << "enemy "
+                << static_cast<int>(enemy.type) << ' '
+                << enemy.centerX << ' ' << enemy.centerY << ' '
+                << enemy.hp << ' ' << enemy.maxHp << ' '
+                << enemy.attackCooldown << "\n";
+            });
+    }
+
+    const std::size_t projectileCount = projectileManagerState ? projectileManagerState->projectileCount() : 0;
+    file << "projectiles " << projectileCount << "\n";
+    if (projectileManagerState) {
+        projectileManagerState->forEachProjectile([&](const GEProjectileState& projectile) {
+            file << "projectile "
+                << static_cast<int>(projectile.owner) << ' '
+                << projectile.centerX << ' ' << projectile.centerY << ' '
+                << projectile.dirX << ' ' << projectile.dirY << ' '
+                << projectile.speed << ' ' << projectile.damage << "\n";
+            });
+    }
+
+    const std::size_t powerUpCount = powerUpManagerState ? powerUpManagerState->powerUpCount() : 0;
+    float powerUpTimer = powerUpManagerState ? powerUpManagerState->spawnTimer : 0.0f;
+    file << "poweruptimer " << powerUpTimer << "\n";
+    file << "powerups " << powerUpCount << "\n";
+    if (powerUpManagerState) {
+        powerUpManagerState->forEachPowerUp([&](const GEPowerUpState& powerUp) {
+            file << "powerup "
+                << static_cast<int>(powerUp.type) << ' '
+                << powerUp.centerX << ' ' << powerUp.centerY << ' '
+                << powerUp.remainingTime << ' ' << powerUp.timeToLive << "\n";
+            });
+    }
+
+    file.close();
+    return true;
+}
+
+bool GESaveData::loadState() {
+    if (_stateFilePath.empty()) return false;
+    return loadState(_stateFilePath);
+}
+
+bool GESaveData::loadState(const std::string& filename) {
+    if (filename.empty()) return false;
+    std::ifstream file(filename);
+    if (!file.is_open()) return false;
+
+    _stateFilePath = filename;
+    _loadedPlayerState.reset();
+    _loadedEnemyManagerState.reset();
+    _loadedProjectileManagerState.reset();
+    _loadedPowerUpManagerState.reset();
+
+    std::string line;
+    while (std::getline(file, line)) {
+        if (line.empty()) continue;
+        if (line[0] == '#') continue;
+        std::istringstream iss(line);
+        std::string key;
+        if (!(iss >> key)) continue;
+
+        if (key == "window") {
+            iss >> _windowWidth >> _windowHeight;
+        }
+        else if (key == "camera") {
+            iss >> _cameraOffsetX >> _cameraOffsetY;
+        }
+        else if (key == "chunk") {
+            int cx = 0, cy = 0;
+            if (iss >> cx >> cy) {
+                if (_infiniteMap) setActiveChunk(cx, cy);
+            }
+        }
+        else if (key == "player") {
+            GEPlayerState state;
+            int aoeHeld = 0;
+            if (iss >> state.centerX >> state.centerY >> state.hp >> state.maxHp >> state.speed
+                >> state.autoAttackTimer >> state.autoAttackSpeedMultiplier
+                >> state.aoeCooldownTimer >> state.aoeCooldown >> state.contactDamageCooldownTimer) {
+                if (iss >> state.aoeTargetCount >> aoeHeld) {
+                    state.aoeKeyHeld = (aoeHeld != 0);
+                }
+                else {
+                    state.aoeTargetCount = Player::PLAYER_MAX_AOE_TARGETS;
+                    state.aoeKeyHeld = false;
+                }
+                _loadedPlayerState = std::make_unique<GEPlayerState>(state);
+            }
+        }
+        else if (key == "enemytimers") {
+            GEEnemyManagerState state;
+            if (_loadedEnemyManagerState) state = *_loadedEnemyManagerState;
+            if (iss >> state.spawnTimer
+                >> state.spawnInterval
+                >> state.difficultyTimer
+                >> state.elapsedTime) {
+                _loadedEnemyManagerState = std::make_unique<GEEnemyManagerState>(state);
+            }
+        }
+        else if (key == "killcounts") {
+            GEEnemyManagerState state;
+            if (_loadedEnemyManagerState) state = *_loadedEnemyManagerState;
+            for (int& value : state.killCounts) value = 0;
+            int value = 0;
+            size_t index = 0;
+            while (iss >> value && index < state.killCounts.size()) {
+                state.killCounts[index++] = value;
+            }
+            _loadedEnemyManagerState = std::make_unique<GEEnemyManagerState>(state);
+        }
+        else if (key == "enemies") {
+            // count hint is optional, nothing to do.
+        }
+        else if (key == "enemy") {
+            GEEnemyState enemyState{};
+            int typeInt = 0;
+            if (iss >> typeInt
+                >> enemyState.centerX >> enemyState.centerY
+                >> enemyState.hp >> enemyState.maxHp
+                >> enemyState.attackCooldown) {
+
+                enemyState.type = static_cast<GEEnemyType>(typeInt);
+                enemyState.activate();
+                if (!_loadedEnemyManagerState)
+                    _loadedEnemyManagerState = std::make_unique<GEEnemyManagerState>();
+                _loadedEnemyManagerState->addEnemyState(enemyState);
+            }
+        }
+        else if (key == "projectiles") {
+            // count hint optional
+        }
+        else if (key == "projectile") {
+            GEProjectileState projectileState;
+            int ownerInt = 0;
+            if (iss >> ownerInt >> projectileState.centerX >> projectileState.centerY
+                >> projectileState.dirX >> projectileState.dirY
+                >> projectileState.speed >> projectileState.damage) {
+                projectileState.owner = static_cast<ProjectileOwner>(ownerInt);
+                projectileState.activate();
+                if (!_loadedProjectileManagerState)
+                    _loadedProjectileManagerState = std::make_unique<GEProjectileManagerState>();
+                _loadedProjectileManagerState->addProjectileState(projectileState);
+            }
+        }
+        else if (key == "poweruptimer") {
+            float timer = 0.0f;
+            if (iss >> timer) {
+                if (!_loadedPowerUpManagerState)
+                    _loadedPowerUpManagerState = std::make_unique<GEPowerUpManagerState>();
+                _loadedPowerUpManagerState->spawnTimer = timer;
+            }
+        }
+        else if (key == "powerups") {
+            // count hint optional
+        }
+        else if (key == "powerup") {
+            GEPowerUpState powerUpState;
+            int typeInt = 0;
+            if (iss >> typeInt >> powerUpState.centerX >> powerUpState.centerY
+                >> powerUpState.remainingTime >> powerUpState.timeToLive) {
+                powerUpState.type = static_cast<GEPowerUpType>(typeInt);
+                powerUpState.activate();
+                if (!_loadedPowerUpManagerState)
+                    _loadedPowerUpManagerState = std::make_unique<GEPowerUpManagerState>();
+                _loadedPowerUpManagerState->addPowerUpState(powerUpState);
+            }
+        }
+    }
+
+    file.close();
+    return true;
 }

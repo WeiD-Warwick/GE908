@@ -78,3 +78,24 @@ void GEProjectileManager::draw(Window& window, const GECamera& camera) {
             projectile->draw(window, camera);
         });
 }
+
+GEProjectileManagerState GEProjectileManager::snapshotState() const {
+    GEProjectileManagerState state;
+    _projectiles.forEachActive([&](GEProjectile* projectile, unsigned int) {
+        if (!projectile || !projectile->isActiveElement()) return;
+        state.addProjectileState(projectile->snapshotState());
+        });
+    return state;
+}
+
+void GEProjectileManager::applyState(const GEProjectileManagerState& state) {
+    _projectiles.destroyAll();
+    _projectiles.fillNull(Projectile::MAX_PROJECTILES);
+
+    state.forEachProjectile([&](const GEProjectileState& projectileState) {
+        if (!projectileState.isActiveElement()) return;
+        GEProjectile* projectile = new GEProjectile();
+        projectile->applyState(projectileState);
+        _projectiles.add(projectile);
+        });
+}

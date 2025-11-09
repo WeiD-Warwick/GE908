@@ -1,0 +1,17 @@
+# GE runtime state
+window 854 480
+camera 624 -173
+chunk 0 0
+player 1051.61 66.363 300 300 300 1.04897 1 0 5 0 4 0
+enemytimers 0.448962 3 9.44896 9.44896
+killcounts 0 0 0 0
+enemies 3
+enemy 3 469 833 90 150 0.839851
+enemy 2 824.878 690.347 270 300 0
+enemy 2 817.602 -209.206 300 300 0
+projectiles 3
+projectile 1 809.654 701.817 0.933197 -0.359364 100 200
+projectile 0 943.6 363.614 -0.341514 0.939877 300 30
+projectile 1 520.158 765.683 0.60506 -0.79618 100 200
+poweruptimer 9.44896
+powerups 0
