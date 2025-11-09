@@ -4,6 +4,7 @@
 #include "../../Foundation/GECollisible.h"
 #include "../../Foundation/GESaveData.h"
 #include "../Interface/GEProvider.h"
+#include "../Entity/GETile.h"
 
 using namespace GamesEngineeringBase;
 

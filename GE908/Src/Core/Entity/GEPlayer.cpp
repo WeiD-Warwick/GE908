@@ -91,7 +91,7 @@ bool GEPlayer::collidesWithTileType(float newX, float newY, const MapProvider& m
             if (tileX < 0 || tileX >= mapCols || tileY < 0 || tileY >= mapRows)
                 continue;
 
-            int tileID = _saveData->getTileID(0, tileY, tileX);
+            int tileID = _saveData->getTileID(tileY, tileX);
             GETile* tile = maps.getTile(tileID);
             if (!tile) continue;
 

@@ -57,29 +57,47 @@ GETile* GEMapsManager::getTile(int tileID) const {
 void GEMapsManager::draw(Window& window, const GECamera& camera) const {
     if (!_saveData) return;
 
-    int layers = _saveData->getLayerCount();
-    int mapWidth = _saveData->getMapColCount();
-    int mapHeight = _saveData->getMapRowCount();
-    int tileWidth = _saveData->getTileWidth();
-    int tileHeight = _saveData->getTileHeight();
+	const int layers = _saveData->getLayerCount();
+	const int mapWidth = _saveData->getMapColCount();
+	const int mapHeight = _saveData->getMapRowCount();
+	const int tileWidth = _saveData->getTileWidth();
+	const int tileHeight = _saveData->getTileHeight();
+
+	if (mapWidth <= 0 || mapHeight <= 0 || tileWidth <= 0 || tileHeight <= 0) return;
+
     int cameraOffsetX = _saveData->getCameraOffsetX();
     int cameraOffsetY = _saveData->getCameraOffsetY();
 
     int winWidth = _saveData->getScreenWidth();
     int winHeight = _saveData->getScreenHeight();
 
-    for (int layer = 0;layer < layers;layer++) {
-        for (int rowNumber = 0;rowNumber < mapHeight;rowNumber++) {
-            for (int colNumber = 0;colNumber < mapWidth;colNumber++) {
-                int tileID = _saveData->getTileID(layer, rowNumber, colNumber);
-                GETile* tile = getTile(tileID);
-				if (!tile) continue;
+	const float cameraX = camera.getX();
+	const float cameraY = camera.getY();
+	const float cameraRight = cameraX + static_cast<float>(camera.getWidth());
+	const float cameraBottom = cameraY + static_cast<float>(camera.getHeight());
 
-				const float tileCenterX = (colNumber + 0.5f) * tileWidth;
-				const float tileCenterY = (rowNumber + 0.5f) * tileHeight;
-				tile->setCenter(tileCenterX, tileCenterY);
-				tile->draw(window, camera);
-            }
-        }
-    }
+	int minCol = static_cast<int>(std::floor(cameraX / tileWidth));
+	int maxCol = static_cast<int>(std::floor((cameraRight - 1.0f) / tileWidth));
+	int minRow = static_cast<int>(std::floor(cameraY / tileHeight));
+	int maxRow = static_cast<int>(std::floor((cameraBottom - 1.0f) / tileHeight));
+
+	if (maxCol < 0 || maxRow < 0 || minCol >= mapWidth || minRow >= mapHeight)
+		return;
+
+	if (minCol < 0) minCol = 0;
+	if (minRow < 0) minRow = 0;
+	if (maxCol >= mapWidth) maxCol = mapWidth - 1;
+	if (maxRow >= mapHeight) maxRow = mapHeight - 1;
+
+	for (int rowNumber = minRow; rowNumber <= maxRow; rowNumber++) {
+		for (int colNumber = minCol; colNumber <= maxCol; colNumber++) {
+			int tileID = _saveData->getTileID(rowNumber, colNumber);
+			GETile* tile = getTile(tileID);
+			if (!tile) continue;
+			const float tileCenterX = (colNumber + 0.5f) * tileWidth;
+			const float tileCenterY = (rowNumber + 0.5f) * tileHeight;
+			tile->setCenter(tileCenterX, tileCenterY);
+			tile->draw(window, camera);
+		}
+	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "GECharacter.h"
+#include "GETile.h"
 #include "../Interface/GEProvider.h"
 #include "../../Foundation/GECamera.h"
 #include "../../Foundation/GEModel.h"
