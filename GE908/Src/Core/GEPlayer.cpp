@@ -28,20 +28,25 @@ GEPlayer::GEPlayer()
     }
 }
 
-void GEPlayer::bindWorldContext(const MapService* maps, EnemyService* enemies, ProjectileService* projectiles, PowerUpService* powerUps) {
-    _mapsManager = maps;
-    _enemyManager = enemies;
-    _projectileManager = projectiles;
-    _powerUpManager = powerUps;
-    _saveData = maps->getSaveData();
+void GEPlayer::bind(GEContext& ctx) {
+    _mapsManager = &ctx.mapProvider();
+    _enemyManager = &ctx.enemyProvider();
+    _projectileManager = &ctx.projectileProvider();
+    _powerUpManager = &ctx.powerupProvider();
 
-    int mapWorldWidth = _saveData->getMapTotalWidth();
-    int mapWorldHeight = _saveData->getMapTotalHeight();
+    if (_mapsManager) {
+        _saveData = _mapsManager->getSaveData();
+        if (_saveData) {
+            int mapWorldWidth = _saveData->getMapTotalWidth();
+            int mapWorldHeight = _saveData->getMapTotalHeight();
 
-    _image.load("Src/Assets/Textures/player.png");
-    setCenter(mapWorldWidth / 2.0f, mapWorldHeight / 2.0f);
-    setMapBounds(mapWorldWidth, mapWorldHeight);
+            _image.load("Src/Assets/Textures/player.png");
+            setCenter(mapWorldWidth / 2.0f, mapWorldHeight / 2.0f);
+            setMapBounds(mapWorldWidth, mapWorldHeight);
+        }
+    }
 }
+
 
 void GEPlayer::update(float deltaTime, Window& window) {
     updateCharacterState(deltaTime);
@@ -64,7 +69,7 @@ void GEPlayer::update(float deltaTime, Window& window) {
     applyEnvironmentalEffects(deltaTime);
 }
 
-bool GEPlayer::collidesWithTileType(float newX, float newY, const MapService& maps, GECollisionType targetType) const {
+bool GEPlayer::collidesWithTileType(float newX, float newY, const MapProvider& maps, GECollisionType targetType) const {
     if (!_saveData) return false;
 
     int tileW = _saveData->getTileWidth();
@@ -113,7 +118,7 @@ bool GEPlayer::collidesWithTileType(float newX, float newY, const MapService& ma
     return false;
 }
 
-bool GEPlayer::collidesWithEnemies(float newX, float newY, const EnemyService& enemyManager) const {
+bool GEPlayer::collidesWithEnemies(float newX, float newY, const EnemyProvider& enemyManager) const {
     int enemyCount = enemyManager.getEnemyCount();
     for (int i = 0;i < enemyCount;i++) {
         GEEnemy* enemy = static_cast<GEEnemy*>(enemyManager.getEnemyAt(i));
@@ -268,21 +273,24 @@ void GEPlayer::executeAoeSkill() {
     if (topCount <= 0) return;
 
     // show range of aoe
-    spawnAoeEffect(originX, originY, _aoeRadius, GEColor(0, 0, 255));
+    spawnAoeEffect(originX, originY, _aoeRadius, BLUE);
 
     // show hit vfx of aoe
     const float IMPACT_RADIUS = 30.0f;
 
     for (int i = 0;i < topCount;++i) {
-        GEEnemy* enemy = topTargets[i];
-        enemy->takeDamage(_aoeDamage);
-        if (!enemy->isAlive() && _enemyManager) {
-            _enemyManager->registerEnemyKill(enemy->getType());
+        GEEnemy* e = topTargets[i];
+        if (!e || !e->isAlive()) continue;
+        GEEnemy& enemy = *e;
+
+        enemy.takeDamage(_aoeDamage);
+        if (!enemy.isAlive() && _enemyManager) {
+            _enemyManager->registerEnemyKill(enemy.getType());
             if (_powerUpManager) {
-                _powerUpManager->onEnemyDefeated(GEPoint(enemy->getCenterX(), enemy->getCenterY()));
+                _powerUpManager->onEnemyDefeated(GEPoint(enemy.getCenterX(), enemy.getCenterY()));
             }
         }
-        spawnAoeEffect(enemy->getCenterX(), enemy->getCenterY(), IMPACT_RADIUS, GEColor(255, 0, 0));
+        spawnAoeEffect(enemy.getCenterX(), enemy.getCenterY(), IMPACT_RADIUS, GREEN);
     }
 
     // reset skill cooldown time
@@ -416,10 +424,6 @@ void GEPlayer::drawCircle(Window& window, const GECamera& camera, float centerX,
         if (y1 >= 0 && y1 < winH) window.draw(x, y1, color.r, color.g, color.b);
         if (y2 >= 0 && y2 < winH) window.draw(x, y2, color.r, color.g, color.b);
     }
-}
-
-void GEPlayer::onEvent(const GEEvent& event)
-{
 }
 
 void GEPlayer::draw(Window& window, const GECamera& camera) const {

@@ -1,11 +1,11 @@
 #pragma once
 #include "../Foundation/GECollisible.h"
-#include "../Foundation/GEObservable.h"
 #include "../Foundation/GEModel.h"
+#include "../Foundation/GEContext.h"
 
 using namespace GamesEngineeringBase;
 
-class GECharacter : public GECollisible, public GEObserver {
+class GECharacter : public GECollisible {
 
 protected:
 	int _width = 0;
@@ -49,6 +49,8 @@ public:
 
     virtual ~GECharacter() = default;
     virtual void takeDamage(int value);
+
+    virtual void bind(GEContext& ctx) = 0;
 
     bool canReceiveContactDamage() const { return _contactDamageCooldownTimer <= 0.0f; }
     void startContactDamageCooldown();

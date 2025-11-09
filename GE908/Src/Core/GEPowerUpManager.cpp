@@ -92,7 +92,7 @@ void GEPowerUpManager::spawnPowerUpAt(const GEPoint point) {
     }
 }
 
-void GEPowerUpManager::update(float deltaTime, PlayerService& player) {
+void GEPowerUpManager::update(float deltaTime, GEContext& ctx) {
     if (!_saveData) return;
 
     _spawnTimer += deltaTime;
@@ -107,8 +107,8 @@ void GEPowerUpManager::update(float deltaTime, PlayerService& player) {
         powerUp->update(deltaTime);
         if (!powerUp->isActive()) continue;
 
-        if (powerUp->collide(player.collisionBody())) {
-            player.applyPowerUp(powerUp->getType());
+        if (powerUp->collide(ctx.playerProvider().collisionBody())) {
+            ctx.playerProvider().applyPowerUp(powerUp->getType());
             powerUp->deactivate();
         }
     }

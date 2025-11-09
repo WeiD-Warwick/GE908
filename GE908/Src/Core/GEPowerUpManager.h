@@ -26,7 +26,7 @@ public:
     void update(float deltaTime);
 };
 
-class GEPowerUpManager : public PowerUpService {
+class GEPowerUpManager : public PowerUpProvider {
 private:
     static constexpr int MAX_POWERUPS = 16;
     static constexpr float SPAWN_INTERVAL_SECONDS = 10.0f;
@@ -46,7 +46,7 @@ public:
     ~GEPowerUpManager();
 
     void load(GESaveData* saveData);
-    void update(float deltaTime, PlayerService& player);
+    void update(float deltaTime, GEContext& ctx);
     void draw(Window& window, const GECamera& camera);
     void onEnemyDefeated(const GEPoint& position) override;
 };

@@ -1,6 +1,7 @@
 #include <string>
 #include <cmath>
 #include "GEEnemy.h"
+#include "../Foundation/GECollisible.h"
 
 static const std::string EnemyImagePath(GEEnemyType t) {
 	switch (t) {
@@ -12,6 +13,9 @@ static const std::string EnemyImagePath(GEEnemyType t) {
 	}
 }
 
+void GEEnemy::bind(GEContext& ctx) {
+}
+
 void GEEnemy::applyMovementBounds(float& newX, float& newY) {
     float minCenterX = _width / 2.0f;
     float maxCenterX = _mapWidth - _width / 2.0f;
@@ -20,10 +24,6 @@ void GEEnemy::applyMovementBounds(float& newX, float& newY) {
 
     newX = clamp(newX, minCenterX, maxCenterX);
     newY = clamp(newY, minCenterY, maxCenterY);
-}
-
-void GEEnemy::onEvent(const GEEvent& event)
-{
 }
 
 GEEnemy::GEEnemy(GEEnemyType type)
@@ -60,9 +60,7 @@ GEEnemy::GEEnemy(GEEnemyType type)
 
 GEEnemy::~GEEnemy() = default;
 
-void GEEnemy::update(float deltaTime,
-    float playerCenterX, float playerCenterY,
-    ProjectileService& projectileManager) {
+void GEEnemy::update(float deltaTime, float playerCenterX, float playerCenterY, GEContext& ctx) {
     updateCharacterState(deltaTime);
 
     if (!isAlive()) return;
@@ -91,8 +89,7 @@ void GEEnemy::update(float deltaTime,
 
         vx /= len;
         vy /= len;
-
-        projectileManager.addProjectile(ProjectileOwner::FromEnemy, cx, cy, vx, vy, 100.0f, 200);
+        ctx.projectileProvider().addProjectile(ProjectileOwner::FromEnemy, cx, cy, vx, vy, 100.0f, 200);
     }
 }
 

@@ -2,11 +2,11 @@
 #include "../../ThirdParty/GamesEngineeringBase.h"
 #include "../Foundation/GECollisible.h"
 #include "../Foundation/GESaveData.h"
-#include "../Foundation/GEServices.h"
+#include "../Foundation/GEProvider.h"
 
 using namespace GamesEngineeringBase;
 
-class GEMapsManager : public MapService {
+class GEMapsManager : public MapProvider {
 private:
     GETile** _tiles = nullptr;// image cache
     int _tileCount = 0;

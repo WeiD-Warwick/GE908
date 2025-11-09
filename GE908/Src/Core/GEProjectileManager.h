@@ -1,7 +1,7 @@
 #pragma once
 #include "GEPlayer.h"
 #include "GEEnemy.h"
-#include "../Foundation/GEServices.h"
+#include "../Foundation/GEProvider.h"
 
 #define MAX_PROJECTILES 5000
 
@@ -39,7 +39,7 @@ public:
     }
 };
 
-class GEProjectileManager : public ProjectileService {
+class GEProjectileManager : public ProjectileProvider {
 
 private:
 
@@ -53,6 +53,6 @@ public:
     void addProjectile(ProjectileOwner from, float startPointX, float startPointY,
         float dirX, float dirY, float speed, int damage);
 
-    void update(float deltaTime, EnemyService& enemyManager, PlayerService& player, PowerUpService& powerUpManager);
+    void update(float deltaTime, GEContext& ctx);
     void draw(Window& window, const GECamera& camera);
 };

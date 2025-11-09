@@ -1,96 +1,105 @@
-﻿#include <string>
-#include "GameManager.h"
+﻿#include "GameManager.h"
 #include "Foundation/GEDebug.h"
+#include <string>
+
 #define WINDOW_WIDTH 854
 #define WINDOW_HEIGHT 480
 
-const GEColor fpsColor = GEColor(255, 0, 0);
-
 using namespace GamesEngineeringBase;
 
-GameManager::GameManager(Window& window, MapService& mapSvc, PlayerService& player, EnemyService& enemySvc, ProjectileService& projectileSvc, PowerUpService& powerUpSvc) 
-	: _window(window),
-	_mapService(mapSvc),
-	_player(player),
-	_enemyService(enemySvc),
-	_projectileService(projectileSvc),
-	_powerUpService(powerUpSvc),
-	_font(),
-	_isRunning(false) {}
+void GameManager::run() {
+    _isRunning = true;
+    loadComponent();
 
-GameManager::~GameManager() = default;
+    while (_isRunning) { 
+        GEFrameTimer::shared().beginFrame();
+        float deltaTime = GEFrameTimer::shared().getDeltaTime();
+
+        update(deltaTime);
+        render();
+
+        GEFrameTimer::shared().endFrame(); 
+    }
+}
 
 void GameManager::loadComponent() {
-	_font.load();
-	_mapService.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
-	_saveData = _mapService.getSaveData();
+    _font.load();
+    _mapProvider.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
 
-	if (_saveData) {
-		_player.bindWorldContext(&_mapService, &_enemyService, &_projectileService, &_powerUpService);
+    GESaveData* saveData = _mapProvider.getSaveData();
 
-		int mapWorldWidth = _saveData->getMapTotalWidth();
-		int mapWorldHeight = _saveData->getMapTotalHeight();
-		_camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
-		_enemyService.load(_saveData);
-		_powerUpService.load(_saveData);
-	}
+    if (!saveData) return;
+
+    GEPlayer* playerImpl = dynamic_cast<GEPlayer*>(&_player);
+    if (playerImpl)
+        playerImpl->bind(_ctx);
+
+    int mapWorldWidth = saveData->getMapTotalWidth();
+    int mapWorldHeight = saveData->getMapTotalHeight();
+    _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
+
+    _enemyProvider.load(saveData);
+    _powerUpProvider.load(saveData);
 }
 
 void GameManager::update(float deltaTime) {
-	_window.checkInput();
-	GEDebug::shared().updateFromInput(_window);
-	_player.update(deltaTime, _window);
-	_camera.followPlayer(_player.collisionBody().getOriginX(), _player.collisionBody().getOriginY(), _player.collisionBody().getWidth(), _player.collisionBody().getHeight());
-	_saveData->setCameraOffset(_camera.getX(), _camera.getY());
-	_enemyService.update(deltaTime, &_player, _projectileService);
-	_projectileService.update(deltaTime, _enemyService, _player, _powerUpService);
-	_powerUpService.update(deltaTime, _player);
+    _window.checkInput();
+    GEDebug::shared().updateFromInput(_window);
+
+    // 玩家逻辑
+    _player.update(deltaTime, _window);
+
+    // 相机跟随玩家
+    auto& body = _player.collisionBody();
+    _camera.followPlayer(body.getOriginX(), body.getOriginY(),
+        body.getWidth(), body.getHeight());
+
+    // 同步相机偏移到存档
+    GESaveData* saveData = _mapProvider.getSaveData();
+    if (saveData)
+        saveData->setCameraOffset(_camera.getX(), _camera.getY());
+
+    // 敌人、投射物、道具逻辑
+    _enemyProvider.update(deltaTime, _ctx);
+    _projectileProvider.update(deltaTime, _ctx);
+    _powerUpProvider.update(deltaTime, _ctx);
 }
 
 void GameManager::render() {
-	_window.clear();
-	_mapService.draw(_window, _camera);
-	_player.draw(_window, _camera);
-	_enemyService.draw(_window, _camera);
-	_projectileService.draw(_window, _camera);
-	_powerUpService.draw(_window, _camera);
+    _window.clear();
 
-	drawText();
-	_window.present();
-}
+    _mapProvider.draw(_window, _camera);
+    _enemyProvider.draw(_window, _camera);
+    _projectileProvider.draw(_window, _camera);
+    _player.draw(_window, _camera);
+    _powerUpProvider.draw(_window, _camera);
 
-void GameManager::run() {
-	_isRunning = true;
-	loadComponent();
-
-	while (_isRunning) {
-		GEFrameTimer::shared().beginFrame();
-		float deltaTime = GEFrameTimer::shared().getDeltaTime();
-
-		update(deltaTime);
-		render();
-
-		GEFrameTimer::shared().endFrame();
-	}
-}
-
-
-void GameManager::stop() {
-	_isRunning = false;
-
+    drawText();
+    _window.present();
 }
 
 void GameManager::drawText() {
-	int killTextY = 20;
-	_font.draw("Normal: " + std::to_string(_enemyService.getKillCount(GEEnemyType::Normal)), GEPoint(20, killTextY), fpsColor, _window);
-	killTextY += 20;
-	_font.draw("Fast: " + std::to_string(_enemyService.getKillCount(GEEnemyType::Fast)), GEPoint(20, killTextY), fpsColor, _window);
-	killTextY += 20;
-	_font.draw("Heavy: " + std::to_string(_enemyService.getKillCount(GEEnemyType::Heavy)), GEPoint(20, killTextY), fpsColor, _window);
-	killTextY += 20;
-	_font.draw("Static: " + std::to_string(_enemyService.getKillCount(GEEnemyType::StaticShooter)), GEPoint(20, killTextY), fpsColor, _window);
-	
-	_font.draw("FPS:" + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())), GEPoint(20, 400), fpsColor, _window);
-	_font.draw("HP:" + std::to_string(_player.getHP()), GEPoint(200, 400), fpsColor, _window);
-	_font.draw("Skill: " + std::to_string(_player.getAOECooldownTime()), GEPoint(400, 400), fpsColor, _window);
+    int y = 20;
+    _font.draw("Normal: " + std::to_string(_enemyProvider.getKillCount(GEEnemyType::Normal)),
+        GEPoint(20, y), RED, _window);
+    y += 20;
+    _font.draw("Fast: " + std::to_string(_enemyProvider.getKillCount(GEEnemyType::Fast)),
+        GEPoint(20, y), RED, _window);
+    y += 20;
+    _font.draw("Heavy: " + std::to_string(_enemyProvider.getKillCount(GEEnemyType::Heavy)),
+        GEPoint(20, y), RED, _window);
+    y += 20;
+    _font.draw("Static: " + std::to_string(_enemyProvider.getKillCount(GEEnemyType::StaticShooter)),
+        GEPoint(20, y), RED, _window);
+
+    _font.draw("FPS: " + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())),
+        GEPoint(20, 400), RED, _window);
+    _font.draw("HP: " + std::to_string(_player.getHP()),
+        GEPoint(200, 400), RED, _window);
+    _font.draw("Skill: " + std::to_string(static_cast<int>(_player.getAOECooldownTime())),
+        GEPoint(400, 400), RED, _window);
+}
+
+void GameManager::stop() {
+    _isRunning = false;
 }

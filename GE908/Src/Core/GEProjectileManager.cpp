@@ -25,7 +25,7 @@ void GEProjectileManager::addProjectile(ProjectileOwner from, float startPointX,
     }
 }
 
-void GEProjectileManager::update(float deltaTime, EnemyService& enemyManager, PlayerService& player, PowerUpService& powerUpManager) {
+void GEProjectileManager::update(float deltaTime, GEContext& ctx) {
     for (int i = 0;i < MAX_PROJECTILES;i++) {
         GEProjectile* projectile = _projectiles[i];
 
@@ -34,22 +34,22 @@ void GEProjectileManager::update(float deltaTime, EnemyService& enemyManager, Pl
         projectile->update(deltaTime);
 
         if (projectile->getOwner() == ProjectileOwner::FromPlayer) {
-            int n = enemyManager.getEnemyCount();
+            int n = ctx.enemyProvider().getEnemyCount();
             for (int j = 0;j < n;j++) {
-                GEEnemy* enemy = static_cast<GEEnemy*>(enemyManager.getEnemyAt(j));
+                GEEnemy* enemy = static_cast<GEEnemy*>(ctx.enemyProvider().getEnemyAt(j));
                 if (enemy && enemy->isAlive() && projectile->collide(*enemy)) {
                     enemy->takeDamage(projectile->getDamage());
                     if (!enemy->isAlive()) {
-                        enemyManager.registerEnemyKill(enemy->getType());
-                        powerUpManager.onEnemyDefeated(GEPoint(enemy->getCenterX(), enemy->getCenterY()));
+                        ctx.enemyProvider().registerEnemyKill(enemy->getType());
+                        ctx.powerupProvider().onEnemyDefeated(GEPoint(enemy->getCenterX(), enemy->getCenterY()));
                     }
                     projectile->deactivate();
                     break;
                 }
             }
         } else {
-            if (projectile->collide(player.collisionBody())) {
-                player.takeDamage(projectile->getDamage());
+            if (projectile->collide(ctx.playerProvider().collisionBody())) {
+                ctx.playerProvider().takeDamage(projectile->getDamage());
                 projectile->deactivate();
             }
         }

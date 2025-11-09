@@ -35,6 +35,10 @@ struct GEColor {
     GEColor(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(b) {}
 };
 
+static const GEColor RED = GEColor(255, 0, 0);
+static const GEColor GREEN = GEColor(0, 255, 0);
+static const GEColor BLUE = GEColor(0, 0, 255);
+
 struct GEPoint {
     float x = 0.0f;
     float y = 0.0f;

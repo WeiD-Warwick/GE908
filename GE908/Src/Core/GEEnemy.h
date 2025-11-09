@@ -1,6 +1,6 @@
 #pragma once
 #include "GECharacter.h"
-#include "../Foundation/GEServices.h"
+#include "../Foundation/GEProvider.h"
 
 class GEPlayer;
 
@@ -11,15 +11,15 @@ private:
 	float _attackRate = 2.0f;
 	bool _isStatic = false;
 
-	void applyMovementBounds(float& newX, float& newY) override;
+	void bind(GEContext& ctx) override;
 
-	void onEvent(const GEEvent& event) override;
+	void applyMovementBounds(float& newX, float& newY) override;
 public:
 	GEEnemy(GEEnemyType type);
 	~GEEnemy();
 
 	GEEnemyType getType() const { return _type; }
-	void update(float deltaTime, float playerCenterX, float playerCenterY, ProjectileService& projectileManager);
+	void update(float deltaTime, float playerCenterX, float playerCenterY, GEContext& ctx);
 	bool getIsStatic() const { return _isStatic; }
 	void draw(Window& window, const GECamera& camera) const override;
 	void takeDamage(int value) override;

@@ -148,14 +148,12 @@
     <ClInclude Include="Src\Core\GEPlayer.h" />
     <ClInclude Include="Src\Core\GEMapsManager.h" />
     <ClInclude Include="Src\Foundation\GEArray.h" />
-    <ClInclude Include="Src\Foundation\GEServices.h" />
-    <ClInclude Include="Src\Foundation\GEEntity.h" />
+    <ClInclude Include="Src\Foundation\GEContext.h" />
+    <ClInclude Include="Src\Foundation\GEProvider.h" />
     <ClInclude Include="Src\Foundation\GEModel.h" />
-    <ClInclude Include="Src\Foundation\GEObservable.h" />
     <ClInclude Include="Src\Foundation\GESaveData.h" />
     <ClInclude Include="Src\Foundation\GEFont.h" />
     <ClInclude Include="Src\Foundation\GECamera.h" />
-    <ClInclude Include="Src\Foundation\GEWorld.h" />
     <ClInclude Include="Src\GameManager.h" />
     <ClInclude Include="ThirdParty\GamesEngineeringBase.h" />
   </ItemGroup>

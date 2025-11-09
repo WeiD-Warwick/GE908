@@ -30,7 +30,7 @@ void GEEnemyManager::load(GESaveData* saveData) {
     resetKillCounts();
 }
 
-void GEEnemyManager::spawnEnemyOutsideCamera(PlayerService* player) {
+void GEEnemyManager::spawnEnemyOutsideCamera(PlayerProvider& player) {
     if (_enemyCount >= MAX_ENEMIES) return;
 
     float camOffsetX = _saveData->getCameraOffsetX();
@@ -91,7 +91,7 @@ void GEEnemyManager::draw(Window& window, const GECamera& camera) {
     }
 }
 
-void GEEnemyManager::update(float deltaTime, PlayerService* player, ProjectileService& projectileManager) {
+void GEEnemyManager::update(float deltaTime, GEContext& ctx) {
     _spawnTimer += deltaTime;
     _difficultyTimer += deltaTime;
     _elapsedTime += deltaTime;
@@ -105,7 +105,7 @@ void GEEnemyManager::update(float deltaTime, PlayerService* player, ProjectileSe
     else {
         while (_spawnTimer >= _spawnInterval) {
             const int previousCount = _enemyCount;
-            spawnEnemyOutsideCamera(player);
+            spawnEnemyOutsideCamera(ctx.playerProvider());
             _spawnTimer -= _spawnInterval;
 
             if (_enemyCount == previousCount || _enemyCount >= activeEnemyCap) {
@@ -122,32 +122,36 @@ void GEEnemyManager::update(float deltaTime, PlayerService* player, ProjectileSe
         _spawnInterval = max(_spawnInterval - SPAWN_INTERVAL_STEP, MIN_SPAWN_INTERVAL);
     }
 
-    for (int i = 0;i < _enemyCount;i++) {
-        GEEnemy* enemy = _enemies[i];
-        if (!enemy || !enemy->isAlive()) continue;
+    GEPlayer& player = static_cast<GEPlayer&>(ctx.playerProvider());
+    for (int i = 0; i < _enemyCount; i++) {
 
-        const float previousX = enemy->getCenterX();
-        const float previousY = enemy->getCenterY();
+        GEEnemy* e = _enemies[i];
+        if (!e || !e->isAlive()) continue;
 
-        enemy->update(deltaTime, player->collisionBody().getCenterX(), player->collisionBody().getCenterY(), projectileManager);
+        GEEnemy& enemy = *e;
 
-        if (enemy->collide(player->collisionBody())) {
-            enemy->setCenter(previousX, previousY);
+        const float previousX = enemy.getCenterX();
+        const float previousY = enemy.getCenterY();
+
+        enemy.update(deltaTime, player.getCenterX(), player.getCenterY(), ctx);
+
+        if (enemy.collide(player)) {
+            enemy.setCenter(previousX, previousY);
 
 
-            //if (player->canReceiveContactDamage()) {
-            //    player->takeDamage(PLAYER_COLLISION_DAMAGE);
-            //    player->startContactDamageCooldown();
-            //}
+            if (player.canReceiveContactDamage()) {
+                player.takeDamage(PLAYER_COLLISION_DAMAGE);
+                player.startContactDamageCooldown();
+            }
 
-            //if (enemy->canReceiveContactDamage()) {
-            //    enemy->takeDamage(ENEMY_COLLISION_DAMAGE);
-            //    enemy->startContactDamageCooldown();
+            if (enemy.canReceiveContactDamage()) {
+                enemy.takeDamage(ENEMY_COLLISION_DAMAGE);
+                enemy.startContactDamageCooldown();
 
-            //    if (!enemy->isAlive()) {
-            //        registerEnemyKill(enemy->getType());
-            //    }
-            //}
+                if (!enemy.isAlive()) {
+                    registerEnemyKill(enemy.getType());
+                }
+            }
         }
     }
 }

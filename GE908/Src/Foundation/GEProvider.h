@@ -4,17 +4,12 @@
 #include "GEModel.h"
 #include "GESaveData.h"
 
-class ProjectileService;
-class MapService;
-class PowerUpService;
-class MapService;
-class PlayerService;
+class GEContext;
 
-
-class EnemyService {
+class EnemyProvider {
 public:
 	virtual void load(GESaveData* saveData) = 0;
-	virtual void update(float deltaTime, PlayerService* player, ProjectileService& projectileManager) = 0;
+	virtual void update(float deltaTime, GEContext& ctx) = 0;
 	virtual int getEnemyCount() const = 0;
 	virtual GECollisible* getEnemyAt(int index) const = 0;
 	virtual void registerEnemyKill(GEEnemyType type) = 0;
@@ -22,22 +17,22 @@ public:
 	virtual void draw(Window& window, const GECamera& camera) = 0;
 };
 
-class ProjectileService {
+class ProjectileProvider {
 public:
-	virtual void update(float deltaTime, EnemyService& enemyManager, PlayerService& player, PowerUpService& powerUpManager) = 0;
+	virtual void update(float deltaTime, GEContext& ctx) = 0;
 	virtual void addProjectile(ProjectileOwner from, float startPointX, float startPointY, float dirX, float dirY, float speed, int damage) = 0;
 	virtual void draw(Window& window, const GECamera& camera) = 0;
 };
 
-class PowerUpService {
+class PowerUpProvider {
 public:
 	virtual void load(GESaveData* saveData) = 0;
-	virtual void update(float deltaTime, PlayerService& player) = 0;
+	virtual void update(float deltaTime, GEContext& ctx) = 0;
 	virtual void draw(Window& window, const GECamera& camera) = 0;
 	virtual void onEnemyDefeated(const GEPoint& position) = 0;
 };
 
-class MapService {
+class MapProvider {
 public:
 	virtual GESaveData* getSaveData() const = 0;
 	virtual GETile* getTile(int tileID) const = 0;
@@ -46,7 +41,7 @@ public:
 };
 
 
-class PlayerService {
+class PlayerProvider {
 public:
 	virtual void takeDamage(int value) = 0;
 	virtual void update(float deltaTime, Window& window) = 0;
@@ -55,6 +50,6 @@ public:
 	virtual int getHP() const = 0;
 	virtual float getAOECooldownTime() const = 0;
 	virtual void draw(Window& window, const GECamera& camera) const = 0;
-	virtual void bindWorldContext(const MapService* maps, EnemyService* enemies, ProjectileService* projectiles, PowerUpService* powerUps) = 0;
+	virtual void bind(GEContext& ctx) = 0;
 };
 

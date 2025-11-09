@@ -12,6 +12,7 @@ int main() {
     GEPowerUpManager powerUpManager;
     GEMapsManager maps;
 
+
     GameManager game(window, maps, player, enemyManager, projectileManager, powerUpManager);
     game.run();
     return 0;

@@ -4,7 +4,7 @@
 #include "../Foundation/GECamera.h"
 #include "../Foundation/GEModel.h"
 #include "../Foundation/GESaveData.h"
-#include "../Foundation/GEServices.h"
+#include "../Foundation/GEProvider.h"
 
 static constexpr auto MAX_PROJECTILES = 100;
 static constexpr auto PLAYER_PROJECTILE_SPEED = 150.0f;
@@ -15,14 +15,14 @@ static constexpr auto PLAYER_MAX_AUTO_ATTACK_SPEED_MULTIPLIER = 3.0f;
 
 class GEMapsManager;
 
-class GEPlayer : public GECharacter, public PlayerService {
+class GEPlayer : public GECharacter, public PlayerProvider {
 
 private:
-	const GESaveData* _saveData = nullptr;
-	const MapService* _mapsManager = nullptr;
-	EnemyService* _enemyManager = nullptr;
-	ProjectileService* _projectileManager = nullptr;
-	PowerUpService* _powerUpManager = nullptr;
+	GESaveData* _saveData = nullptr;
+	MapProvider* _mapsManager = nullptr;
+	EnemyProvider* _enemyManager = nullptr;
+	ProjectileProvider* _projectileManager = nullptr;
+	PowerUpProvider* _powerUpManager = nullptr;
 
 	// auto attack
 	float _autoAttackTimer = 0.0f;
@@ -49,9 +49,9 @@ private:
 
 	PlayerAoeEffect _aoeEffects[PLAYER_MAX_AOE_EFFECTS];
 
-	bool collidesWithTileType(float newX, float newY, const MapService& Manager, GECollisionType targetType) const;
+	bool collidesWithTileType(float newX, float newY, const MapProvider& Manager, GECollisionType targetType) const;
 
-	bool collidesWithEnemies(float newX, float newY, const EnemyService& enemyManager) const;
+	bool collidesWithEnemies(float newX, float newY, const EnemyProvider& enemyManager) const;
 
 	bool isBlockedAt(float x, float y) const;
 
@@ -70,8 +70,6 @@ private:
 	void drawAoeIndicatorIfNeeded(Window& window, const GECamera& camera) const;
 	void drawAoeEffects(Window& window, const GECamera& camera) const;
 	void drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, GEColor color) const;
-	
-	void onEvent(const GEEvent& event) override;
 
 public:
 
@@ -79,8 +77,8 @@ public:
 
 	~GEPlayer() = default;
 
-	void bindWorldContext(const MapService* maps, EnemyService* enemies, ProjectileService* projectiles, PowerUpService* powerUps);
-	
+	void bind(GEContext& ctx) override;
+
 	void update(float deltaTime, Window& window);
 
 	void draw(Window& window, const GECamera& camera) const override;

@@ -2,7 +2,7 @@
 #include "GEEnemy.h"
 #include "GEPlayer.h"
 #include "../Foundation/GESaveData.h"
-#include "../Foundation/GEServices.h"
+#include "../Foundation/GEProvider.h"
 
 static constexpr auto MAX_ENEMIES = 1000;
 static constexpr float DEFAULT_SPAWN_INTERVAL = 6.0f;
@@ -16,7 +16,7 @@ static constexpr float ACTIVE_ENEMY_CAP_STEP_TIME = 45.0f;
 
 static constexpr int ENEMY_TYPE_COUNT = 4;
 
-class GEEnemyManager : public EnemyService {
+class GEEnemyManager : public EnemyProvider {
 
 private:
     GEEnemy* _enemies[MAX_ENEMIES];
@@ -30,7 +30,7 @@ private:
 
     GESaveData* _saveData = nullptr;
 
-    void spawnEnemyOutsideCamera(PlayerService* player);
+    void spawnEnemyOutsideCamera(PlayerProvider& player);
 
 public:
 
@@ -41,7 +41,7 @@ public:
     GECollisible *getEnemyAt(int index) const { return _enemies[index]; }
 
     void load(GESaveData* saveData);
-    void update(float deltaTime, PlayerService* player, ProjectileService& projectileManager);
+    void update(float deltaTime, GEContext& ctx);
     void draw(Window& window, const GECamera& camera);
 
     void registerEnemyKill(GEEnemyType type);
