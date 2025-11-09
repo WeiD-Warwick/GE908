@@ -81,32 +81,26 @@ void GameManager::update(float deltaTime) {
     _window.checkInput();
     GEDebug::shared().updateFromInput(_window);
 
-    // 玩家逻辑
     _player.update(deltaTime, _window);
 
-    // 相机跟随玩家
     auto& body = _player.collisionBody();
-    _camera.followPlayer(body.getOriginX(), body.getOriginY(),
-        body.getWidth(), body.getHeight());
+    _camera.followPlayer(body.getOriginX(), body.getOriginY(), body.getWidth(), body.getHeight());
 
-    // 同步相机偏移到存档
-    GESaveData* saveData = _mapProvider.getSaveData();
-    if (saveData) {
-        saveData->setCameraOffset(_camera.getX(), _camera.getY());
-        saveData->updateActiveChunkFromWorldPosition(body.getCenterX(), body.getCenterY());
+    if (_saveData) {
+        _saveData->setCameraOffset(_camera.getX(), _camera.getY());
+        _saveData->updateActiveChunkFromWorldPosition(body.getCenterX(), body.getCenterY());
     }
 
-    // 敌人、投射物、道具逻辑
     _enemyProvider.update(deltaTime, _ctx);
     _projectileProvider.update(deltaTime, _ctx);
     _powerUpProvider.update(deltaTime, _ctx);
 
-    if (saveData && _window.keyPressed('P')) {
+    if (_saveData && _window.keyPressed('P')) {
         GEPlayerState playerState = _player.snapshotState();
         GEEnemyManagerState enemyManagerState = _enemyProvider.snapshotState();
         GEProjectileManagerState projectileState = _projectileProvider.snapshotState();
         GEPowerUpManagerState powerUpState = _powerUpProvider.snapshotState();
-        saveData->saveState(& playerState, &enemyManagerState, &projectileState, &powerUpState);
+        _saveData->saveState(& playerState, &enemyManagerState, &projectileState, &powerUpState);
     }
 }
 
