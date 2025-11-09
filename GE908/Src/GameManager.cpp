@@ -51,22 +51,30 @@ void GameManager::run() {
 }
 
 void GameManager::loadComponent(const std::string& dataPath) {
-    _saveData.loadGame(dataPath);
-    _saveData.setWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    _saveData = new GESaveData();
+    _saveData->loadGame(dataPath);
+
+    if (!_saveData) {
+        _isRunning = false;
+        return;
+    }
+
+    _saveData->setWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     _player.bind(_ctx);
 
-    if (_saveData.isInfiniteMap()) {
+    if (_saveData->isInfiniteMap()) {
         _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, -1, -1);
     }
     else {
-        int mapWorldWidth = _saveData.getActiveChunkPixelWidth() > 0 ? _saveData.getActiveChunkPixelWidth() : WINDOW_WIDTH;
-        int mapWorldHeight = _saveData.getActiveChunkPixelHeight() > 0 ? _saveData.getActiveChunkPixelHeight() : WINDOW_HEIGHT;
+        int mapWorldWidth = _saveData->getActiveChunkPixelWidth() > 0 ? _saveData->getActiveChunkPixelWidth() : WINDOW_WIDTH;
+        int mapWorldHeight = _saveData->getActiveChunkPixelHeight() > 0 ? _saveData->getActiveChunkPixelHeight() : WINDOW_HEIGHT;
         _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
     }
-    _camera.setPosition(_saveData.getCameraOffsetX(), _saveData.getCameraOffsetY());
-    _enemyProvider.load(&_saveData);
-    _powerUpProvider.load(&_saveData);
-    _projectileProvider.load(&_saveData);
+    _camera.setPosition(_saveData->getCameraOffsetX(), _saveData->getCameraOffsetY());
+    _mapProvider.load(_saveData);
+    _enemyProvider.load(_saveData);
+    _powerUpProvider.load(_saveData);
+    _projectileProvider.load(_saveData);
 }
 
 void GameManager::update(float deltaTime) {

@@ -23,7 +23,7 @@ public:
     void loadTileResources(const std::string& folderPath);
 
     // load save data from file
-    void loadSaveData(const std::string& filePath);
+    void load(GESaveData* saveData);
 
     // get tile Image
     GETile* getTile(int tileID) const;

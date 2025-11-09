@@ -12,6 +12,10 @@ GEMapsManager::~GEMapsManager() {
 	}
 }
 
+void GEMapsManager::load(GESaveData* saveData) {
+	_saveData = saveData;
+}
+
 void GEMapsManager::loadTileResources(const std::string& folderPath) {
 	_tiles = new GETile * [Map::TILES_COUNT];
 
@@ -27,19 +31,6 @@ void GEMapsManager::loadTileResources(const std::string& folderPath) {
 		else {
 			_tiles[i] = new GETile(filePath, GECollisionType::Tile_Water);
 		}
-	}
-}
-
-void GEMapsManager::loadSaveData(const std::string& filePath) {
-	if (_saveData) {
-		delete _saveData;
-		_saveData = nullptr;
-	}
-	_saveData = new GESaveData();
-
-	if (!_saveData->loadGame(filePath)) {
-		delete _saveData;
-		_saveData = nullptr;
 	}
 }
 

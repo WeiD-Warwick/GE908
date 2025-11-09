@@ -43,6 +43,7 @@ public:
 	virtual GETile* getTile(int tileID) const = 0;
 	virtual void draw(Window& window, const GECamera& camera) const = 0;
 	virtual void loadTileResources(const std::string& folderPath) = 0;
+	virtual void load(GESaveData* saveData) = 0;
 };
 
 

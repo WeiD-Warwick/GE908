@@ -14,7 +14,7 @@ private:
     Window& _window;
     GEFont _font;
     GECamera _camera;
-    GESaveData _saveData;
+    GESaveData* _saveData = nullptr;
     MapProvider& _mapProvider;
     PlayerProvider& _player;
     EnemyProvider& _enemyProvider;
