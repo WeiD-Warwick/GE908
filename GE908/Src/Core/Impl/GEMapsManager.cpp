@@ -57,9 +57,11 @@ GETile* GEMapsManager::getTile(int tileID) const {
 void GEMapsManager::draw(Window& window, const GECamera& camera) const {
     if (!_saveData) return;
 
-	const int layers = _saveData->getLayerCount();
-	const int mapWidth = _saveData->getMapColCount();
-	const int mapHeight = _saveData->getMapRowCount();
+	const auto* chunk = _saveData->getActiveChunk();
+	if (!chunk || !chunk->isValid()) return;
+
+	const int mapWidth = chunk->getColumnCount();
+	const int mapHeight = chunk->getRowCount();
 	const int tileWidth = _saveData->getTileWidth();
 	const int tileHeight = _saveData->getTileHeight();
 

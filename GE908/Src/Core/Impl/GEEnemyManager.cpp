@@ -40,8 +40,10 @@ bool GEEnemyManager::spawnEnemyOutsideCamera(PlayerProvider& player) {
     float camOffsetY = _saveData->getCameraOffsetY();
     int screenW = _saveData->getScreenWidth();
     int screenH = _saveData->getScreenHeight();
-    int mapW = _saveData->getMapTotalWidth();
-    int mapH = _saveData->getMapTotalHeight();
+    int mapW = _saveData->getActiveChunkPixelWidth();
+    int mapH = _saveData->getActiveChunkPixelHeight();
+
+    if (mapW <= 0 || mapH <= 0) return false;
 
     const int safeDistance = _saveData->getTileWidth() * 2;
     int side = rand() % 4;

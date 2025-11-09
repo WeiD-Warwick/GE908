@@ -4,9 +4,124 @@
 #include <sstream>
 
 class GESaveData {
+public:
+    struct ChunkCoord {
+        int x = 0;
+        int y = 0;
+
+        bool operator==(const ChunkCoord& other) const {
+            return x == other.x && y == other.y;
+        }
+    };
+
+    struct MapChunk {
+        int columns = 0;
+        int rows = 0;
+        int* tiles = nullptr;
+
+        MapChunk() = default;
+
+        ~MapChunk() {
+            clear();
+        }
+
+        MapChunk(const MapChunk& other) {
+            copyFrom(other);
+        }
+
+        MapChunk& operator=(const MapChunk& other) {
+            if (this != &other) {
+                copyFrom(other);
+            }
+            return *this;
+        }
+
+        MapChunk(MapChunk&& other) noexcept {
+            moveFrom(other);
+        }
+
+        MapChunk& operator=(MapChunk&& other) noexcept {
+            if (this != &other) {
+                clear();
+                moveFrom(other);
+            }
+            return *this;
+        }
+
+        void clear() {
+            if (tiles) {
+                delete[] tiles;
+                tiles = nullptr;
+            }
+            columns = 0;
+            rows = 0;
+        }
+
+        bool allocate(int cols, int rowsCount) {
+            clear();
+            if (cols <= 0 || rowsCount <= 0) return false;
+            const int total = cols * rowsCount;
+            tiles = new int[total];
+            if (!tiles) return false;
+            for (int i = 0; i < total; ++i) {
+                tiles[i] = 0;
+            }
+            columns = cols;
+            rows = rowsCount;
+            return true;
+        }
+
+        bool isValid() const {
+            return columns > 0 && rows > 0 && tiles != nullptr;
+        }
+
+        int getColumnCount() const { return columns; }
+        int getRowCount() const { return rows; }
+
+        int getTileID(int row, int col) const {
+            if (!isValid()) return 0;
+            if (row < 0 || row >= rows || col < 0 || col >= columns) return 0;
+            const int index = row * columns + col;
+            return tiles[index];
+        }
+
+        int getPixelWidth(int tileWidth) const { return columns * tileWidth; }
+        int getPixelHeight(int tileHeight) const { return rows * tileHeight; }
+
+    private:
+        void copyFrom(const MapChunk& other) {
+            if (!other.isValid()) {
+                clear();
+                return;
+            }
+            const int total = other.columns * other.rows;
+            int* newTiles = new int[total];
+            for (int i = 0; i < total; ++i) {
+                newTiles[i] = other.tiles[i];
+            }
+            clear();
+            tiles = newTiles;
+            columns = other.columns;
+            rows = other.rows;
+        }
+
+        void moveFrom(MapChunk& other) {
+            columns = other.columns;
+            rows = other.rows;
+            tiles = other.tiles;
+            other.columns = 0;
+            other.rows = 0;
+            other.tiles = nullptr;
+        }
+    };
+
 private:
-    int _mapColCount = 0;
-    int _mapRowCount = 0;
+    struct ChunkNode {
+        ChunkCoord coord;
+        MapChunk chunk;
+        ChunkNode* next = nullptr;
+    };
+
     int _tileWidth = 0;
     int _tileHeight = 0;
 
@@ -16,33 +131,11 @@ private:
     int _windowWidth = 854;
     int _windowHeight = 480;
 
-    // Changed to 2D array (only keep single layer)
-    int** _layer = nullptr;
+    ChunkNode* _chunksHead = nullptr;
+    ChunkCoord _activeChunk{ 0, 0 };
 
-    // Allocate memory for single layer
-    bool _allocateLayer() {
-        if (_mapColCount <= 0 || _mapRowCount <= 0) return false;
 
-        _layer = new int* [_mapRowCount];
-        for (int y = 0; y < _mapRowCount; ++y) {
-            _layer[y] = new int[_mapColCount];
-            for (int x = 0; x < _mapColCount; ++x)
-                _layer[y][x] = 0;
-        }
-        return true;
-    }
-
-    // Release memory for single layer
-    void _releaseLayer() {
-        if (!_layer) return;
-
-        for (int y = 0; y < _mapRowCount; ++y)
-            delete[] _layer[y];
-        delete[] _layer;
-        _layer = nullptr;
-    }
-
-    bool _parseKeywordLine(const std::string& line) {
+    bool _parseKeywordLine(const std::string& line, MapChunk& chunk) {
         if (line.empty()) return false;
 
         std::istringstream iss(line);
@@ -51,102 +144,183 @@ private:
 
         if (!(iss >> key >> value)) return false;
 
-        if (key == "tileswide") _mapColCount = value;
-        else if (key == "tileshigh") _mapRowCount = value;
+        if (key == "tileswide") chunk.columns = value;
+        else if (key == "tileshigh") chunk.rows = value;
         else if (key == "tilewidth") _tileWidth = value;
         else if (key == "tileheight") _tileHeight = value;
         return true;
+    }
+    void clearChunks() {
+        ChunkNode* node = _chunksHead;
+        while (node) {
+            ChunkNode* next = node->next;
+            delete node;
+            node = next;
+        }
+        _chunksHead = nullptr;
+    }
+
+    ChunkNode* findChunkNode(const ChunkCoord& coord) {
+        ChunkNode* node = _chunksHead;
+        while (node) {
+            if (node->coord == coord) return node;
+            node = node->next;
+        }
+        return nullptr;
+    }
+
+    const ChunkNode* findChunkNode(const ChunkCoord& coord) const {
+        const ChunkNode* node = _chunksHead;
+        while (node) {
+            if (node->coord == coord) return node;
+            node = node->next;
+        }
+        return nullptr;
+    }
+
+    ChunkNode* ensureChunkNode(const ChunkCoord& coord) {
+        ChunkNode* node = findChunkNode(coord);
+        if (node) return node;
+        node = new ChunkNode();
+        node->coord = coord;
+        node->next = _chunksHead;
+        _chunksHead = node;
+        return node;
     }
 
 public:
     GESaveData() = default;
     ~GESaveData() {
-        _releaseLayer(); // Release single layer
+       clearChunks();
     }
 
-    int getMapColCount() const { return _mapColCount; }
-    int getMapRowCount() const { return _mapRowCount; }
+    GESaveData(const GESaveData&) = delete;
+    GESaveData& operator=(const GESaveData&) = delete;
 
     int getTileWidth() const { return _tileWidth; }
     int getTileHeight() const { return _tileHeight; }
 
-    int getMapTotalWidth() const { return _mapColCount * _tileWidth; }
-    int getMapTotalHeight() const { return _mapRowCount * _tileHeight; }
-
-    void setCameraOffset(int x, int y) { _cameraOffsetX = x; _cameraOffsetY = y; }
+    void setCameraOffset(int x, int y) { _cameraOffsetX = static_cast<float>(x); _cameraOffsetY = static_cast<float>(y); }
     float getCameraOffsetX() { return _cameraOffsetX; }
     float getCameraOffsetY() { return _cameraOffsetY; }
 
     void setWindowSize(int width, int height) { _windowWidth = width; _windowHeight = height; }
-        int getScreenWidth() const { return _windowWidth; }
+    int getScreenWidth() const { return _windowWidth; }
     int getScreenHeight() const { return _windowHeight; }
 
-    // Since there's only one layer, return fixed value 1 or remove this interface
-    int getLayerCount() const { return 1; }
+    void setActiveChunk(int chunkX, int chunkY) {
+        _activeChunk.x = chunkX;
+        _activeChunk.y = chunkY;
+    }
+
+    const MapChunk* getActiveChunk() const {
+        const ChunkNode* node = findChunkNode(_activeChunk);
+        if (!node) return nullptr;
+        return &node->chunk;
+    }
+
+    MapChunk* getActiveChunk() {
+        ChunkNode* node = findChunkNode(_activeChunk);
+        if (!node) return nullptr;
+        return &node->chunk;
+    }
+
+    int getActiveChunkColumnCount() const {
+        const MapChunk* chunk = getActiveChunk();
+        return chunk ? chunk->getColumnCount() : 0;
+    }
+
+    int getActiveChunkRowCount() const {
+        const MapChunk* chunk = getActiveChunk();
+        return chunk ? chunk->getRowCount() : 0;
+    }
+
+    int getActiveChunkPixelWidth() const {
+        const MapChunk* chunk = getActiveChunk();
+        return chunk ? chunk->getPixelWidth(_tileWidth) : 0;
+    }
+
+    int getActiveChunkPixelHeight() const {
+        const MapChunk* chunk = getActiveChunk();
+        return chunk ? chunk->getPixelHeight(_tileHeight) : 0;
+    }
 
     bool loadGame(const std::string& filename) {
         std::ifstream file(filename);
         if (!file.is_open()) return false;
 
-        _releaseLayer(); // Release old data before loading
+        clearChunks();
 
         std::string line;
         int currentRow = 0;
         bool startReadingLayer = false;
+        MapChunk chunk;
 
         while (std::getline(file, line)) {
             if (line.empty()) continue;
-
-            // Read metadata (when not starting to read layer yet)
             if (!startReadingLayer && line.find("layer") != 0) {
-                _parseKeywordLine(line);
+                _parseKeywordLine(line, chunk);
                 continue;
             }
 
-            // Detect layer marker (only process layer 0)
             if (line.find("layer 0") == 0) {
                 currentRow = 0;
                 startReadingLayer = true;
-                // Allocate layer memory (metadata has been parsed, can get row and column counts)
-                if (!_allocateLayer()) {
-                    return false; // Memory allocation failed
+                if (chunk.columns <= 0 || chunk.rows <= 0) {
+                    file.close();
+                    return false;
+                }
+                if (!chunk.allocate(chunk.columns, chunk.rows)) {
+                    file.close();
+                    return false;
                 }
                 continue;
             }
 
-            // Read layer data (only process single layer)
             if (startReadingLayer) {
+                if (currentRow >= chunk.rows) {
+                    startReadingLayer = false;
+                    continue;
+                }
+
                 std::stringstream ss(line);
                 std::string cell;
                 int x = 0;
 
-                while (std::getline(ss, cell, ',') && x < _mapColCount) {
+                while (std::getline(ss, cell, ',') && x < chunk.columns) {
+                    int value = 0;
                     try {
-                        _layer[currentRow][x] = std::stoi(cell);
+                        value = std::stoi(cell);
                     }
                     catch (...) {
                         // Set to 0 by default if parsing fails
-                        _layer[currentRow][x] = 0;
+                        value = 0;
                     }
+                    const int index = currentRow * chunk.columns + x;
+                    chunk.tiles[index] = value;
                     ++x;
                 }
 
-                currentRow++;
-                // Stop reading layer when reaching map height
-                if (currentRow >= _mapRowCount) {
+                ++currentRow;
+                if (currentRow >= chunk.rows) {
                     startReadingLayer = false;
                 }
             }
         }
 
         file.close();
+
+
+        if (!chunk.isValid()) return false;
+
+        ChunkNode* node = ensureChunkNode(_activeChunk);
+        node->chunk = chunk;
         return true;
     }
 
-    // Remove layer parameter, directly access 2D array
     int getTileID(int row, int col) const {
-        if (!_layer) return 0;
-        if (row < 0 || row >= _mapRowCount || col < 0 || col >= _mapColCount) return 0;
-        return _layer[row][col];
+        const MapChunk* chunk = getActiveChunk();
+        if (!chunk) return 0;
+        return chunk->getTileID(row, col);
     }
 };

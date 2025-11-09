@@ -30,14 +30,13 @@ void GameManager::loadComponent() {
 
     if (!saveData) return;
 
-    //GEPlayer* playerImpl = dynamic_cast<GEPlayer*>(&_player);
- /*   if (playerImpl)
-        playerImpl->bind(_ctx);*/
     _player.bind(_ctx);
-    int mapWorldWidth = saveData->getMapTotalWidth();
-    int mapWorldHeight = saveData->getMapTotalHeight();
-    _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
+    int mapWorldWidth = saveData->getActiveChunkPixelWidth();
+    int mapWorldHeight = saveData->getActiveChunkPixelHeight();
+    if (mapWorldWidth <= 0) mapWorldWidth = WINDOW_WIDTH;
+    if (mapWorldHeight <= 0) mapWorldHeight = WINDOW_HEIGHT;
 
+    _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
     _enemyProvider.load(saveData);
     _powerUpProvider.load(saveData);
 }

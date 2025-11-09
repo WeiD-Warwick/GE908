@@ -35,12 +35,15 @@ void GEPlayer::bind(GEContext& ctx) {
     if (_mapsManager) {
         _saveData = _mapsManager->getSaveData();
         if (_saveData) {
-            int mapWorldWidth = _saveData->getMapTotalWidth();
-            int mapWorldHeight = _saveData->getMapTotalHeight();
+            const auto* chunk = _saveData->getActiveChunk();
+            if (chunk && chunk->isValid()) {
+                int mapWorldWidth = chunk->getPixelWidth(_saveData->getTileWidth());
+                int mapWorldHeight = chunk->getPixelHeight(_saveData->getTileHeight());
 
-            _image.load("Src/Assets/Textures/player.png");
-            setCenter(mapWorldWidth / 2.0f, mapWorldHeight / 2.0f);
-            setMapBounds(mapWorldWidth, mapWorldHeight);
+                _image.load("Src/Assets/Textures/player.png");
+                setCenter(mapWorldWidth / 2.0f, mapWorldHeight / 2.0f);
+                setMapBounds(mapWorldWidth, mapWorldHeight);
+            }
         }
     }
 }
@@ -70,10 +73,13 @@ void GEPlayer::update(float deltaTime, Window& window) {
 bool GEPlayer::collidesWithTileType(float newX, float newY, const MapProvider& maps, GECollisionType targetType) const {
     if (!_saveData) return false;
 
+    const auto* chunk = _saveData->getActiveChunk();
+    if (!chunk || !chunk->isValid()) return false;
+
     int tileW = _saveData->getTileWidth();
     int tileH = _saveData->getTileHeight();
-    int mapCols = _saveData->getMapColCount();
-    int mapRows = _saveData->getMapRowCount();
+    int mapCols = chunk->getColumnCount();
+    int mapRows = chunk->getRowCount();
 
     float playerCenterX = newX;
     float playerCenterY = newY;
@@ -173,8 +179,10 @@ void GEPlayer::applyEnvironmentalEffects(float deltaTime) {
 void GEPlayer::applyMovementBounds(float& newX, float& newY) {
     float camW = _saveData->getScreenWidth();
     float camH = _saveData->getScreenHeight();
-    float mapW = _saveData->getMapTotalWidth();
-    float mapH = _saveData->getMapTotalHeight();
+    float mapW = static_cast<float>(_saveData->getActiveChunkPixelWidth());
+    float mapH = static_cast<float>(_saveData->getActiveChunkPixelHeight());
+
+    if (mapW <= 0 || mapH <= 0) return;
 
     float minCenterX = camW / 2.0f;
     float maxCenterX = mapW - camW / 2.0f;
