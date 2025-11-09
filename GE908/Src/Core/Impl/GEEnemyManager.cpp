@@ -57,7 +57,7 @@ bool GEEnemyManager::spawnEnemyOutsideCamera(PlayerProvider& player) {
         // generat enemy at bottom
         x = camOffsetX + rand() % screenW; 
         y = camOffsetY + screenH + safeDistance; 
-        break;  
+        break;
     case 2: 
         // generat enemy at left
         x = camOffsetX - safeDistance;

@@ -1,3 +1,4 @@
+#pragma once
 #include "../../Foundation/GECollisible.h"
 #include <string>
 
