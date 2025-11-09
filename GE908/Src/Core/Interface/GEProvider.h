@@ -23,6 +23,7 @@ public:
 
 class ProjectileProvider : public GECodable<GEProjectileManagerState> {
 public:
+	virtual void load(GESaveData* saveData) = 0;
 	virtual void update(float deltaTime, GEContext& ctx) = 0;
 	virtual void addProjectile(ProjectileOwner from, float startPointX, float startPointY, float dirX, float dirY, float speed, int damage) = 0;
 	virtual void draw(Window& window, const GECamera& camera) = 0;
@@ -41,7 +42,7 @@ public:
 	virtual GESaveData* getSaveData() const = 0;
 	virtual GETile* getTile(int tileID) const = 0;
 	virtual void draw(Window& window, const GECamera& camera) const = 0;
-	virtual void load(const std::string& tilesFolderPath, const std::string& saveDatafilePath) = 0;
+	virtual void loadTileResources(const std::string& folderPath) = 0;
 };
 
 

@@ -10,6 +10,17 @@ GEProjectileManager::~GEProjectileManager() {
     _projectiles.clear();
 }
 
+void GEProjectileManager::load(GESaveData* saveData) {
+    _projectiles.destroyAll();
+    _projectiles.fillNull(Projectile::MAX_PROJECTILES);
+
+    if (saveData) {
+        if (const GEProjectileManagerState* state = saveData->getProjectileManagerState()) {
+            applyState(*state);
+        }
+    }
+}
+
 void GEProjectileManager::addProjectile(ProjectileOwner from,
     float startPointX, float startPointY,
     float dirX, float dirY, float speed, int damage)

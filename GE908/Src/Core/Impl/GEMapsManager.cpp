@@ -12,11 +12,6 @@ GEMapsManager::~GEMapsManager() {
 	}
 }
 
-void GEMapsManager::load(const std::string& tilesFolderPath, const std::string& saveDatafilePath) {
-	loadTileResources(tilesFolderPath);
-	loadSaveData(saveDatafilePath);
-}
-
 void GEMapsManager::loadTileResources(const std::string& folderPath) {
 	_tiles = new GETile * [Map::TILES_COUNT];
 

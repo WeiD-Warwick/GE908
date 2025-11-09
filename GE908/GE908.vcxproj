@@ -300,7 +300,8 @@
     <Image Include="Src\Assets\Textures\player.png" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Src\SaveGames\tiles.txt" />
+    <Text Include="Src\SaveGames\fixed.txt" />
+    <Text Include="Src\SaveGames\inifinty.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -16,6 +16,8 @@ public:
     GEProjectileManager();
     ~GEProjectileManager();
 
+    void load(GESaveData* saveData);
+
     void addProjectile(ProjectileOwner from, float startPointX, float startPointY,
         float dirX, float dirY, float speed, int damage);
 

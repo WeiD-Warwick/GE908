@@ -3,52 +3,9 @@
 #include <cstdlib>
 #include <ctime>
 
-// ------------------ GEPowerUp ------------------
-GEPowerUp::GEPowerUp()
-    : GECollisible(PowerUp::ATTACK_SPEED_TEXTURE, GECollisionType::PowerUp) {
-}
-
-void GEPowerUp::spawn(GEPowerUpType type, float centerX, float centerY, float lifeTimeSeconds) {
-    _type = type;
-    _timeToLive = lifeTimeSeconds;
-    _remainingTime = lifeTimeSeconds;
-    _active = true;
-
-    switch (_type) {
-    case GEPowerUpType::AttackSpeedBoost:
-        _image.load(PowerUp::ATTACK_SPEED_TEXTURE);
-        break;
-    case GEPowerUpType::AdditionalAoeTarget:
-        _image.load(PowerUp::AOE_TARGET_TEXTURE);
-        break;
-    case GEPowerUpType::HealPlayer:
-        _image.load(PowerUp::HEAL_TEXTURE);
-    default:
-        break;
-    }
-
-    setCenter(centerX, centerY);
-}
-
-void GEPowerUp::deactivate() {
-    _active = false;
-    _remainingTime = 0.0f;
-}
-
-void GEPowerUp::update(float deltaTime) {
-    if (!_active) return;
-
-    if (_timeToLive > 0.0f) {
-        _remainingTime -= deltaTime;
-        if (_remainingTime <= 0.0f)
-            deactivate();
-    }
-}
-
-// ------------------ GEPowerUpManager ------------------
 GEPowerUpManager::GEPowerUpManager() {
-    _powerUps.resize(16);     // max 16 power-ups
-    _powerUps.fillNull(16);   // initialize with nullptr
+    _powerUps.resize(100);     // max 100 power-ups
+    _powerUps.fillNull(100);   // initialize with nullptr
 }
 
 GEPowerUpManager::~GEPowerUpManager() {
@@ -153,5 +110,6 @@ void GEPowerUpManager::applyState(const GEPowerUpManagerState& state) {
         GEPowerUp* powerUp = new GEPowerUp();
         powerUp->applyState(powerUpState);
         _powerUps.add(powerUp);
-        });
+        }
+    );
 }

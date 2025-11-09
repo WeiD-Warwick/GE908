@@ -9,48 +9,64 @@ using namespace GamesEngineeringBase;
 
 void GameManager::run() {
     _isRunning = true;
-    loadComponent();
+    _font.load();
+    _mapProvider.loadTileResources("Src/Assets/MapTiles/");
 
-    while (_isRunning) { 
+    // check use which map
+    // 1: FixedMap 
+    // 2: InfiniteMap
+    bool pressKey = false;
+    bool isFixedMap = true;
+    while (!pressKey) {
+        _window.checkInput();
+
+        if (_window.keyPressed('1')) {
+            isFixedMap = true;
+            pressKey = true;
+        }
+        if (_window.keyPressed('2')) {
+            isFixedMap = false;
+            pressKey = true;
+        }
+
+        _window.clear();
+        _font.draw("Press 1 for Fixed Map", GEPoint(200, 200), RED, _window);
+        _font.draw("Press 2 for Infinite Map", GEPoint(200, 240), RED, _window);
+        _window.present();
+    }
+
+    const std::string& dataPath = isFixedMap ? "Src/SaveGames/fixed.txt" : "Src/SaveGames/inifinty.txt";
+
+    loadComponent(dataPath);
+
+    while (_isRunning) {
         GEFrameTimer::shared().beginFrame();
         float deltaTime = GEFrameTimer::shared().getDeltaTime();
 
         update(deltaTime);
         render();
 
-        GEFrameTimer::shared().endFrame(); 
+        GEFrameTimer::shared().endFrame();
     }
 }
 
-void GameManager::loadComponent() {
-    _font.load();
-    _mapProvider.load("Src/Assets/MapTiles/", "Src/SaveGames/tiles.txt");
-
-    GESaveData* saveData = _mapProvider.getSaveData();
-
-    if (!saveData) return;
-
-    saveData->setWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-
+void GameManager::loadComponent(const std::string& dataPath) {
+    _saveData.loadGame(dataPath);
+    _saveData.setWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     _player.bind(_ctx);
-    int mapWorldWidth = saveData->getActiveChunkPixelWidth();
-    int mapWorldHeight = saveData->getActiveChunkPixelHeight();
 
-    if (saveData->isInfiniteMap()) {
+    if (_saveData.isInfiniteMap()) {
         _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, -1, -1);
     }
     else {
-        if (mapWorldWidth <= 0) mapWorldWidth = WINDOW_WIDTH;
-        if (mapWorldHeight <= 0) mapWorldHeight = WINDOW_HEIGHT;
+        int mapWorldWidth = _saveData.getActiveChunkPixelWidth() > 0 ? _saveData.getActiveChunkPixelWidth() : WINDOW_WIDTH;
+        int mapWorldHeight = _saveData.getActiveChunkPixelHeight() > 0 ? _saveData.getActiveChunkPixelHeight() : WINDOW_HEIGHT;
         _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
     }
-    _camera.setPosition(saveData->getCameraOffsetX(), saveData->getCameraOffsetY());
-    _enemyProvider.load(saveData);
-    _powerUpProvider.load(saveData);
-
-    if (const GEProjectileManagerState* projectileState = saveData->getProjectileManagerState()) {
-        _projectileProvider.applyState(*projectileState);
-    }
+    _camera.setPosition(_saveData.getCameraOffsetX(), _saveData.getCameraOffsetY());
+    _enemyProvider.load(&_saveData);
+    _powerUpProvider.load(&_saveData);
+    _projectileProvider.load(&_saveData);
 }
 
 void GameManager::update(float deltaTime) {
@@ -82,7 +98,7 @@ void GameManager::update(float deltaTime) {
         GEEnemyManagerState enemyManagerState = _enemyProvider.snapshotState();
         GEProjectileManagerState projectileState = _projectileProvider.snapshotState();
         GEPowerUpManagerState powerUpState = _powerUpProvider.snapshotState();
-        saveData->saveState("text.txt", & playerState, &enemyManagerState, &projectileState, &powerUpState);
+        saveData->saveState(& playerState, &enemyManagerState, &projectileState, &powerUpState);
     }
 }
 

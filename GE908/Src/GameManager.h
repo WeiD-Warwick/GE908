@@ -14,7 +14,7 @@ private:
     Window& _window;
     GEFont _font;
     GECamera _camera;
-
+    GESaveData _saveData;
     MapProvider& _mapProvider;
     PlayerProvider& _player;
     EnemyProvider& _enemyProvider;
@@ -46,7 +46,7 @@ public:
 	void run();
 
 	// load Game Resource, like , player, enemies, fonts
-	void loadComponent();
+	void loadComponent(const std::string& dataPath);
 
 	// update
 	void update(float deltaTime);
