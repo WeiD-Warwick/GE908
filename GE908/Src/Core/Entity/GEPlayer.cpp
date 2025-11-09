@@ -8,8 +8,8 @@ static float fireTimer = 0.0f;
 
 GEPlayer::GEPlayer()
     : GECharacter(Player::playerSpriteFilePath, GECollisionType::Player) {
-    _hp = 200;
-    _speed = 240;
+    _hp = 300;
+    _speed = 300;
     _maxHp = _hp;
 
     setContactDamageCooldownDuration(0.5f);
@@ -33,7 +33,7 @@ void GEPlayer::bind(GEContext& ctx) {
     if (_mapsManager) {
         _saveData = _mapsManager->getSaveData();
         if (_saveData) {
-            _image.load("Src/Assets/Textures/player.png");
+            _image.load(Player::playerSpriteFilePath);
             int chunkPixelW = _saveData->getChunkPixelWidth();
             int chunkPixelH = _saveData->getChunkPixelHeight();
             if (chunkPixelW <= 0) chunkPixelW = _image.width * 4;

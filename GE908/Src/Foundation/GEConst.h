@@ -29,12 +29,16 @@ namespace Player {
 
 // Enemy related values
 namespace Enemy {
-    constexpr int PLAYER_COLLISION_DAMAGE = 30;
+
+    // player get damage
+    constexpr int PLAYER_COLLISION_DAMAGE = 20;
+
+    // enemy get damage
     constexpr int ENEMY_COLLISION_DAMAGE = 30;
 
-    static constexpr auto MAX_ENEMIES = 1000;
-    static constexpr float DEFAULT_SPAWN_INTERVAL = 6.0f;
-    static constexpr float MIN_SPAWN_INTERVAL = 2.5f;
+    static constexpr auto MAX_ENEMIES = 2000;
+    static constexpr float DEFAULT_SPAWN_INTERVAL = 3.0f;
+    static constexpr float MIN_SPAWN_INTERVAL = 0.5f;
     static constexpr float SPAWN_INTERVAL_STEP = 0.25f;
     static constexpr float SPAWN_DIFFICULTY_STEP_TIME = 25.0f;
 
