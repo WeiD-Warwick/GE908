@@ -90,7 +90,7 @@ void GameManager::update(float deltaTime) {
         _gameState = GEGameLifeCircle::Victory;
     }
 
-    if (_saveData && _window.keyPressed('P')) {
+    if (_saveData && _window.keyPressed('L')) {
         GEPlayerState playerState = _player.snapshotState();
         GEEnemyManagerState enemyManagerState = _enemyProvider.snapshotState();
         GEProjectileManagerState projectileState = _projectileProvider.snapshotState();
@@ -112,6 +112,8 @@ void GameManager::render() {
 }
 
 void GameManager::drawText() {
+
+
     int y = 20;
     _font.draw("Normal: " + std::to_string(_enemyProvider.getKillCount(GEEnemyType::Normal)),
         GEPoint(20, y), RED, _window);
@@ -128,12 +130,15 @@ void GameManager::drawText() {
     _font.draw("FPS: " + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())),
         GEPoint(20, 400), RED, _window);
     _font.draw("HP: " + std::to_string(_player.getHP()),
-        GEPoint(200, 400), RED, _window);
+        GEPoint(20, 420), RED, _window);
     _font.draw("Skill: " + std::to_string(static_cast<int>(_player.getAOECooldownTime())),
-        GEPoint(400, 400), RED, _window);
+        GEPoint(20, y=440), RED, _window);
 
     _font.draw("Time: " + std::to_string(static_cast<int>(std::ceil(_levelTimeRemaining))),
-        GEPoint(400, 20), RED, _window);
+        GEPoint(540, 20), RED, _window);
+    _font.draw("J  Show Collidars.", GEPoint(540, 400), BLUE, _window);
+    _font.draw("K  Show AOE Range.", GEPoint(540, 420), BLUE, _window);
+    _font.draw("L  Save Game.", GEPoint(540, 440), BLUE, _window);
 }
 
 void GameManager::stop() {
