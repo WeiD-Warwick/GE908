@@ -57,5 +57,6 @@ public:
 	virtual float getAOECooldownTime() const = 0;
 	virtual void draw(Window& window, const GECamera& camera) const = 0;
 	virtual void bind(GEContext& ctx) = 0;
+
 };
 

@@ -80,7 +80,8 @@ public:
 
     bool isInfiniteMap() const;
 
-    bool loadGame(const std::string& filename);
+    bool loadGame(const GEDataLoadMode loadMode);
+    std::string getFilePath(const GEDataLoadMode loadMode);
     int getTileID(int row, int col);
 
     const GEPlayerState* getPlayerState() const;

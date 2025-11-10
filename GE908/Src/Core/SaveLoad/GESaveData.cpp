@@ -213,12 +213,31 @@ int GESaveData::getChunkPixelWidth() const { return _chunkColumns * _tileWidth; 
 int GESaveData::getChunkPixelHeight() const { return _chunkRows * _tileHeight; }
 bool GESaveData::isInfiniteMap() const { return _infiniteMap; }
 
-bool GESaveData::loadGame(const std::string& filename) {
+bool GESaveData::loadGame(const GEDataLoadMode loadMode) {
+    std::string filename = getFilePath(loadMode);
     std::ifstream file(filename);
     if (!file.is_open()) return false;
 
     clearChunks();
-    _stateFilePath = filename + ".state";
+
+    switch (loadMode) {
+    case GEDataLoadMode::LastSavedFix:
+        _stateFilePath = filename + ".state";
+        _infiniteMap = false;
+        break;
+    case GEDataLoadMode::LastSavedInfinite:
+        _stateFilePath = filename + ".state";
+        _infiniteMap = true;
+        break;
+    case GEDataLoadMode::NewFix:
+        _stateFilePath.clear();
+        _infiniteMap = false;
+        break;
+    case GEDataLoadMode::NewInfinite:
+        _stateFilePath.clear();
+        _infiniteMap = true;
+        break;
+    }
 
     std::string line;
     int currentRow = 0;
@@ -263,8 +282,19 @@ bool GESaveData::loadGame(const std::string& filename) {
     ChunkNode* node = ensureChunkNode(_activeChunk);
     if (node) node->chunk = chunk;
 
-    loadState(_stateFilePath);
+    if (loadMode == GEDataLoadMode::LastSavedFix || loadMode == GEDataLoadMode::LastSavedInfinite)
+        loadState(_stateFilePath);
+    //loadState(_stateFilePath);
     return true;
+}
+
+std::string GESaveData::getFilePath(const GEDataLoadMode loadMode) {
+    switch (loadMode) {
+    case GEDataLoadMode::NewFix: return "Src/SaveGames/fixed.txt"; break;
+    case GEDataLoadMode::NewInfinite: return "Src/SaveGames/inifinty.txt"; break;
+    case GEDataLoadMode::LastSavedFix: return "Src/SaveGames/fixed.txt"; break;
+    case GEDataLoadMode::LastSavedInfinite: return "Src/SaveGames/inifinty.txt"; break;
+    }
 }
 
 int GESaveData::getTileID(int row, int col) {

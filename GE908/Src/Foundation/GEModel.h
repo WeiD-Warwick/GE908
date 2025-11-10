@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 enum class GEPowerUpType {
 	None					= 0,
@@ -28,4 +28,18 @@ enum class GECollisionType {
 	Tile_Road,
 	Projectile,
 	PowerUp,
+};
+
+enum class GEGameLifeCircle {
+	Menu,
+	Playing,
+	Defeat,
+	Victory,
+};
+
+enum class GEDataLoadMode {
+	NewFix,
+	NewInfinite,
+	LastSavedFix,
+	LastSavedInfinite,
 };

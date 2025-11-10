@@ -11,48 +11,39 @@ void GameManager::run() {
     _isRunning = true;
     _font.load();
     _mapProvider.loadTileResources("Src/Assets/MapTiles/");
-
-    // check use which map
-    // 1: FixedMap 
-    // 2: InfiniteMap
-    bool pressKey = false;
-    bool isFixedMap = true;
-    while (!pressKey) {
-        _window.checkInput();
-
-        if (_window.keyPressed('1')) {
-            isFixedMap = true;
-            pressKey = true;
-        }
-        if (_window.keyPressed('2')) {
-            isFixedMap = false;
-            pressKey = true;
-        }
-
-        _window.clear();
-        _font.draw("Press 1 for Fixed Map", GEPoint(200, 200), RED, _window);
-        _font.draw("Press 2 for Infinite Map", GEPoint(200, 240), RED, _window);
-        _window.present();
-    }
-
-    const std::string& dataPath = isFixedMap ? "Src/SaveGames/fixed.txt" : "Src/SaveGames/inifinty.txt";
-
-    loadComponent(dataPath);
+    bool componentHasLoaded = false;
 
     while (_isRunning) {
         GEFrameTimer::shared().beginFrame();
         float deltaTime = GEFrameTimer::shared().getDeltaTime();
 
-        update(deltaTime);
-        render();
-
+        switch (_gameState) {
+        case GEGameLifeCircle::Menu:
+            _levelTimeRemaining = 120.0f;
+            updateMenu();
+            renderMenu();
+            break;
+        case GEGameLifeCircle::Playing:
+            if (!componentHasLoaded) {
+                loadComponent(_loadMode);
+                componentHasLoaded = true;
+            }
+            update(deltaTime);
+            render();
+            _levelTimeRemaining -= deltaTime;
+            break;
+        default:
+            updateEnding();
+            renderEnding();
+            break;
+        }
         GEFrameTimer::shared().endFrame();
     }
 }
 
-void GameManager::loadComponent(const std::string& dataPath) {
+void GameManager::loadComponent(const GEDataLoadMode loadMode) {
     _saveData = new GESaveData();
-    _saveData->loadGame(dataPath);
+    _saveData->loadGame(loadMode);
 
     if (!_saveData) {
         _isRunning = false;
@@ -64,14 +55,9 @@ void GameManager::loadComponent(const std::string& dataPath) {
 
     _player.bind(_ctx);
 
-    if (_saveData->isInfiniteMap()) {
-        _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, -1, -1);
-    }
-    else {
-        int mapWorldWidth = _saveData->getActiveChunkPixelWidth() > 0 ? _saveData->getActiveChunkPixelWidth() : WINDOW_WIDTH;
-        int mapWorldHeight = _saveData->getActiveChunkPixelHeight() > 0 ? _saveData->getActiveChunkPixelHeight() : WINDOW_HEIGHT;
-        _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
-    }
+    int mapWorldWidth = _saveData->isInfiniteMap() ? -1 : (_saveData->getActiveChunkPixelWidth() > 0 ? _saveData->getActiveChunkPixelWidth() : WINDOW_WIDTH);
+    int mapWorldHeight = _saveData->isInfiniteMap() ? -1 : (_saveData->getActiveChunkPixelHeight() > 0 ? _saveData->getActiveChunkPixelHeight() : WINDOW_HEIGHT);
+    _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
     _camera.setPosition(_saveData->getCameraOffsetX(), _saveData->getCameraOffsetY());
 
     _enemyProvider.load(_saveData);
@@ -97,6 +83,14 @@ void GameManager::update(float deltaTime) {
     _projectileProvider.update(deltaTime, _ctx);
     _powerUpProvider.update(deltaTime, _ctx);
 
+    if (_player.getHP() <= 0) {
+        _gameState = GEGameLifeCircle::Defeat;
+    }
+
+    if (_player.getHP() > 0 && _levelTimeRemaining <= 0) {
+        _gameState = GEGameLifeCircle::Victory;
+    }
+
     if (_saveData && _window.keyPressed('P')) {
         GEPlayerState playerState = _player.snapshotState();
         GEEnemyManagerState enemyManagerState = _enemyProvider.snapshotState();
@@ -108,7 +102,6 @@ void GameManager::update(float deltaTime) {
 
 void GameManager::render() {
     _window.clear();
-
     _mapProvider.draw(_window, _camera);
     _enemyProvider.draw(_window, _camera);
     _projectileProvider.draw(_window, _camera);
@@ -139,8 +132,64 @@ void GameManager::drawText() {
         GEPoint(200, 400), RED, _window);
     _font.draw("Skill: " + std::to_string(static_cast<int>(_player.getAOECooldownTime())),
         GEPoint(400, 400), RED, _window);
+
+    _font.draw("Time: " + std::to_string(static_cast<int>(std::ceil(_levelTimeRemaining))),
+        GEPoint(400, 20), RED, _window);
 }
 
 void GameManager::stop() {
     _isRunning = false;
+}
+
+void GameManager::updateMenu() {
+    _window.checkInput();
+    if (_window.keyPressed('1')) {
+        _gameState = GEGameLifeCircle::Playing;
+        _loadMode = GEDataLoadMode::NewFix;
+    }
+    else if (_window.keyPressed('2')) {
+        _gameState = GEGameLifeCircle::Playing;
+        _loadMode = GEDataLoadMode::NewInfinite;
+    }
+    else if (_window.keyPressed('3')) {
+        _gameState = GEGameLifeCircle::Playing;
+        _loadMode = GEDataLoadMode::LastSavedFix;
+    }
+    else if (_window.keyPressed('4')) {
+        _gameState = GEGameLifeCircle::Playing;
+        _loadMode = GEDataLoadMode::LastSavedInfinite;
+    }
+}
+
+
+void GameManager::renderMenu() {
+    _window.clear();
+    _font.draw("Press 1 for new Fixed Map", GEPoint(160, 160), WHITE, _window);
+    _font.draw("Press 2 for new Infinite Map", GEPoint(160, 200), WHITE, _window);
+    _font.draw("Press 3 for last saved Fixed Map", GEPoint(160, 240), WHITE, _window);
+    _font.draw("Press 4 for last saved Infinite Map", GEPoint(160, 280), WHITE, _window);
+    _window.present();
+}
+
+
+void GameManager::updateEnding() {
+    if (_window.keyPressed(' ')) {
+        _gameState = GEGameLifeCircle::Menu;
+        _saveData->loadState
+    }
+}
+
+void GameManager::renderEnding() {
+    _window.clear();
+    if (_gameState == GEGameLifeCircle::Defeat) {
+        _font.draw("Failed T T", GEPoint(200, 200), RED, _window);
+        _font.draw("Press Space Back To Menu.", GEPoint(200, 240), WHITE, _window);
+    }
+
+    if (_gameState == GEGameLifeCircle::Victory) {
+        _font.draw("!! Win !!", GEPoint(200, 200), GREEN, _window);
+        _font.draw("Press Space Back To Menu.", GEPoint(200, 240), WHITE, _window);
+    }
+    
+    _window.present();
 }

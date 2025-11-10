@@ -23,6 +23,11 @@ private:
     GEContext _ctx;
     bool _isRunning = false;
 
+    GEGameLifeCircle _gameState = GEGameLifeCircle::Menu;
+    GEDataLoadMode _loadMode = GEDataLoadMode::NewFix;
+
+    float _levelTimeRemaining = 120.0f;
+
 public:
     GameManager(Window& window,
         MapProvider& mapProvider,
@@ -38,6 +43,7 @@ public:
         _powerUpProvider(powerUpProvider),
         _ctx(window, enemyProvider, mapProvider, projectileProvider, powerUpProvider, playerProvider)
     {
+        _gameState = GEGameLifeCircle::Menu;
     }
 
     ~GameManager() = default;
@@ -46,7 +52,7 @@ public:
 	void run();
 
 	// load Game Resource, like , player, enemies, fonts
-	void loadComponent(const std::string& dataPath);
+	void loadComponent(const GEDataLoadMode loadMode);
 
 	// update
 	void update(float deltaTime);
@@ -56,6 +62,14 @@ public:
 
 	// End Game Loops
 	void stop();
+
+    void updateMenu();
+
+    void renderMenu();
+
+    void updateEnding();
+
+    void renderEnding();
 
 	void drawText();
 
