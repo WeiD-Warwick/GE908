@@ -76,11 +76,13 @@ struct GEPlayerState {
     int speed = 0;
     float autoAttackTimer = 0.0f;
     float autoAttackSpeedMultiplier = 1.0f;
+    float attackSpeedBuffTimer = 0.0f;
     float aoeCooldownTimer = 0.0f;
     float aoeCooldown = 0.0f;
     float contactDamageCooldownTimer = 0.0f;
     int aoeTargetCount = 0;
     bool aoeKeyHeld = false;
+    float aoeTargetBuffTimer = 0.0f;
 };
 
 class GEEnemyManagerState {

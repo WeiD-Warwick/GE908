@@ -144,7 +144,6 @@ void GameManager::drawText() {
     _font.draw("Time: " + std::to_string(static_cast<int>(std::ceil(_levelTimeRemaining))),
         GEPoint(540, 20), RED, _window);
     _font.draw("J  Show Collidars.", GEPoint(540, 400), BLUE, _window);
-    _font.draw("K  Show AOE Range.", GEPoint(540, 420), BLUE, _window);
     _font.draw("L  Save Game.", GEPoint(540, 440), BLUE, _window);
 }
 

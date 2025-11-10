@@ -20,27 +20,27 @@ private:
 
 	// auto attack
 	float _autoAttackTimer = 0.0f;
-	float _autoAttackIntervalBase = 1.4f;
+	float _autoAttackIntervalBase = Player::PLAYER_BASE_AUTO_ATTACK_INTERVAL;
 	float _autoAttackSpeedMultiplier = 1.0f;
+	float _attackSpeedBuffTimer = 0.0f;
 
 	// aoe
 	float _aoeCooldownTimer = 0.0f;
 	float _aoeCooldown = 5.0f;
 	float _aoeRadius = 300.0f;
 	float _aoeEffectDuration = 0.35f;
-	int _aoeTargetCount = 4;
+	int _aoeTargetCount = Player::PLAYER_BASE_AOE_TARGETS;
+	float _aoeTargetBuffTimer = 0.0f;
 	bool _aoeKeyHeld = false;
 
-	struct PlayerAoeEffect {
-		bool active = false;
-		float centerX = 0.0f;
-		float centerY = 0.0f;
-		float radius = 0.0f;
-		GEColor color = GEColor();
-		float remainingTime = 1.0f;
+	struct AoeImpact {
+		float x = 0.0f;
+		float y = 0.0f;
+		float remainingTime = 0.0f;
 	};
 
-	PlayerAoeEffect _aoeEffects[Player::PLAYER_MAX_AOE_EFFECTS];
+	AoeImpact _aoeImpacts[Player::PLAYER_MAX_AOE_EFFECTS];
+	int _aoeImpactCount = 0;
 
 	bool collidesWithTileType(float newX, float newY, const MapProvider& Manager, GECollisionType targetType) const;
 
@@ -57,13 +57,10 @@ private:
 	void aoeAttack(float deltaTime);
 
 	void executeAoeSkill();
-	int findEnemiesWithinRadius(float cx, float cy, float radius, GEEnemy** outList, int maxCount) const;
-	int selectTopEnemiesByHP(GEEnemy** input, int count, int topN, GEEnemy** output) const;
-	void updateAoeEffects(float deltaTime);
-	void spawnAoeEffect(float centerX, float centerY, float radius, GEColor color);
-	void drawAoeIndicatorIfNeeded(Window& window, const GECamera& camera) const;
-	void drawAoeEffects(Window& window, const GECamera& camera) const;
-	void drawCircle(Window& window, const GECamera& camera, float centerX, float centerY, float radius, GEColor color) const;
+	void updateAoeImpacts(float deltaTime);
+	void recordAoeImpact(float centerX, float centerY);
+	void drawAoeImpacts(Window& window, const GECamera& camera) const;
+	void drawImpact(Window& window, const GECamera& camera, float centerX, float centerY, float radius, GEColor color) const;
 
 public:
 

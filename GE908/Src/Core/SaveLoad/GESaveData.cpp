@@ -291,7 +291,8 @@ bool GESaveData::saveState(const std::string& filename,
             << p.autoAttackTimer << ' ' << p.autoAttackSpeedMultiplier << ' '
             << p.aoeCooldownTimer << ' ' << p.aoeCooldown << ' '
             << p.contactDamageCooldownTimer << ' '
-            << p.aoeTargetCount << ' ' << (p.aoeKeyHeld ? 1 : 0) << "\n";
+            << p.aoeTargetCount << ' ' << (p.aoeKeyHeld ? 1 : 0) << ' '
+            << p.attackSpeedBuffTimer << ' ' << p.aoeTargetBuffTimer << "\n";
     }
 
     if (enemyManagerState) {
@@ -411,11 +412,16 @@ bool GESaveData::loadState(const std::string& filename) {
         else if (key == "player") {
             GEPlayerState state;
             int aoeHeld = 0;
+            state.attackSpeedBuffTimer = 0.0f;
+            state.aoeTargetBuffTimer = 0.0f;
             if (iss >> state.centerX >> state.centerY >> state.hp >> state.maxHp >> state.speed
                 >> state.autoAttackTimer >> state.autoAttackSpeedMultiplier
                 >> state.aoeCooldownTimer >> state.aoeCooldown >> state.contactDamageCooldownTimer) {
                 if (iss >> state.aoeTargetCount >> aoeHeld) {
                     state.aoeKeyHeld = (aoeHeld != 0);
+                    if (iss >> state.attackSpeedBuffTimer) {
+                        iss >> state.aoeTargetBuffTimer;
+                    }
                 }
                 else {
                     state.aoeTargetCount = Player::PLAYER_MAX_AOE_TARGETS;
