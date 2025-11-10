@@ -28,6 +28,8 @@ private:
 
     float _levelTimeRemaining = 120.0f;
 
+    bool _componentHasLoaded = false;
+
 public:
     GameManager(Window& window,
         MapProvider& mapProvider,

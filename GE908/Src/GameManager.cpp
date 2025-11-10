@@ -11,7 +11,6 @@ void GameManager::run() {
     _isRunning = true;
     _font.load();
     _mapProvider.loadTileResources("Src/Assets/MapTiles/");
-    bool componentHasLoaded = false;
 
     while (_isRunning) {
         GEFrameTimer::shared().beginFrame();
@@ -24,9 +23,9 @@ void GameManager::run() {
             renderMenu();
             break;
         case GEGameLifeCircle::Playing:
-            if (!componentHasLoaded) {
+            if (!_componentHasLoaded) {
                 loadComponent(_loadMode);
-                componentHasLoaded = true;
+                _componentHasLoaded = true;
             }
             update(deltaTime);
             render();
@@ -174,20 +173,24 @@ void GameManager::renderMenu() {
 
 void GameManager::updateEnding() {
     if (_window.keyPressed(' ')) {
+        delete _saveData;
+        _saveData = new GESaveData();
+
         _gameState = GEGameLifeCircle::Menu;
-        _saveData->loadState
+        _levelTimeRemaining = 120.0f;
+        _componentHasLoaded = false;
     }
 }
 
 void GameManager::renderEnding() {
     _window.clear();
     if (_gameState == GEGameLifeCircle::Defeat) {
-        _font.draw("Failed T T", GEPoint(200, 200), RED, _window);
+        _font.draw("Failed", GEPoint(200, 200), RED, _window);
         _font.draw("Press Space Back To Menu.", GEPoint(200, 240), WHITE, _window);
     }
 
     if (_gameState == GEGameLifeCircle::Victory) {
-        _font.draw("!! Win !!", GEPoint(200, 200), GREEN, _window);
+        _font.draw("Win!", GEPoint(200, 200), GREEN, _window);
         _font.draw("Press Space Back To Menu.", GEPoint(200, 240), WHITE, _window);
     }
     
