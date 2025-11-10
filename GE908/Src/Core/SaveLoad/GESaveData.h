@@ -26,6 +26,9 @@ private:
     uint32_t _randomSeed = 0u;
     bool _hasRandomSeed = false;
 
+    float _levelTimeRemaining = 120.0f;
+    bool _hasLevelTimeRemaining = false;
+
     std::string _stateFilePath;
     std::unique_ptr<GEPlayerState> _loadedPlayerState;
     std::unique_ptr<GEEnemyManagerState> _loadedEnemyManagerState;
@@ -74,6 +77,10 @@ public:
     int getChunkPixelHeight() const;
 
     bool isInfiniteMap() const;
+
+    void setLevelTimeRemaining(float timeRemaining);
+    float getLevelTimeRemaining() const;
+    bool hasLevelTimeRemaining() const;
 
     bool loadGame(const GEDataLoadMode loadMode);
     std::string getFilePath(const GEDataLoadMode loadMode);

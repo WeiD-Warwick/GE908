@@ -47,6 +47,8 @@ void GESaveData::clearChunks() {
     _infiniteMap = false;
     _activeChunk = { 0,0 };
     _randomSeed = 0u;
+    _levelTimeRemaining = 120.0f;
+    _hasLevelTimeRemaining = false;
     _hasRandomSeed = false;
     _loadedPlayerState.reset();
     _loadedEnemyManagerState.reset();
@@ -156,6 +158,15 @@ int GESaveData::getActiveChunkPixelHeight() const {
 int GESaveData::getChunkPixelWidth() const { return _chunkColumns * _tileWidth; }
 int GESaveData::getChunkPixelHeight() const { return _chunkRows * _tileHeight; }
 bool GESaveData::isInfiniteMap() const { return _infiniteMap; }
+
+void GESaveData::setLevelTimeRemaining(float timeRemaining) {
+    _levelTimeRemaining = timeRemaining;
+    _hasLevelTimeRemaining = true;
+}
+
+float GESaveData::getLevelTimeRemaining() const { return _levelTimeRemaining; }
+
+bool GESaveData::hasLevelTimeRemaining() const { return _hasLevelTimeRemaining; }
 
 bool GESaveData::loadGame(const GEDataLoadMode loadMode) {
     std::string filename = getFilePath(loadMode);
@@ -270,6 +281,7 @@ bool GESaveData::saveState(const std::string& filename,
     file << "camera " << _cameraOffsetX << ' ' << _cameraOffsetY << "\n";
     file << "chunk " << _activeChunk.x << ' ' << _activeChunk.y << "\n";
     file << "seed " << (_hasRandomSeed ? 1 : 0) << ' ' << _randomSeed << "\n";
+    file << "leveltimer " << _levelTimeRemaining << "\n";
 
     if (playerState) {
         const auto& p = *playerState;
@@ -387,6 +399,13 @@ bool GESaveData::loadState(const std::string& filename) {
                     _randomSeed = flagOrSeed;
                     _hasRandomSeed = true;
                 }
+            }
+        }
+        else if (key == "leveltimer") {
+            float remaining = 0.0f;
+            if (iss >> remaining) {
+                _levelTimeRemaining = remaining;
+                _hasLevelTimeRemaining = true;
             }
         }
         else if (key == "player") {

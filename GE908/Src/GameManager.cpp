@@ -49,6 +49,12 @@ void GameManager::loadComponent(const GEDataLoadMode loadMode) {
         return;
     }
 
+    const bool loadingFromSave = (loadMode == GEDataLoadMode::LastSavedFix || loadMode == GEDataLoadMode::LastSavedInfinite);
+    if (loadingFromSave && _saveData->hasLevelTimeRemaining())
+        _levelTimeRemaining = _saveData->getLevelTimeRemaining();
+    else
+        _levelTimeRemaining = 120.0f;
+
     _saveData->setWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     _mapProvider.load(_saveData);
 
@@ -76,6 +82,7 @@ void GameManager::update(float deltaTime) {
     if (_saveData) {
         _saveData->setCameraOffset(_camera.getX(), _camera.getY());
         _saveData->updateActiveChunkFromWorldPosition(body.getCenterX(), body.getCenterY());
+        _saveData->setLevelTimeRemaining(_levelTimeRemaining);
     }
 
     _enemyProvider.update(deltaTime, _ctx);
