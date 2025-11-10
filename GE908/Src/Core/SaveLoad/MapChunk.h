@@ -106,9 +106,3 @@ struct ChunkCoord {
     int y = 0;
     bool operator==(const ChunkCoord& other) const { return x == other.x && y == other.y; }
 };
-
-struct ChunkNode {
-    ChunkCoord coord;
-    MapChunk chunk;
-    ChunkNode* next = nullptr;
-};

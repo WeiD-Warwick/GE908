@@ -15,18 +15,18 @@ bool GESaveData::_parseKeywordLine(const std::string& line, MapChunk& chunk) {
     std::string key;
     if (!(iss >> key)) return false;
 
-    if (key == "mapmode") {
-        std::string mode;
-        if (!(iss >> mode)) return false;
-        _infiniteMap = (mode == "infinite");
-        return true;
-    }
-
     if (key == "seed") {
+        uint32_t flagOrSeed = 0u;
         uint32_t value = 0u;
-        if (!(iss >> value)) return false;
-        _randomSeed = value;
-        _hasRandomSeed = true;
+        if (!(iss >> flagOrSeed)) return false;
+        if (iss >> value) {
+            _hasRandomSeed = (flagOrSeed != 0u);
+            _randomSeed = value;
+        }
+        else {
+            _randomSeed = flagOrSeed;
+            _hasRandomSeed = true;
+        }
         return true;
     }
 
@@ -41,13 +41,6 @@ bool GESaveData::_parseKeywordLine(const std::string& line, MapChunk& chunk) {
 }
 
 void GESaveData::clearChunks() {
-    ChunkNode* node = _chunksHead;
-    while (node) {
-        ChunkNode* next = node->next;
-        delete node;
-        node = next;
-    }
-    _chunksHead = nullptr;
     _baseChunk.clear();
     _chunkColumns = 0;
     _chunkRows = 0;
@@ -60,24 +53,6 @@ void GESaveData::clearChunks() {
     _loadedProjectileManagerState.reset();
     _loadedPowerUpManagerState.reset();
     _stateFilePath.clear();
-}
-
-ChunkNode* GESaveData::findChunkNode(const ChunkCoord& coord) {
-    ChunkNode* node = _chunksHead;
-    while (node) {
-        if (node->coord == coord) return node;
-        node = node->next;
-    }
-    return nullptr;
-}
-
-const ChunkNode* GESaveData::findChunkNode(const ChunkCoord& coord) const {
-    const ChunkNode* node = _chunksHead;
-    while (node) {
-        if (node->coord == coord) return node;
-        node = node->next;
-    }
-    return nullptr;
 }
 
 int GESaveData::floorDiv(int value, int divisor) {
@@ -123,33 +98,6 @@ int GESaveData::sampleTileForWorld(int worldRow, int worldCol) const {
     return _baseChunk.getTileID(srcRow, srcCol);
 }
 
-void GESaveData::generateChunk(MapChunk& chunk, const ChunkCoord& coord) {
-    if (!_baseChunk.isValid()) return;
-    if (coord.x == 0 && coord.y == 0) { chunk = _baseChunk; return; }
-    if (!chunk.allocate(_chunkColumns, _chunkRows)) return;
-
-    for (int row = 0; row < _chunkRows; ++row)
-        for (int col = 0; col < _chunkColumns; ++col) {
-            int worldRow = coord.y * _chunkRows + row;
-            int worldCol = coord.x * _chunkColumns + col;
-            int tile = sampleTileForWorld(worldRow, worldCol);
-            chunk.tiles[row * _chunkColumns + col] = tile;
-        }
-}
-
-ChunkNode* GESaveData::ensureChunkNode(const ChunkCoord& coord) {
-    ChunkNode* node = findChunkNode(coord);
-    if (node) return node;
-    if (!_infiniteMap && (coord.x != 0 || coord.y != 0)) return nullptr;
-    node = new ChunkNode();
-    node->coord = coord;
-    node->next = _chunksHead;
-    _chunksHead = node;
-    if (_infiniteMap) generateChunk(node->chunk, coord);
-    else if (_baseChunk.isValid()) node->chunk = _baseChunk;
-    return node;
-}
-
 void GESaveData::setCameraOffset(int x, int y) {
     _cameraOffsetX = static_cast<float>(x);
     _cameraOffsetY = static_cast<float>(y);
@@ -163,10 +111,12 @@ int GESaveData::getScreenWidth() const { return _windowWidth; }
 int GESaveData::getScreenHeight() const { return _windowHeight; }
 
 void GESaveData::setActiveChunk(int chunkX, int chunkY) {
-    if (!_infiniteMap) { _activeChunk = { 0,0 }; ensureChunkNode(_activeChunk); return; }
+    if (!_infiniteMap) {
+        _activeChunk = { 0,0 };
+        return;
+    }
     _activeChunk.x = chunkX;
     _activeChunk.y = chunkY;
-    ensureChunkNode(_activeChunk);
 }
 
 void GESaveData::updateActiveChunkFromWorldPosition(float worldX, float worldY) {
@@ -180,17 +130,11 @@ void GESaveData::updateActiveChunkFromWorldPosition(float worldX, float worldY) 
 }
 
 const MapChunk* GESaveData::getActiveChunk() const {
-    const ChunkNode* node = findChunkNode(_activeChunk);
-    return node ? &node->chunk : nullptr;
+    return _baseChunk.isValid() ? &_baseChunk : nullptr;
 }
 
 MapChunk* GESaveData::getActiveChunk() {
-    ChunkNode* node = findChunkNode(_activeChunk);
-    if (!node) {
-        if (!_infiniteMap && _chunksHead) return &_chunksHead->chunk;
-        return nullptr;
-    }
-    return &node->chunk;
+    return _baseChunk.isValid() ? &_baseChunk : nullptr;
 }
 
 int GESaveData::getActiveChunkColumnCount() const {
@@ -220,24 +164,10 @@ bool GESaveData::loadGame(const GEDataLoadMode loadMode) {
 
     clearChunks();
 
-    switch (loadMode) {
-    case GEDataLoadMode::LastSavedFix:
-        _stateFilePath = filename + ".state";
-        _infiniteMap = false;
-        break;
-    case GEDataLoadMode::LastSavedInfinite:
-        _stateFilePath = filename + ".state";
-        _infiniteMap = true;
-        break;
-    case GEDataLoadMode::NewFix:
-        _stateFilePath.clear();
-        _infiniteMap = false;
-        break;
-    case GEDataLoadMode::NewInfinite:
-        _stateFilePath.clear();
-        _infiniteMap = true;
-        break;
-    }
+    const bool infiniteMode = (loadMode == GEDataLoadMode::NewInfinite || loadMode == GEDataLoadMode::LastSavedInfinite);
+    _infiniteMap = infiniteMode;
+    _stateFilePath = filename + (infiniteMode ? ".ini.state" : ".fix.state");
+
 
     std::string line;
     int currentRow = 0;
@@ -277,35 +207,26 @@ bool GESaveData::loadGame(const GEDataLoadMode loadMode) {
     _baseChunk = chunk;
     _chunkColumns = chunk.getColumnCount();
     _chunkRows = chunk.getRowCount();
-    if (_infiniteMap && (_chunkColumns <= 0 || _chunkRows <= 0)) _infiniteMap = false;
+    if (_chunkColumns <= 0 || _chunkRows <= 0) _infiniteMap = false;
 
-    ChunkNode* node = ensureChunkNode(_activeChunk);
-    if (node) node->chunk = chunk;
+    if (_infiniteMap && !_hasRandomSeed) {
+        _randomSeed = static_cast<uint32_t>(std::rand());
+        _hasRandomSeed = true;
+    }
 
+    _activeChunk = { 0,0 };
     if (loadMode == GEDataLoadMode::LastSavedFix || loadMode == GEDataLoadMode::LastSavedInfinite)
         loadState(_stateFilePath);
-    //loadState(_stateFilePath);
     return true;
 }
 
 std::string GESaveData::getFilePath(const GEDataLoadMode loadMode) {
-    switch (loadMode) {
-    case GEDataLoadMode::NewFix: return "Src/SaveGames/fixed.txt"; break;
-    case GEDataLoadMode::NewInfinite: return "Src/SaveGames/inifinty.txt"; break;
-    case GEDataLoadMode::LastSavedFix: return "Src/SaveGames/fixed.txt"; break;
-    case GEDataLoadMode::LastSavedInfinite: return "Src/SaveGames/inifinty.txt"; break;
-    }
+    return "Src/SaveGames/tilt.txt";
 }
 
 int GESaveData::getTileID(int row, int col) {
-    if (_infiniteMap && _chunkColumns > 0 && _chunkRows > 0) {
-        ChunkCoord coord;
-        int localRow = 0, localCol = 0;
-        if (!worldToChunkIndices(row, col, coord, localRow, localCol)) return 0;
-        ChunkNode* node = ensureChunkNode(coord);
-        if (!node) return 0;
-        return node->chunk.getTileID(localRow, localCol);
-    }
+    if (_infiniteMap && _chunkColumns > 0 && _chunkRows > 0)
+        return sampleTileForWorld(row, col);
     const MapChunk* chunk = getActiveChunk();
     return chunk ? chunk->getTileID(row, col) : 0;
 }
@@ -348,6 +269,7 @@ bool GESaveData::saveState(const std::string& filename,
     file << "window " << _windowWidth << ' ' << _windowHeight << "\n";
     file << "camera " << _cameraOffsetX << ' ' << _cameraOffsetY << "\n";
     file << "chunk " << _activeChunk.x << ' ' << _activeChunk.y << "\n";
+    file << "seed " << (_hasRandomSeed ? 1 : 0) << ' ' << _randomSeed << "\n";
 
     if (playerState) {
         const auto& p = *playerState;
@@ -451,6 +373,20 @@ bool GESaveData::loadState(const std::string& filename) {
             int cx = 0, cy = 0;
             if (iss >> cx >> cy) {
                 if (_infiniteMap) setActiveChunk(cx, cy);
+            }
+        }
+        else if (key == "seed") {
+            unsigned int flagOrSeed = 0u;
+            unsigned int value = 0u;
+            if (iss >> flagOrSeed) {
+                if (iss >> value) {
+                    _hasRandomSeed = (flagOrSeed != 0u);
+                    _randomSeed = value;
+                }
+                else {
+                    _randomSeed = flagOrSeed;
+                    _hasRandomSeed = true;
+                }
             }
         }
         else if (key == "player") {

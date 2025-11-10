@@ -21,7 +21,6 @@ private:
     int _chunkRows = 0;
     bool _infiniteMap = false;
 
-    ChunkNode* _chunksHead = nullptr;
     ChunkCoord _activeChunk{ 0, 0 };
 
     uint32_t _randomSeed = 0u;
@@ -36,15 +35,11 @@ private:
 private:
     bool _parseKeywordLine(const std::string& line, MapChunk& chunk);
     void clearChunks();
-    ChunkNode* findChunkNode(const ChunkCoord& coord);
-    const ChunkNode* findChunkNode(const ChunkCoord& coord) const;
     static int floorDiv(int value, int divisor);
     static int positiveMod(int value, int divisor);
     bool worldToChunkIndices(int tileRow, int tileCol, ChunkCoord& coord, int& localRow, int& localCol) const;
     uint32_t hashCoordinates(int worldRow, int worldCol) const;
     int sampleTileForWorld(int worldRow, int worldCol) const;
-    void generateChunk(MapChunk& chunk, const ChunkCoord& coord);
-    ChunkNode* ensureChunkNode(const ChunkCoord& coord);
 
 public:
     GESaveData();
