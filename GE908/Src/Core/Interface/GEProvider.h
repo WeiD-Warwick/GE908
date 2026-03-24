@@ -12,6 +12,7 @@ class GETile;
 
 class EnemyProvider : public GECodable<GEEnemyManagerState> {
 public:
+	virtual ~EnemyProvider() = default;
 	virtual void load(GESaveData* saveData) = 0;
 	virtual void update(float deltaTime, GEContext& ctx) = 0;
 	virtual int getEnemyCount() const = 0;
@@ -23,6 +24,7 @@ public:
 
 class ProjectileProvider : public GECodable<GEProjectileManagerState> {
 public:
+	virtual ~ProjectileProvider() = default;
 	virtual void load(GESaveData* saveData) = 0;
 	virtual void update(float deltaTime, GEContext& ctx) = 0;
 	virtual void addProjectile(ProjectileOwner from, float startPointX, float startPointY, float dirX, float dirY, float speed, int damage) = 0;
@@ -31,6 +33,7 @@ public:
 
 class PowerUpProvider : public GECodable<GEPowerUpManagerState> {
 public:
+	virtual ~PowerUpProvider() = default;
 	virtual void load(GESaveData* saveData) = 0;
 	virtual void update(float deltaTime, GEContext& ctx) = 0;
 	virtual void draw(Window& window, const GECamera& camera) = 0;
@@ -39,6 +42,7 @@ public:
 
 class MapProvider {
 public:
+	virtual ~MapProvider() = default;
 	virtual GESaveData* getSaveData() const = 0;
 	virtual GETile* getTile(int tileID) const = 0;
 	virtual void draw(Window& window, const GECamera& camera) const = 0;
@@ -49,6 +53,7 @@ public:
 
 class PlayerProvider : public GECodable<GEPlayerState> {
 public:
+	virtual ~PlayerProvider() = default;
 	virtual void takeDamage(int value) = 0;
 	virtual void update(float deltaTime, Window& window) = 0;
 	virtual GECollisible& collisionBody() = 0;

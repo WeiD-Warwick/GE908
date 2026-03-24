@@ -41,13 +41,9 @@ void GameManager::run() {
 }
 
 void GameManager::loadComponent(const GEDataLoadMode loadMode) {
-    _saveData = new GESaveData();
+    _saveData = std::make_unique<GESaveData>();
     _saveData->loadGame(loadMode);
 
-    if (!_saveData) {
-        _isRunning = false;
-        return;
-    }
 
     const bool loadingFromSave = (loadMode == GEDataLoadMode::LastSavedFix || loadMode == GEDataLoadMode::LastSavedInfinite);
     if (loadingFromSave && _saveData->hasLevelTimeRemaining())
@@ -56,18 +52,19 @@ void GameManager::loadComponent(const GEDataLoadMode loadMode) {
         _levelTimeRemaining = 120.0f;
 
     _saveData->setWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    _mapProvider.load(_saveData);
+    _mapProvider.load(_saveData.get());
 
     _player.bind(_ctx);
 
     int mapWorldWidth = _saveData->isInfiniteMap() ? -1 : (_saveData->getActiveChunkPixelWidth() > 0 ? _saveData->getActiveChunkPixelWidth() : WINDOW_WIDTH);
     int mapWorldHeight = _saveData->isInfiniteMap() ? -1 : (_saveData->getActiveChunkPixelHeight() > 0 ? _saveData->getActiveChunkPixelHeight() : WINDOW_HEIGHT);
+    // Restore the camera position when loading
     _camera.load(WINDOW_WIDTH, WINDOW_HEIGHT, mapWorldWidth, mapWorldHeight);
     _camera.setPosition(_saveData->getCameraOffsetX(), _saveData->getCameraOffsetY());
 
-    _enemyProvider.load(_saveData);
-    _powerUpProvider.load(_saveData);
-    _projectileProvider.load(_saveData);
+    _enemyProvider.load(_saveData.get());
+    _powerUpProvider.load(_saveData.get());
+    _projectileProvider.load(_saveData.get());
 }
 
 void GameManager::update(float deltaTime) {
@@ -76,10 +73,12 @@ void GameManager::update(float deltaTime) {
 
     _player.update(deltaTime, _window);
 
+    // Get the position of the player's collider in each frame, and call followPlayer to update the camera
     auto& body = _player.collisionBody();
     _camera.followPlayer(body.getOriginX(), body.getOriginY(), body.getWidth(), body.getHeight());
 
     if (_saveData) {
+        // Record the camera position when saving
         _saveData->setCameraOffset(_camera.getX(), _camera.getY());
         _saveData->updateActiveChunkFromWorldPosition(body.getCenterX(), body.getCenterY());
         _saveData->setLevelTimeRemaining(_levelTimeRemaining);
@@ -102,7 +101,7 @@ void GameManager::update(float deltaTime) {
         GEEnemyManagerState enemyManagerState = _enemyProvider.snapshotState();
         GEProjectileManagerState projectileState = _projectileProvider.snapshotState();
         GEPowerUpManagerState powerUpState = _powerUpProvider.snapshotState();
-        _saveData->saveState(& playerState, &enemyManagerState, &projectileState, &powerUpState);
+        _saveData->saveState(&playerState, &enemyManagerState, &projectileState, &powerUpState);
     }
 }
 
@@ -119,8 +118,6 @@ void GameManager::render() {
 }
 
 void GameManager::drawText() {
-
-
     int y = 20;
     _font.draw("Normal: " + std::to_string(_enemyProvider.getKillCount(GEEnemyType::Normal)),
         GEPoint(20, y), RED, _window);
@@ -133,7 +130,6 @@ void GameManager::drawText() {
     y += 20;
     _font.draw("Static: " + std::to_string(_enemyProvider.getKillCount(GEEnemyType::StaticShooter)),
         GEPoint(20, y), RED, _window);
-
     _font.draw("FPS: " + std::to_string(static_cast<int>(GEFrameTimer::shared().getFPS())),
         GEPoint(20, 400), RED, _window);
     _font.draw("HP: " + std::to_string(_player.getHP()),
@@ -184,8 +180,7 @@ void GameManager::renderMenu() {
 
 void GameManager::updateEnding() {
     if (_window.keyPressed(' ')) {
-        delete _saveData;
-        _saveData = new GESaveData();
+        _saveData = std::make_unique<GESaveData>();
 
         _gameState = GEGameLifeCircle::Menu;
         _levelTimeRemaining = 120.0f;

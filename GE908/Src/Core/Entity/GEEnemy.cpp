@@ -90,7 +90,7 @@ void GEEnemy::update(float deltaTime, float playerCenterX, float playerCenterY, 
 
         vx /= len;
         vy /= len;
-        ctx.projectileProvider().addProjectile(ProjectileOwner::FromEnemy, cx, cy, vx, vy, 100.0f, 200);
+        ctx.projectileProvider().addProjectile(ProjectileOwner::FromEnemy, cx, cy, vx, vy, 100.0f, 100);
     }
 }
 

@@ -8,7 +8,7 @@ static float fireTimer = 0.0f;
 
 GEPlayer::GEPlayer()
     : GECharacter(Player::playerSpriteFilePath, GECollisionType::Player) {
-    _hp = 300;
+    _hp = 500;
     _speed = 300;
     _maxHp = _hp;
 

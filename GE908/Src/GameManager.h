@@ -6,6 +6,7 @@
 #include "Core/Entity/GEPlayer.h"
 #include "Core/Interface/GEProvider.h"
 #include "Foundation/GEContext.h"
+#include <memory>
 
 using namespace GamesEngineeringBase;
 
@@ -14,7 +15,7 @@ private:
     Window& _window;
     GEFont _font;
     GECamera _camera;
-    GESaveData* _saveData = nullptr;
+    std::unique_ptr<GESaveData> _saveData;
     MapProvider& _mapProvider;
     PlayerProvider& _player;
     EnemyProvider& _enemyProvider;

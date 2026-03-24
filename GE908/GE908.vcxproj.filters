@@ -21,38 +21,59 @@
     <ClCompile Include="Src\GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Core\GEMapsManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Core\GEPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Foundation\GEFrameTimer.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Core\GEEnemy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Core\GEEnemyManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GECollisible.h">
       <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Core\GEProjectileManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Core\GECharacter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Core\GEPowerUpManager.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEDebug.h">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Foundation\GEUtility.h">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Entity\GEPowerUp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Entity\GEProjectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Entity\GETile.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\SaveLoad\GESaveData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\SaveLoad\MapChunk.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Impl\GEPowerUpManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Entity\GECharacter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Impl\GEProjectileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Impl\GEEnemyManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Entity\GEEnemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Entity\GEPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Core\Impl\GEMapsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Foundation\GEConst.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Foundation\GEObjectPool.h">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,31 +89,49 @@
     <ClInclude Include="Src\Foundation\GEFont.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Foundation\GESaveData.h">
+    <ClInclude Include="Src\Core\Entity\GEPowerUp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\GEMapsManager.h">
+    <ClInclude Include="Src\Core\Entity\GEProjectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\GEPlayer.h">
+    <ClInclude Include="Src\Core\Impl\GEPowerUpManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\GECharacter.h">
+    <ClInclude Include="Src\Core\Impl\GEProjectileManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\GEEnemy.h">
+    <ClInclude Include="Src\Core\Impl\GEEnemyManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\GEEnemyManager.h">
+    <ClInclude Include="Src\Core\Entity\GEEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\GEProjectileManager.h">
+    <ClInclude Include="Src\Core\Entity\GECharacter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Core\GEPowerUpManager.h">
+    <ClInclude Include="Src\Core\Entity\GEPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Foundation\GEArray.h">
+    <ClInclude Include="Src\Core\Impl\GEMapsManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\SaveLoad\GECodable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\SaveLoad\GEGameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Foundation\GEContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\Interface\GEProvider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Foundation\GEModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Core\SaveLoad\GESaveData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -484,8 +523,11 @@
     <Image Include="Src\Assets\MapTiles\24.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Src\Assets\Textures\heal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Src\SaveGames\tiles.txt" />
+    <Text Include="Src\SaveGames\tilt.txt" />
   </ItemGroup>
 </Project>
